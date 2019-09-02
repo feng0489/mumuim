@@ -1,0 +1,248 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>APICloud APP</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <style>
+        	body {
+	background-image: linear-gradient(160deg, #ff8f07 20%,#f85023 60%);
+}
+            header {
+f85023
+                border-bottom-style: solid;
+
+                
+            }
+
+            h1 {
+                height: 40px;
+                line-height: 40px;
+                color: #ffffff;
+                font-size: 18px;
+                text-align: center;
+            }
+
+            .back {
+                position: absolute;
+                left: 0px;
+                bottom: 0px;
+                width: 40px;
+                height: 40px;
+                background: url(../image/cm2_icn_back.png) center center no-repeat;
+                background-size: 15px auto;
+            }
+
+            nav {
+                position: relative;
+                height: 180px;
+                display: flex;
+                display: -webkit-flex;
+                display: flex;
+                border-bottom: solid #f0f0f0 1px;
+            }
+
+            nav>div {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                flex: 1;
+                width: 100%;
+                line-height: 50px;
+                color: #ffffff;
+                font-size: 15px;
+                text-align: center;
+            }
+
+            .nav-act {
+	color: #ffffff;
+	font-size: 18px;
+            }
+
+            .nav-hov {
+                background-color: rgba(250, 240, 230, 0.7);
+            }
+
+            mark {
+                position: absolute;
+                bottom: 0px;
+                left: 0px;
+                text-align: center;
+                background: transparent;
+                -webkit-transition: 300ms;
+            }
+
+            mark>img {
+                height: 8px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header id="header">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="80"><div class="back event-back"></div></td>
+    <td><h1 class="friend_talking_title">邀请一个好友</h1></td>
+    <td onClick="fnOpenShareFrame();" tapmode="highlight" width="80"><font color="#ffffff">我要分享</font></td>
+  </tr>
+</table>
+        </header>
+		<div style="height:130px; ">
+		<div style=" color:#ffffff; padding-top:10px;" align="center" >每月最少赚(每月都可领)</div>
+		<div style="font-size:50px; color:#ffffff;" align="center" class="lastdate">112元</div>
+		<div style=" color:#ffffff;" align="center" class="total_shouyi">本月活跃0</div>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+	</div>
+        <nav id="nav">
+            <div class="nav-act total_tuiguang" tapmode="nav-hov" onClick="fnChange(0);">总邀请(0)</div>
+            <div tapmode="nav-hov" onClick="fnChange(1);" class="total_youxiao">有效(0)</div>
+            <!--<div tapmode="nav-hov" onClick="fnChange(2);" class="total_youxiao_shouyi">收益(0)</div>-->
+            <mark></mark>
+        </nav>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            fnReady();
+            fnInit();
+			var systemType = api.systemType;  // 获取手机类型，比如： ios
+            if(systemType=='ios'){//兼容ios和安卓
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="30px";
+            }else{
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="35px";
+            }
+            var users = getStorage("users")
+            $('.total_shouyi').text("本月活跃"+users.tuijian_money);
+            tuijianTotal();
+            api.openFrameGroup({
+                name: 'message_group',
+                scrollEnabled: true,
+                rect: {
+                    x: 0,
+                    y: 250,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                index: 0,
+                frames: [{
+                    name: 'tuiguang_frame',
+                    url: 'tuiguang_frame.html'
+                }, {
+                    name: 'tuiguang_frame1',
+                    url: 'tuiguang_frame1.html'
+                }, {
+                    name: 'tuiguang_frame2',
+                    url: 'tuiguang_frame2.html'
+                }]
+            }, function(ret, err) {
+                fnChangeStyle(ret.index);
+            });
+        };
+       //apiready end
+        //推荐人统计
+        function tuijianTotal() {
+
+            var users = getStorage("users");
+            api.ajax({
+                url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                method: 'post',
+                data: {
+                    values: {
+                        "ac": "tuijianTotal",
+                        "uid": users.user_id,
+                    },
+                }
+            }, function (ret, err) {
+                if(!err){
+                    if(parseInt(ret.code) == 200){
+                        var data = ret.data;
+                        $('.lastdate').text(data.lastdate);
+                        $('.total_tuiguang').text("总邀请("+data.total+")");
+                        $('.total_youxiao').text("有效("+data.youxiao+")");
+                    }else{
+                        api.toast({
+                            msg: ret.msg,
+                            duration: ret.code,
+                            location: 'bottom'
+                        });
+                    }
+                }else{
+                    api.toast({
+                        msg: '网络异常，请重新请求!',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+        var navs, mark;
+
+        function fnInit() {
+            navs = $api.domAll(nav, 'div');
+            mark = $api.dom(nav, 'mark');
+            mark.style.width = (api.winWidth / 3) + 'px';
+        };
+
+        function fnChange(index) {
+            fnChangeStyle(index);
+            api.setFrameGroupIndex({
+                name: 'message_group',
+                index: index,
+                scroll: true
+            });
+        };
+
+        function fnChangeStyle(index) {
+            for (var i = 0; i < navs.length; i++) {
+                if (i == index) {
+                    $api.addCls(navs[i], 'nav-act');
+                } else {
+                    $api.removeCls(navs[i], 'nav-act');
+                }
+            };
+
+            var markPosX = (api.winWidth / 3) * index + 'px';
+            $api.css(mark, '-webkit-transform: translate(' + markPosX + ', 0)');
+        };
+
+        //打开分享页面
+        var shareStatus = false;
+
+        function fnOpenShareFrame() {
+            shareStatus = !shareStatus;
+            if (shareStatus) {
+                api.openFrame({
+                    name: 'tuigung_share_frame',
+                    url: './tuigung_share_frame.html',
+                    bounces: false,
+                    vScrollBarEnabled: false,
+                    hScrollBarEnabled: false,
+                    rect: {
+                        x: 0,
+                        y: 0,
+                        w: 'auto',
+                        h: 'auto'
+                    }
+                });
+            } else {
+                api.closeFrame({
+                    name: 'tuigung_share_frame'
+                });
+            }
+        };
+
+    </script>
+</html>

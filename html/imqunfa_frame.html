@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8" />
+	<title>详细资料</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+	<link rel="stylesheet" href="css/iconfont/iconfont.css" />
+	<link rel="stylesheet" href="css/reset.css" />
+	<link rel="stylesheet" href="css/animate.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/zepto.min.js"></script>
+	<script src="js/fontSize.js"></script>
+	<script src="js/rippleEffect.js"></script>
+	<script src="js/wcPop/wcPop.js"></script>
+	
+</head>
+<body>
+	
+	<div class="wcim__popup-tmpl">
+		<div id="J__popupTmpl-launchGroupChat">
+			<div class="wcim__popupTmpl">
+				<div class="wcim__launchGroupChat-panel" id="J__launchGroupChat">
+					<ul class="wcim__similarPanel-cells clearfix bg-fff rmt-25">
+						<li><a class="flexbox flex-alignc" href="#"><span class="bg"><i class="iconfont icon-search c-9ea0a3 fs-40"></i></span><label class="flex1 flexbox"><input class="ipt-text flex1" type="text" placeholder="查找群" /></label></a></li>
+					</ul>
+					<div class="group-table qun rmt-25">
+						<h2 class="hdtit flexbox"><em class="flex1">我的群聊</em> <i class="iconfont icon-arrT c-9ea0a3 fs-32"></i></h2>
+						<ul class="wcim__similarPanel-cells clearfix">
+							<li class="item wcim__material-cell"><img class="uimg" src="img/uimg/u__qun-img02.jpg" /><span class="name flex1">FIFA世界杯交流群</span></li><li class="item wcim__material-cell"><img class="uimg" src="img/uimg/u__qun-img03.jpg" /><span class="name flex1">湖北老乡汇</span></li>
+							<li class="item wcim__material-cell"><img class="uimg" src="img/uimg/u__qun-img01.jpg" /><span class="name flex1">幸运双色球</span></li>
+						</ul>
+					</div>
+					<div class="group-table rmt-15">
+						<h2 class="hdtit flexbox"><em class="flex1">我的好友</em> <i class="iconfont icon-arrT c-9ea0a3 fs-32"></i></h2>
+						<ul class="wcim__similarPanel-cells clearfix">
+							<li class="item wcim__material-cell"><img class="uimg" src="img/uimg/u__chat-img01.jpg" /><span class="name flex1">马云</span>
+								<i class="chkbox"></i></li><li class="item wcim__material-cell"><img class="uimg" src="img/uimg/u__chat-img02.jpg" /><span class="name flex1">萨能salon</span>
+								<i class="chkbox"></i></li><li class="item wcim__material-cell"><img class="uimg" src="img/uimg/u__chat-img03.jpg" /><span class="name flex1">科比-布莱特</span>
+								<i class="chkbox"></i></li><li class="item wcim__material-cell"><img class="uimg" src="img/uimg/u__chat-img04.jpg" /><span class="name flex1">张总</span>
+								<i class="chkbox"></i></li>
+							<li class="item wcim__material-cell"><img class="uimg" src="img/uimg/u__chat-img05.jpg" /><span class="name flex1">旋风小子</span>
+								<i class="chkbox"></i></li><li class="item wcim__material-cell"><img class="uimg" src="img/uimg/u__chat-img06.jpg" /><span class="name flex1">(>^ω^<)喵</span>
+									 <i class="chkbox"></i></li><li class="item wcim__material-cell"><img class="uimg" src="img/uimg/u__chat-img07.jpg" /><span class="name flex1">风铃子</span>
+								<i class="chkbox"></i></li><li class="item wcim__material-cell"><img class="uimg" src="img/uimg/u__chat-img08.jpg" /><span class="name flex1">幂幂</span>
+								<i class="chkbox"></i></li>
+						</ul>
+					</div><div class="group-btn"><div class="fixbottom"><a class="wcim__btn-primary btn-sure disabled" href="javascript:;">确定<em class="groupChatNum"></em></a></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		/** __公共函数 */
+		$(function () {
+			wcRipple({ elem: '.effect__ripple-fff', opacity: .15, speed: .5, bgColor: "#fff" });
+			wcRipple({ elem: '.effect__ripple', opacity: .15, speed: .5, bgColor: "#000" });
+			
+			// 禁止长按弹出系统菜单
+			$("body").on("contextmenu", ".weChatIM__panel", function (e) {
+				e.preventDefault();
+			});
+
+			// 顶部 “+” 菜单
+			$("#J__topbarAdd").on("click", function(e){
+				var _points = [e.clientX, e.clientY];
+				var contextMenuIdx = wcPop({skin: 'contextmenu', shade: true,shadeClose: true,opacity: 0,follow: _points,style: 'background:#3d3f4e; min-width:3.5rem;',
+					btns: [{text: '<i class="iconfont icon-haoyou fs-40 mr-10"></i><span>添加好友</span>',style: 'color:#fff;', onTap(){wcPop.close(contextMenuIdx);
+							var addfriendIdx = wcPop({id: 'wcim_fullscreen',skin: 'fullscreen',title: '添加好友',
+								content: $("#J__popupTmpl-addFriends").html(),position: 'right',opacity: .1,xclose: true,style: 'background: #f2f1f6;'
+							});
+						}},{text: '<i class="iconfont icon-qunliao fs-40 mr-10"></i><span>发起群聊</span>',style: 'color:#fff;', onTap(){wcPop.close(contextMenuIdx);
+							var addfriendIdx = wcPop({id: 'wcim_fullscreen',skin: 'fullscreen',title: '发起群聊',content: $("#J__popupTmpl-launchGroupChat").html(),position: 'right',opacity: .1,xclose: true,style: 'background: #f2f1f6;'
+							});
+						}},
+						{text: '<i class="iconfont icon-bangzhu fs-40 mr-10"></i><span>帮助与反馈</span>',style: 'color:#fff;',}
+					]
+				});
+			});
+			// 群聊选项
+			$("body").on("click", "#J__launchGroupChat .group-table .hdtit", function () {
+				$(this).toggleClass("cur");$(this).siblings("ul").slideToggle(300);
+			});
+			$("body").on("click", "#J__launchGroupChat .group-table:not(.qun) .item", function () {
+				$(this).toggleClass("selected");
+				var len = $("#J__launchGroupChat .group-table:not(.qun) .item.selected").size();
+				if (len > 0) {
+					$(".btn-sure").removeClass("disabled");$(".groupChatNum").text('(' + len + ')');
+				} else {
+					$(".btn-sure").addClass("disabled");$(".groupChatNum").text('');
+				}
+			});
+		});
+
+		/** __自定函数 */
+		$(function () {
+			// >>> 【2、通讯录模块】------------------------------------------
+			// 新的好友
+			$("#J__popScreen_newFriends").on("click", function(){
+				var newfriendIdx = wcPop({id: 'wcim_fullscreen',skin: 'fullscreen',title: '新的好友',content: $("#J__popupTmpl-newFriends").html(),position: 'right',opacity: .1,
+					xclose: true,style: 'background: #f2f1f6;'
+				});
+			});
+			// 群聊列表（我的）
+			$("#J__popScreen_groupChat").on("click", function(){
+				var groupchatIdx = wcPop({id: 'wcim_fullscreen', skin: 'fullscreen',title: '我的群聊', content: $("#J__popupTmpl-groupChat").html(),position: 'right', opacity: .1, xclose: true,style: 'background: #f2f1f6;'
+				});
+			});
+			// 群聊列表长按
+			$("body").on("contextmenu", "#J__groupChatList li", function(e){
+				e.preventDefault();var _points = [e.pageX, e.pageY];wcPop({skin: 'contextmenu',shade: true,shadeClose: true,opacity: 0,follow: _points,btns: [{text: '置顶', },{text: '从通讯录移除',}]
+				});
+			});
+
+			// 右侧浮动条
+			$(".wc__addrFriend-floatletter").on("click", "em", function () {var letter = $(this).text();
+				if ($("#" + letter).length > 0) {document.getElementById(letter).scrollIntoView();
+				}$(".wc__addrFriend-showletter").text(letter).fadeIn(300);
+				setTimeout(function () {$(".wc__addrFriend-showletter").fadeOut(300);
+				}, 500);
+			});
+			// 通讯录（长按操作）
+			$("#J__addrFriendList li:not(:first-child)").on("longTap", ".row", function (e) {
+				var _this = $(this);
+				wcPop({skin: 'androidSheet', shadeClose: true,btns: [{text: '设置备注及标签',style: 'line-height:50px;',onTap() {wcPop.close();}}
+					]
+				});
+			});
+
+			// 跳转链接
+			$(".weChatIM__panel").on("click", "*[routeUrl]", function (e) {
+				var routeurl = $(this).attr('routeUrl');
+				if (!routeurl) return;
+				window.location.href = routeurl;
+			});
+		});
+	</script>
+</body>
+</html>

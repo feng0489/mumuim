@@ -1,0 +1,441 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+        <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+        <title>mumuim</title>
+        <link rel="stylesheet" type="text/css" href="./css/api.css" />
+        <link rel="stylesheet" type="text/css" href="html/css/tishi.css" />
+        <style>
+            html,
+            body {
+                height: 100%;
+            }
+            
+            body {
+                display: -webkit-box;
+                display: -webkit-flex;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-flex-flow: column;
+                flex-flow: column;
+            }
+            
+            section {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                flex: 1;
+            }
+            
+            header {
+                position: relative;
+                height: auto;
+				background-color:#ededed;
+            }
+            
+            footer {
+	display: flex;
+	display: -webkit-flex;
+	display: flex;
+	box-sizing: border-box;
+	height: 50px;
+	background-color: rgb(245,245,245);
+	border-top: 1px solid #ccc;
+            }
+            
+            footer>div {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	flex: 1;
+	width: 100%;
+	color: rgb(165, 165, 165);
+	font-size: 11px;
+	text-align: center;
+	padding-bottom: 4px;
+	padding-top: 28px;
+	background-repeat: no-repeat;
+	background-position: center 6px;
+	background-size: auto 20px;
+            }
+            
+            footer>div:nth-child(1) {
+                background-image: url(./image/footer/home.png);
+            }
+            
+
+            footer>div:nth-child(2) {
+                background-image: url(./image/footer/haoyou.png);
+            }
+			
+			footer>div:nth-child(3) {
+                background-image: url(./image/footer/my.png);
+            }
+            
+            footer>div:nth-child(1).active {
+                background-image: url(./image/footer/home_act.png);
+                color: #000000;
+            }
+
+            footer>div:nth-child(2).active {
+                background-image: url(./image/footer/haoyou1.png);
+                color: #000000;
+            }
+			
+			footer>div:nth-child(3).active {
+                background-image: url(./image/footer/my_act.png);
+                color: #000000;
+            }
+            
+            .header-item {
+                position: relative;
+                display: none;
+            }
+            
+            .header-item-act {
+                display: block;
+            }
+            
+            header>div:nth-child(1) {
+	position: relative;
+	background-color: #ededed;
+	height: 50px;
+            }
+            
+            header>div:nth-child(2) {
+                position: relative;
+                height: 50px;
+                background-color: #ededed;
+            }
+            
+            header>div:nth-child(3) {
+                position: relative;
+                height: 50px;
+                background-color: #ededed;
+            }
+            /* header home */
+            
+            .home-citylist {
+                float: left;
+                height: 50px;
+                line-height: 50px;
+                color: #fff;
+                font-size: 14px;
+                margin-left: 15px;
+            }
+            
+            .home-citylist>img {
+	height: 30px;
+	vertical-align: top;
+	padding-top: 10px;
+            }
+            
+            .home-search {
+	position: absolute;
+	bottom: 8px;
+	left: 15px;
+	right: 15px;
+	height: 34px;
+	line-height: 34px;
+	background-color: #ffffff;
+	border-radius: 34px;
+	color: #707070;
+	font-size: 14px;
+            }
+            
+            .home-search>img {
+                height: 20px;
+                padding-top: 7px;
+                padding-left: 10px;
+                padding-right: 10px;
+                vertical-align: top;
+            }
+            
+            .home-msg {
+                float: right;
+            }
+            
+            .home-msg>img {
+                height: 28px;
+                padding-top: 11px;
+                vertical-align: top;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+            /* header groupbuy */
+            
+            .groupbuy-citylist {
+                float: left;
+                height: 50px;
+                line-height: 50px;
+                color: rgb(255, 132, 0);
+                font-size: 18px;
+                margin-left: 15px;
+            }
+            
+            .groupbuy-citylist>img {
+                height: 15px;
+                vertical-align: top;
+                padding-top: 18px;
+            }
+            
+            .groupbuy-search {
+                position: absolute;
+                bottom: 8px;
+                left: 110px;
+                right: 15px;
+                height: 34px;
+                line-height: 34px;
+                background-color: rgb(232, 232, 232);
+                border-radius: 34px;
+                color: rgb(153, 153, 153);
+                font-size: 14px;
+            }
+            
+            .groupbuy-search>img {
+                height: 20px;
+                padding-top: 7px;
+                padding-left: 10px;
+                padding-right: 10px;
+                vertical-align: top;
+            }
+            /* header search */
+            
+            .find-search {
+                position: absolute;
+                bottom: 8px;
+                left: 15px;
+                right: 60px;
+                height: 34px;
+                line-height: 34px;
+                border-radius: 34px;
+                background-color: rgb(232, 232, 232);
+                color: rgb(153, 153, 153);
+                font-size: 14px;
+            }
+            
+            .find-search>img {
+                height: 20px;
+                padding-top: 7px;
+                padding-left: 10px;
+                padding-right: 10px;
+                vertical-align: top;
+            }
+            
+            .find-scanner {
+                float: right;
+                width: 50px;
+                background: url(./image/header/qrcode_search.png) no-repeat center 6px;
+                background-size: auto 24px;
+                padding-top: 50px;
+                color: rgb(153, 153, 153);
+                font-size: 12px;
+                text-align: center;
+            }
+            
+            .find-scanner-hov {
+                background-color: #ddd;
+            }
+            
+            .highlight {
+                opacity: 0.7;
+            }
+            /*兼容ios和Android*/
+            #headerIos{
+              padding-top: 20px;
+            }
+            #headerAnd{
+              padding-top: 35px;
+            }
+        </style>
+    </head>
+
+<body >
+
+<header id="header">
+
+<div class="header-item header-item-act" id="home">
+<!--<div style="padding-top:13px;">-->
+<!--<div class="home-search open-win" win="html/search">-->
+<!--<img src="./image/header/search_home.png">-->
+<!--<span>搜索天猫/淘宝宝贝标题</span>-->
+<!--</div>-->
+<!--</div>-->
+</div>
+<div class="header-item" id="find">
+<div style="padding-top:13px;"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div align="center" style="color:#333333; padding-left:80px;">朋友</div></td><td align="center" width="30"><div class="open-win" win="html/xin_window"><img width="20" src="./image/header/jia1.png"></div></td><td align="center" width="50"><div class="open-win" win="html/imxin"><img width="20" src="./image/header/jia.png"></div></td></tr></table>
+</div></div>
+
+
+<div class="header-item" id="my">
+        <div style="padding-top:13px;"><table width="100%" border="0" cellspacing="0" cellpadding="0"><tr><td><div align="center" style="color:#333333; padding-left:80px;">通讯录</div></td><td align="center" width="30"><div class="open-win" win="html/xin_window"><img width="20" src="./image/header/jia1.png"></div></td><td align="center" width="50"><div class="open-win" win="html/imxin"><img width="20" src="./image/header/jia.png"></div></td></tr></table>
+        </div>
+</div>
+
+</header>
+        <section></section>
+        <footer id="footer">
+            <div class="menu active" tapmode="active" onClick="fnChange(0)">视频</div>
+			<div class="menu" tapmode="active" onClick="fnChange(1)">消息</div>
+            <div class="menu" tapmode="active" onClick="fnChange(2)">通讯录</div>
+        </footer>
+    </body>
+    <script type="text/javascript" src="./script/api.js"></script>
+    <script type="text/javascript" src="./script/common.js"></script>
+    <script type="text/javascript" src="./script/localdb.js"></script>
+    <script type="text/javascript" src="./script/socket.io.js"></script>
+    <script type="text/javascript" src="./script/tishi.js"></script>
+
+    <script type="text/javascript">
+        apiready = function() {
+        	var systemType = api.systemType;  // 获取手机类型，比如： ios
+            if(systemType=='ios'){//兼容ios和安卓
+              var x=document.getElementById("header");
+              x.style.paddingTop="0px";
+            }else{
+              var x=document.getElementById("header");
+              x.style.paddingTop="35px";
+            }
+            var openinstall = api.require('openinstall');
+            //静默修复
+            api.addEventListener({
+                name: 'smartupdatefinish'
+            }, function(ret, err) {
+                api.rebootApp();
+            });
+
+            fnReadyOpenWin();
+            fnInitListener();
+
+            api.sendEvent({
+                name: 'cityChange'
+            });
+
+            fnInit();
+            fnOpenDatabase();
+            fnChange(0);
+
+            //监听剪切板内容
+            api.addEventListener({
+                name: 'key_text'
+            }, function(ret, err) {
+
+            });
+            var clipBoard = api.require('clipBoard');
+            api.addEventListener({
+                name: 'resume'//前台
+            }, function (ret, err) {
+                var keyword = '';
+                clipBoard.get(function(rets, errs) {
+                    if (rets && rets.value && rets.value != "" && rets.value != " ") {
+                        keyword=rets.value;
+                        api.confirm({
+                            title: '是否搜索该产品',
+                            msg: keyword,
+                            buttons: [ '确定', '取消' ]
+                        }, function ( rt, er ) {
+                            var buttons_num = rt.buttonIndex;
+                            if (parseInt(buttons_num)== 1) {
+                                api.openWin({
+                                    name: 'rexiaobaoyou',
+                                    url: './html/rexiaobaoyou.html',
+                                    reload:true,
+                                    pageParam: {
+                                        keyword:keyword,
+                                    },
+                                });
+                                //设置剪切板监听
+                                api.sendEvent({
+                                    name: 'key_text',
+                                    extra: {
+                                        keyword: keyword,
+                                    }
+                                });
+                                console.log("index_keyword:"+keyword);
+                            }
+                        });
+                        clipBoard.set({value: ""}, function() {})
+                    }
+                });
+            });
+
+        };
+
+
+        function fnInitListener() {
+            var flag = false;
+            api.addEventListener({
+                name: 'keyback'
+            }, function(ret, err) {
+                if (false == flag) {
+                    api.toast({
+                        msg: '再按一次退出',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    flag = true;
+                    setTimeout(function() {
+                        flag = false;
+                    }, 2000);
+                } else {
+                    api.closeWidget({
+                        silent: true
+                    });
+                }
+            });
+        }
+
+        var headers, footers, headerHeight, footerHeight;
+
+        function fnInit() {
+            var header = $api.byId('header');
+            var footer = $api.byId('footer');
+
+            headers = $api.domAll(header, '.header-item');
+            footers = $api.domAll(footer, 'div');
+
+            for (var i = 0; i < headers.length; i++) {
+                $api.fixIos7Bar(headers[i]);
+            }
+
+            headerHeight = $api.offset(header).h;
+            footerHeight = $api.offset(footer).h;
+        }
+
+        var frames = ['shouye_frame1', 'find_frame', 'xin_window_frame'];
+
+        function fnChange(index) {
+            for (var i = 0; i < headers.length; i++) {
+                if (index == i) {
+                    $api.addCls(headers[i], 'header-item-act');
+                    $api.addCls(footers[i], 'active');
+                    var arr = [1,2];
+                    var y = arr.indexOf(i)>=0?headerHeight:0;
+                    api.openFrame({
+                        name: frames[i],
+                        url: './html/' + frames[i] + '.html',
+                        bgColor: '#f0f0f0',
+                        vScrollBarEnabled: false,
+                        hScrollBarEnabled: false,
+                        rect: {
+                            x: 0,
+                            y: y,
+                            w: 'auto',
+                            h: api.frameHeight - y - footerHeight
+                        }
+                    });
+                } else {
+                    $api.removeCls(headers[i], 'header-item-act');
+                    $api.removeCls(footers[i], 'active');
+                    api.setFrameAttr({
+                        name: frames[i],
+                        hidden: true
+                    });
+                }
+            }
+        }
+
+    </script>
+
+</html>

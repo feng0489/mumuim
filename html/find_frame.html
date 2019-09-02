@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="UTF-8" />
+    <title>im</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-touch-fullscreen" content="yes" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
+    <link rel="stylesheet" href="css/iconfont/iconfont.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/animate.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <script src="js/zepto.min.js"></script>
+    <script src="js/fontSize.js"></script>
+    <script src="js/rippleEffect.js"></script>
+    <script src="js/wcPop/wcPop.js"></script>
+
+</head>
+<body>
+
+<!-- <>主容器 -->
+<div class="weChatIM__panel clearfix">
+    <div class="we__chatIM-wrapper flexbox flex__direction-column">
+        <!-- //顶部 -->
+
+        <!-- //主页面 -->
+        <div class="wcim__container flex1">
+            <div id="mescroll" class="mescroll"><div class="tabBar__tmpl tabBar01"><div class="wcim__searbox"><div class="inner flexbox flex-alignc"><i class="iconfont icon-search"></i><input class="ipt-sear flex1" type="text"
+                                                                                                                                                                                                name="kw" placeholder="搜索聊天记录" /></div></div>
+                <!-- >>1、消息模块 -->
+                <div class="wcim__recordList" id="J__recordList">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0"><tbody><tr><td><table id="tabOrders" width="100%" cellspacing="0" cellpadding="0" border="0"><tbody><tr><td>
+                        <ul class="clearfix" id="frinds-info-immsg">
+
+                        </ul>
+                    </td></tr></tbody></table></td></tr></tbody></table>
+                </div>
+                <div class="cls rmb-50"></div>
+            </div>
+            </div>
+        </div>
+        <!-- 底部tabBar -->
+
+    </div>
+</div>
+
+<script id="frinds-list-info-immsg" type="text/x-dot-template">
+    {{ for(var vi in it) { }}
+    {{? it[vi].uid == users.user_id}}
+    <li str="{{=it[vi].sort_time}}" onclick="openImwin(this);" data-id="{{=it[vi].fid}}" data-photo="{{=it[vi].fid_photo}}" data-name="{{=it[vi].fid_name}}" id="id_{{=it[vi].fid}}" tapmode="highlight" class="wcim__material-cell msg_content msg_time_sort" id="frinds-list_{{=it[vi].fid}}">
+        <a class="flexbox flex-alignc">
+            <div class="avator">
+                {{? it[vi].fid_photo}}
+                <img src="{{=it[vi].fid_photo}}"/>
+                {{??}}
+                <img  src="../image/my/profile_default.png"/>
+                {{?}}
+            </div>
+            <div class="info flex1">
+                <h2 class="title">{{=it[vi].fid_name}}</h2>
+                <p class="desc clamp1" id="msg_content_{{=it[vi].fid}}">{{=it[vi].msg_content}}</p>
+            </div>
+            <label class="time flex-selft sort_msg_time" id="msg_time_{{=it[vi].fid}}" data-sortTime="{{=it[vi].msg_time}}">{{=it[vi].msg_time}}</label>
+            {{? it[vi].msg_count>0}}
+            <em class="wcim__badge is_uid" id="msg_count_{{=it[vi].fid}}">{{=it[vi].msg_count}}</em>
+            {{??}}
+            <em class="wcim__badge is_uid" id="msg_count_{{=it[vi].fid}}"></em>
+            {{?}}
+        </a>
+    </li>
+    {{??}}
+    <li str="{{=it[vi].sort_time}}"  onclick="openImwin(this);" data-id="{{=it[vi].uid}}" data-photo="{{=it[vi].uid_photo}}" data-name="{{=it[vi].user_name}}" id="id_{{=it[vi].uid}}" tapmode="highlight" class="wcim__material-cell msg_content msg_time_sort" id="frinds-list_{{=it[vi].uid}}">
+        <a class="flexbox flex-alignc">
+            <div class="avator">
+                {{? it[vi].uid_photo}}
+                <img src="{{=it[vi].uid_photo}}"/>
+                {{??}}
+                <img  src="../image/my/profile_default.png"/>
+                {{?}}
+            </div>
+            <div class="info flex1">
+                <h2 class="title">{{=it[vi].user_name}}</h2>
+                <p class="desc clamp1 " id="msg_content_{{=it[vi].uid}}">{{=it[vi].msg_content}}</p>
+            </div>
+            <label class="time flex-selft sort_msg_time" data-sortTime="{{=it[vi].msg_time}}" id="msg_time_{{=it[vi].uid}}">{{=it[vi].msg_time}}</label>
+            {{? it[vi].msg_count>0}}
+            <em class="wcim__badge is_fid" id="msg_count_{{=it[vi].uid}}">{{=it[vi].msg_count}}</em>
+            {{??}}
+            <em class="wcim__badge is_fid" id="msg_count_{{=it[vi].uid}}"></em>
+            {{?}}
+        </a>
+    </li>
+    {{?}}
+    {{ } }}
+</script>
+
+
+<script id="frinds-list-info-immsg_singleton" type="text/x-dot-template">
+
+    {{? it.uid == users.user_id}}
+    <li str="{{=it.sort_time}} " onclick="openImwin(this);" data-id="{{=it.fid}}" data-photo="{{=it.fid_photo}}" data-name="{{=it.fid_name}}" id="id_{{=it.fid}}" tapmode="highlight" class="wcim__material-cell msg_content msg_time_sort" id="frinds-list_{{=it.fid}}">
+        <a class="flexbox flex-alignc">
+            <div class="avator">
+                {{? it.fid_photo}}
+                <img src="{{=it.fid_photo}}"/>
+                {{??}}
+                <img  src="../image/my/profile_default.png"/>
+                {{?}}
+            </div>
+            <div class="info flex1">
+                <h2 class="title">{{=it.fid_name}}</h2>
+                <p class="desc clamp1" id="msg_content_{{=it.fid}}">{{=it.msg_content}}</p>
+            </div>
+            <label class="time flex-selft sort_msg_time" id="msg_time_{{=it.fid}}">{{=it.msg_time}}</label>
+            {{? it.msg_count>0}}
+            <em class="wcim__badge" id="msg_count_{{=it.fid}}">{{=it.msg_count}}</em>
+            {{??}}
+            <em class="wcim__badge is_uid" id="msg_count_{{=it.fid}}"></em>
+            {{?}}
+        </a>
+    </li>
+    {{??}}
+    <li str="{{=it.sort_time}}"  onclick="openImwin(this);" data-id="{{=it.uid }}" data-photo="{{=it.uid_photo}}" data-name="{{=it.user_name}}" id="id_{{=it.uid}}" tapmode="highlight" class="wcim__material-cell msg_content msg_time_sort" id="frinds-list_{{=it.uid}}">
+        <a class="flexbox flex-alignc">
+            <div class="avator">
+                {{? it.uid_photo}}
+                <img src="{{=it.uid_photo}}"/>
+                {{??}}
+                <img  src="../image/my/profile_default.png"/>
+                {{?}}
+            </div>
+            <div class="info flex1">
+                <h2 class="title">{{=it.user_name}}</h2>
+                <p class="desc clamp1 " id="msg_content_{{=it.uid}}">{{=it.msg_content}}</p>
+            </div>
+            <label class="time flex-selft" id="msg_time_{{=it.uid}}">{{=it.msg_time}}</label>
+            {{? it.msg_count>0}}
+            <em class="wcim__badge" id="msg_count_{{=it.uid}}">{{=it.msg_count}}</em>
+            {{??}}
+            <em class="wcim__badge is_uid" id="msg_count_{{=it.uid}}"></em>
+            {{?}}
+        </a>
+    </li>
+    {{?}}
+
+</script>
+<!-- //加载更多提示 -->
+<link rel="stylesheet" href="js/mescroll/mescroll.css" />
+<script src="js/mescroll/mescroll.js"></script>
+<script src="js/mescroll/mescroll-wrapper.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript">
+    var users = getStorage('users');
+    apiready = function() {
+        if(!users) {
+            api.alert({
+                title: '请先登录',
+                msg: '去登录',
+            }, function (ret, err) {
+                if (parseInt(ret.buttonIndex) === 1) {
+                    api.closeWin({
+                        name: 'is_special'
+                    });
+                    //关闭所有窗口
+                    api.closeToWin({
+                        name: 'root'
+                    });
+                    $api.rmStorage("users");
+                    api.openWin({
+                        name: 'login',
+                        url: '../login_frame.html',
+                        reload: true,
+                        slidBackEnabled: false,
+                        pageParam: {
+                            name: 'test'
+                        }
+                    })
+                }
+            });
+            api.closeWin();
+            return;
+        }
+        contact();//最近联系人
+        window.setInterval(msg_content_num, 1000*10);//每10秒获取未读即时聊天信息
+    };
+    //打开聊天页面
+    function openImwin(obj) {
+        var uid = $(obj).data("id");
+        if(!uid){
+            return;
+        }
+        var photo= $(obj).data("photo");
+        var username = $(obj).data("name");
+        $(".msg_content").find("#msg_count_"+uid).text("");
+        api.openWin({
+            name: 'im',
+            url: 'im_window.html',
+            reload:true,
+            pageParam: {
+                uid: uid,
+                photo:photo,
+                username: username
+            }
+        });
+    }
+
+    //最近联系人
+    function  contact() {
+        api.ajax({
+            url: 'http://shujunode.mumuim.cn:8080/im/list',
+            //url: 'http://192.168.88.132:8080/im/list',
+            method: 'get',
+            data: {
+                values: {
+                    "uid": users.user_id
+                },
+            }
+        }, function (ret, err) {
+            if(parseInt(ret.code )== 200){
+                if(ret.data){
+                    $.each(ret.data,function (i,item) {
+                        if(item.msg_content.indexOf("img") > 0 ) {
+                            item.msg_content = '[图片]';
+                        }
+                        if(item.msg_content.indexOf("audio") > 0 ) {
+                            item.msg_content = '[语音]';
+                        }
+                        item.msg_time = timestampToTime(item.msg_time)
+                        item.msg_time=getDateDiff(item.msg_time)
+                    })
+                    var interText = doT.template($("#frinds-list-info-immsg").text());
+                    $("#frinds-info-immsg").html(interText(ret.data));
+                    sortTallkRomg(); //按msg_time降序
+                }
+            }
+        });
+    }
+
+    //未读即时信息条数
+    function msg_content_num() {
+        api.ajax({
+            url: 'http://shujunode.mumuim.cn:8080/im/listNew',
+            //url: 'http://192.168.88.132:8080/im/listNew',
+            method: 'get',
+            data: {
+                values: {
+                    "uid": users.user_id
+                },
+            }
+        }, function (msg, err) {
+            if(msg.code == 200){
+                var msg_content,msg_count,msg_time;
+                $.each(msg.data,function (k,v) {
+                    msg_content = v.msg_content;
+                    if(msg_content.indexOf("img") > 0 ) {
+                        msg_content = '[图片]';
+                    }
+                    if(msg_content.indexOf("audio") > 0 ) {
+                        msg_content= '[语音]';
+                    }
+                    msg_count   = v.msg_count;
+                    v.msg_time  = timestampToTime(v.msg_time );
+                    msg_time    = getDateDiff(v.msg_time);
+                    if(v["uid"] == users.user_id){
+                        var text = $("#frinds-info-immsg").find("#msg_time_"+v.fid).text();
+                    }else{
+                        var text = $("#frinds-info-immsg").find("#msg_time_"+v.uid).text();
+                    }
+                    if(text){
+                        if(v["uid"] == users.user_id){
+                            $(".msg_content").find("#msg_content_"+v.fid).text(msg_content);
+                            $(".msg_content").find("#msg_time_"+v.fid).text(msg_time);
+                            $("#id_"+v.fid).attr("str",v.sort_time);
+                        }else{
+                            $(".msg_content").find("#msg_content_"+v.uid).text(msg_content);
+                            $(".msg_content").find("#msg_time_"+v.uid).text(msg_time);
+                            $(".msg_content").find("#msg_count_"+v.uid).text(msg_count);
+                            $("#id_"+v.uid).attr("str",v.sort_time);
+                        }
+                    }else{
+                        //单例
+                        var interText = doT.template($("#frinds-list-info-immsg_singleton").text());
+                        $("#frinds-info-immsg").prepend(interText(msg.data[k]));
+                    }
+                })
+                sortTallkRomg(); //按msg_time降序
+            }
+        });
+    }
+    //按msg_time降序
+    function sortTallkRomg() {
+        var lis = $('li').toArray().sort(function (b, a) {
+            return parseInt($(a).attr("str")) - parseInt($(b).attr("str"))
+        });
+        $(lis).appendTo($("#frinds-info-immsg"));
+    }
+
+    function openNew21() {
+        api.openWin({
+            bounces:false,
+            name: 'imqunliao',
+            url: 'imqunliao_window.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+</script>
+
+</body>
+</html>

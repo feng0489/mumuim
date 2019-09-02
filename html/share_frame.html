@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>APICloud APP</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <style>
+            html {
+                width: 100%;
+                height: 100%;
+                background: transparent;
+            }
+            
+            body {
+                background: rgba(0, 0, 0, 0.4);
+                width: 100%;
+                height: 100%;
+            }
+            
+            .floatbox {
+                position: absolute;
+                text-align: center;
+                background: #fff;
+                bottom: 0;
+            }
+            
+            .floatheader {
+                height: 40px;
+                line-height: 40px;
+                font-size: 14px;
+                color: #999;
+                text-align: left;
+                margin-left: 20px;
+            }
+            
+            .floatbody {
+                border-bottom: 1px solid #D0D2D6;
+            }
+            
+            .floatbodybtn {
+                width: 20px;
+                height: 20px;
+                background: #0fc;
+            }
+            
+            .floatfooter {
+                height: 40px;
+                line-height: 40px;
+                font-size: 18px;
+            }
+            
+            .row {
+                display: -webkit-box;
+                display: -webkit-flex;
+            }
+            
+            .col {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                flex: 1;
+                padding: 10px;
+            }
+            
+            .col img {
+                width: 50%;
+                display: block;
+                margin: 0 auto;
+            }
+            
+            .col span {
+                font-size: 12px;
+                padding-top: 10px;
+            }
+            
+            .btn-hov {
+                background-color: #D1D4D7;
+            }
+        </style>
+    </head>
+
+    <body tapmode onclick="fnClose()">
+        <div class="floatbox">
+            <div class="floatheader">邀请维护好20人，月躺赚3000简单</div>
+            <div class="floatbody">
+                <div class="row">
+                    <div class="col" tapmode="btn-hov" onClick="share(1)">
+                        <img src="../image/weixin.png" alt="">
+                        <span>微信好友</span>
+                    </div>
+                    <div class="col" tapmode="btn-hov" onClick="share(2)">
+                        <img src="../image/pengyouquan.png" alt="">
+                        <span>微信朋友圈</span>
+                    </div>
+                    <div class="col" tapmode="btn-hov" onClick="fnShare('QQ')">
+                        <img src="../image/qq.png" alt="">
+                        <span>QQ(未开放)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript">
+        var link='';var data={};
+        var wx;
+        apiready = function(){
+            data= api.pageParam;
+            link='&shop_id='+data.shop_id+'&title='+data.title+'&pic_url='+data.pic_url+'&real_price='+data.real_price+'&shop_type='+data.shop_type+"&uid="+data.uid+"&youhuijuan="+data.youhuijuan+"&saleCount="+data.saleCount+"&nick="+data.nick+"&leafCatId="+data.leafCatId;
+            wx = api.require('wx');
+        };
+        //分享给好友或分享到朋友圈
+        function share(num) {
+            var scenes_type=parseInt(num)===1 ? 'session' : 'timeline';
+            wx.shareWebpage({
+                scene: scenes_type,
+                title: '你的朋友给你分享一个宝贝',
+                description:data.title,
+                thumb:'widget://html/images/fenxiang.png',
+                contentUrl: "http://mumuim.cn/index.php?m=default&c=weixin&a=share"+link,
+            }, function (ret, err) {
+                if(ret.status==true){
+                    api.toast({
+                        msg:"分享成功!",
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }else{
+                    api.toast({
+                        msg:"取消分享!",
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                    console.log("分享失败");
+                }
+            });
+
+        };
+
+
+        function fnClose() {
+            api.closeFrame({
+                name: 'share_frame'
+            });
+
+            // api.execScript({
+            //     name: api.winName,
+            //     script: 'fnOpenShareFrame()'
+            // });
+        };
+    </script>
+
+</html>

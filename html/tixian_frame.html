@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>零钱</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+	<link rel="stylesheet" href="css/iconfont/iconfont.css" />
+	<link rel="stylesheet" href="css/reset.css" />
+	<link rel="stylesheet" href="css/animate.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+
+	<script src="css/iconfont/iconfont.js"></script>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/zepto.min.js"></script>
+	<script src="js/fontSize.js"></script>
+	<script src="js/rippleEffect.js"></script>
+	<script src="js/wcPop/wcPop.js"></script>
+	<script src="js/wcKeyboard/wcKeyboard.js"></script>
+
+</head>
+
+<body>
+
+	<div class="wcim__popup-tmpl">
+		<div id="J__popupTmpl-recharge">
+			<div class="wcim__popupTmpl">
+				<div class="wcim__recharge-panel">
+					<div class="item flexbox wcim__material-cell" style="background:#f9f9f9;" id="J__selectBank"><label class="lbl">收款账号</label>
+						<div class="flex1 my_bank_info" onClick="choiceBank();"><p class="bankName">请选择提现账号</p><p class="bankQuota">单日交易限额￥20000.00</p></div><i class="iconfont icon-arrR c-b9bbbc fs-24"></i>
+					</div>
+                    <div class="item"><label class="lbl">提现金额</label><div class="rpt-15 rpb-15 flexbox wcim__borB"><b class="unit">￥</b><input  class="ipt-txt flex1 " value="" id="tixian_value" onkeyup="this.value=this.value.replace(/\D/g,'');money_value(this)" onafterpaste="this.value=this.value.replace(/\D/g,'')"  type="tel" /></div>
+					</div>
+					<div style="color:#666666; font-size:15px; margin-left:26px;"><span class="tixian_price_init">余额0元，可提现0元</span>
+                        <span class="tixian_all" ><font color="#000000">  &nbsp;&nbsp;全部提现</font></span>
+					</div>
+					<div class="item"><input type="hidden" id="payPwdInput" /><a class="wcim__btn-primary" href="javascript:;" id="J__btnNext" onClick="submitTixian()">下一步</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</body>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script src="js/passwordBox.min.js"></script>
+<script type="text/javascript">
+    var users = getStorage("users");
+    var bank_id = 0;
+    var isback = 1;
+	var user_money=0;
+	apiready = function() {
+        api.addEventListener({
+            name:'viewdisappear'
+        },function(){
+            api.closeWin();
+        });
+		userMoney();
+        var bankinfo =   api.pageParam.bankinfo;
+        if(bankinfo){
+            $(".bankName").text(bankinfo.bank_name);
+            bank_id = bankinfo.id;
+            isback = 0
+        }
+        if(isback == 1){
+            showBank();
+        }
+        $(document).on('touchend','.tixian_all',function(){
+                var money = Math.floor(user_money);
+                $('#tixian_value').val(money);
+        });
+        PwdBox.init('QWERTYU','img/pwd_keyboard.png','请输入支付密码','安全支付环境，请放心使用！');
+	}
+
+	//用户可用余额
+	function userMoney(){
+		api.ajax({
+            url:'http://shujunode.mumuim.cn:8080/users/recash',
+			method:'get',
+			data:{
+				values: {
+					"uid" : users.user_id,
+				},
+			}
+		},function(ret,err) {
+			if(!err){
+				if(parseInt(ret.code) == 200){
+					user_money= ret.data || 0;
+					var money = Math.floor(user_money);
+					user_money= Math.floor(user_money * 100) / 100;
+					$('.tixian_price_init').text("余额"+user_money+"元，可提现"+money+"元");
+				}else{
+					api.toast({
+						msg: ret.msg,
+						duration: ret.code,
+						location: 'bottom'
+					});
+				}
+			}else{
+				api.toast({
+					msg: "网络请求超时，请稍后重试",
+					duration: 3000,
+					location: 'bottom'
+				});
+			}
+		})
+	}
+
+	function showBank() {
+        api.ajax({
+            url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            method: 'post',
+            data: {
+                values: {
+                    "ac": "tixianBank",
+                    "uid": users.user_id,
+                },
+            }
+        }, function (ret, err) {
+            if(!err){
+                if(parseInt(ret.code) == 200){
+                  if(ret.data){
+					  setStorage('bank_list'+users.user_id,ret.data) ;
+                      var bank_info = ret.data[0]
+                      $(".bankName").text(bank_info.name);
+                      bank_id = bank_info.id
+                  }else{
+                      $('.my_bank_info').html("<h3 style='color: #aa0000'>请先添加提现账号！</h3>")
+                  }
+                }else{
+                    api.toast({
+                        msg: ret.msg,
+                        duration: ret.code,
+                        location: 'bottom'
+                    });
+                }
+            }else{
+                api.toast({
+                    msg: '网络异常，请重新请求!',
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+
+    function choiceBank(){
+	    var bank_list = getStorage("bank_list"+ users.user_id)
+        api.openWin({
+            name: 'choice_bank',
+            url: 'choice_bank.html',
+            pageParam: {
+                bank_list: bank_list
+            }
+        });
+    }
+    
+    function submitTixian() {
+        var price =  $('#tixian_value').val();
+        var money = parseInt(user_money) ;
+        if(parseInt(price)>money){
+            api.toast({
+                msg: '您的余额不足！',
+                duration: 3000,
+                location: 'bottom'
+            });
+            return;
+        }
+		if(price <= 0){
+			api.toast({
+				msg: '请输入金额',
+				duration: 3000,
+				location: 'bottom'
+			});
+			return;
+		}
+        PwdBox.show(function(res){
+            api.ajax({
+                url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                method: 'post',
+                data: {
+                    values: {
+                        "ac": "checkSubmit",
+                        "submit": res.password,
+                        "uid": users.user_id,
+                    },
+                }
+            }, function (ret, err) {
+            	console.log("ret:"+JSON.stringify(ret)+"err:"+JSON.stringify(err))
+                if(!err){
+                    if(parseInt(ret.code) == 200) {
+                        if(price> 0 && bank_id){
+                          tixianCommit(price,ret.data.submit_code);//申请提现
+                        }else{
+                            api.toast({
+                                msg: '非法提交，请核对信息后再提交',
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+                        }
+                        PwdBox.reset();
+                    }else{
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                        PwdBox.reset();
+                        return false;
+                    }
+                }else{
+                    api.toast({
+                        msg: '网络异常，请重新请求!',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                    PwdBox.reset();
+                    return false;
+                }
+            })
+        })
+    }
+    
+    function tixianCommit(price,submit_code) {
+        api.ajax({
+            url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            method: 'post',
+            data: {
+                values: {
+                    "ac": "commitCash",
+                    "uid": users.user_id,
+                    "price": price,
+                    "bank_id": bank_id,
+                    "submit_code": submit_code,
+                },
+            }
+        }, function (ret, err) {
+            if(!err){
+                if(parseInt(ret.code) == 200){
+					userMoney();
+                    api.toast({
+                        msg: '提交申请成功',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }else{
+                    api.toast({
+                        msg: ret.msg,
+                        duration: ret.code,
+                        location: 'bottom'
+                    });
+                }
+            }else{
+                api.toast({
+                    msg: '网络异常，请重新请求!',
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+
+	//判断输入是否为空或纯空格
+	function isNull(str){
+		if ( str == "" ) return true;
+		var regu = "^[ ]+$";
+		var re = new RegExp(regu);
+		//为空或纯空格为 true    有值为false
+		return re.test(str);
+	}
+
+	//监听用户输入金额 显示提现手续费
+	var isClick=0;
+	function money_value(obj){
+		var money_input=$(obj).val();
+		if(isNull(money_input)){
+			userMoney();
+			return;
+		}
+		clearTimeout(isClick);
+		isClick = setTimeout(function () {
+			api.ajax({
+				url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+				//url: 'http://192.168.88.132:9988/index.php?m=default&c=phone&a=request',
+				method: 'post',
+				data: {
+					values: {
+						"ac": "serviceFee",
+						"uid": users.user_id,
+						"money_input":money_input,
+					},
+				}
+			}, function (re, er) {
+				if(!er){
+					if(parseInt(re.code)===200){
+						$('.tixian_price_init').text("手续费"+re.data.service_fee+"元(费率"+re.data.fee_res+"%)");
+					}else if(parseInt(re.code)===104248){
+						$('.tixian_price_init').text(re.msg);
+					}
+				}
+			})
+		},1500);
+	}
+
+
+</script>
+</html>

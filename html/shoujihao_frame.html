@@ -1,0 +1,316 @@
+
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=no"> 
+    <title>更新手机号</title>
+
+
+    <style>
+	 
+        html { font-size: 10px; }
+        html,body { background-color: #ededed; }
+        body { padding-bottom: 0;margin: 0; padding-top: 10px;}
+        * { padding: 0;margin: 0; }
+        header {position: fixed;top: 0;left: 0;z-index: 999;width: 100%;height: 49px; background-color: #333; color: #fff;}
+        header .back { position: absolute;top: 0;left: 0; display: inline-block;padding-left: 5px; font-size: 30px; }
+        header p { margin: 0;line-height: 49px; font-size: 16px;text-align: center; }
+        .register { font-size: 20px;}
+        .res-item {position: relative;  width: 100%; margin-bottom: 8px;background-color: #fff; }
+
+        .res-item .input-item {display: inline-block;width:95%; padding-left: 10px; padding-right:10px;height: 60px;border: none; font-size: inherit;}
+        .res-item .input-item:focus { 
+
+            background-color: #EEFFEE;
+
+        }
+        .res-item .input-item:focus + .res-icon { color: #e21945; }
+        .yanzhengma {position: absolute;right: 8px;top: 15px; z-index: 100;  display: inline-block;padding: 0.5rem 0.8rem;font-size: 14px; border: none;background-color: #e21945;color: #fff;border-radius: 8px; }
+        .yanzhengma:disabled { background-color: #ddd; }
+        .mobiles{position: relative;}
+        .res-btn {
+
+}
+        .res-btn button {  background-color: #00CC33;font-size: 1.6rem; color: #fff;border-radius: 8px;
+		
+		display: inline-block;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    display: inline-block;
+    margin-bottom: 0;
+    padding: .5em 2em;
+    vertical-align: middle;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2;
+    text-align: center;
+    white-space: nowrap;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 0;
+    cursor: pointer;
+    outline: 0;
+    -webkit-appearance: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-transition: background-color .3s ease-out,border-color .3s ease-out;
+    transition: background-color .3s ease-out,border-color .3s ease-out; }
+     .res-btn button:focus { color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="register">
+        <div class="res-item" >
+            <input type="tel" class="input-item mobile mobile_info" value="" readonly="readonly">
+        </div>
+        <div class="res-item none_info_yanzhengma" style="display: none">
+            <input type="tel" placeholder="验证码需要消耗0.1元" class="input-item yanzheng"  >
+            <button type="button"  class="yanzhengma btnSendCode1" onClick="getPhoneCode()" >获取验证码</button>
+        </div>
+        <div class="res-item">
+            <input type="tel"   placeholder="新手机号码" class="input-item  new_mobile" maxlength="11" oninput = "value=value.replace(/[^\d]/g,'')">
+        </div>
+        <div class="res-item">
+            <input type="tel" placeholder="确认新手机号码" class="input-item again_mobile" maxlength="11" oninput = "value=value.replace(/[^\d]/g,'')" >
+        </div>
+        <div align="center" class="res-btn">
+            <button type="button" id="res-btn" class="mobiles  update_mobile ">确认设置</button>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" >
+    var money=0;
+    apiready = function(){
+        //查询是否绑定手机号
+        var users = getStorage('users');
+        var phoneReg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
+        if (!phoneReg.test(users.mobile_phone)) {
+            $(".mobile_info").val("请绑定手机号");
+        }else {
+            $(".mobile_info").val("已绑定手机号码："+users.mobile_phone);
+            $(".none_info_yanzhengma").css("display",'block');
+
+        }
+
+        api.addEventListener({
+            name: 'upMobilePhone'
+        }, function(ret, err) {
+            location.reload();
+        });
+
+        var users = getStorage('users');
+        //用户可用余额
+        api.ajax({
+            url:'http://shujunode.mumuim.cn:8080/users/recash',
+            method:'get',
+            data:{
+                values: {
+                    "uid" : users.user_id,
+                },
+            }
+        },function(ret,err) {
+            if(!err){
+                if(parseInt(ret.code)===200){
+                    money=ret.data || 0;
+                }else {
+                    api.toast({
+                        msg:ret.msg,
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            }else{
+                api.toast({
+                    msg: "网络请求超时，请稍后重试",
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+        })
+    };
+
+    //获取手机验证码
+    var phoneReg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
+    var count = 60;
+    var InterValObj1;
+    var curCount1;
+    function getPhoneCode() {
+        var new_mobile=$('.new_mobile').val();
+        var again_mobile=$('.again_mobile').val();
+        //查询用户可用余额是否足够支付信息费用
+        if(money<0.1){
+            api.toast({
+                msg: '您的余额不足!',
+                duration: 3000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if (again_mobile =='' || new_mobile=='') {
+            api.toast({
+                msg: '请输入手机号码!',
+                duration: 3000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if (!phoneReg.test(again_mobile) || !phoneReg.test(new_mobile)) {
+            api.toast({
+                msg: '手机号码格式错误!',
+                duration: 3000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        curCount1 = count;
+        $(".btnSendCode1").attr("disabled", "true");
+        $(".btnSendCode1").text(+curCount1 + "秒再获取");
+        InterValObj1 = window.setInterval(SetRemainTime, 1000);
+        api.ajax({
+            url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            method:'get',
+            data:{
+                values: {
+                    "ac" :"phoneCode",
+                    "phone" : again_mobile,
+                },
+            }
+        },function(ret,err){
+            if(!err){
+                if(ret.code == 200){
+                    api.toast({
+                        msg: '短信验证码已发送至您的手机，请注意查收！',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            }else{
+                api.toast({
+                    msg: ret.msg,
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+
+        });
+    }
+    function SetRemainTime() {
+        if (curCount1 == 0) {
+            window.clearInterval(InterValObj1);
+            $(".btnSendCode1").removeAttr("disabled");
+            $(".btnSendCode1").text("重新发送");
+        } else {
+            curCount1--;
+            $(".btnSendCode1").text(+curCount1 + "秒再获取");
+        }
+    }
+
+
+
+    //修改手机号
+    $(document).on('click','.update_mobile',function(){
+        var users=getStorage("users");
+        var new_mobile=$('.new_mobile').val();
+        var again_mobile=$('.again_mobile').val();
+        var validate_code=$('.yanzheng').val();
+        if(!validate_code){
+            api.toast({
+                msg: '请输入验证码!',
+                duration: 3000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if(!new_mobile){
+            api.toast({
+                msg: "请输入新手机号码",
+                duration: 3000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if(!again_mobile){
+            api.toast({
+                msg: "请再次输入新手机号码",
+                duration: 3000,
+                location: 'bottom'
+            });
+            return false;
+        }
+
+        if(!($.trim(new_mobile) === $.trim(again_mobile))){
+            api.toast({
+                msg: "两次输入手机号码不一致",
+                duration: 3000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        var phoneReg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
+        if (phoneReg.test(new_mobile) && phoneReg.test(again_mobile)) {
+            api.ajax({
+                url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                method:'post',
+                data:{
+                    values: {
+                        "ac" :"updateMobile",
+                        "uid" : users.user_id,
+                        "new_mobile" : new_mobile,
+                        "again_mobile" :again_mobile,
+                        "validate_code" : validate_code,
+                    },
+                }
+            },function(ret,err){
+                if(!err){
+                    if(ret.code==200){
+                        $(".mobile_info").val("已绑定手机号码："+ret.data);
+                        users.mobile_phone=ret.data;
+                        setStorage('users',users);
+                        api.toast({
+                            msg: '更换手机号成功',
+                            duration:3000,
+                            location: 'bottom'
+                        });
+                        api.sendEvent({
+                            name: 'upMobilePhone',
+                        });
+                    }else{
+                        api.toast({
+                            msg: ret.msg,
+                            duration: ret.code,
+                            location: 'bottom'
+                        });
+                    }
+
+                }else{
+                    api.toast({
+                        msg: "网络异常，请稍候！",
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            })
+
+        }else {
+            api.toast({
+                msg: "请检查手机号码格式",
+                duration: 3000,
+                location: 'bottom'
+            });
+        }
+    });
+
+</script>
+</html>

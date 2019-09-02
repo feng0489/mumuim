@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>登录</title>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <script type="text/javascript" src="script/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="script/api.js"></script>
+    <script type="text/javascript" src="script/SHA1.js"></script>
+    <script type="text/javascript" src="script/remotedb.js"></script>
+    <link rel="stylesheet" type="text/css" href="html/css/tishi.css">
+    <style type="text/css">
+        html,body {
+            color: #333;
+            margin: 0;
+            height: 100%;
+            font-family: "Myriad Set Pro","Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: normal;
+        }
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        a {
+            text-decoration: none;
+            color: #000;
+        }
+        a, label, button, input, select {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+        img {
+            border: 0;
+        }
+        body {
+            background: #ededed;
+            color: #666;
+        }
+        html, body, div, dl, dt, dd, ol, ul, li, h1, h2, h3, h4, h5, h6, p, blockquote, pre, button, fieldset, form, input, legend, textarea, th, td {
+            margin: 0;
+            padding: 0;
+        }
+        a {
+            text-decoration: none;
+            color: #08acee;
+        }
+        button {
+            outline: 0;
+        }
+        img {
+            border: 0;
+        }
+        button,input,optgroup,select,textarea {
+            margin: 0;
+            font: inherit;
+            color: inherit;
+            outline: none;
+        }
+        li {
+            list-style: none;
+        }
+        a {
+            color: #666;
+        }
+        .clearfix::after {
+            clear: both;
+            content: ".";
+            display: block;
+            height: 0;
+            visibility: hidden;
+        }
+        .clearfix {
+        }
+        /* 必要布局样式css */
+        .aui-flexView {
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+        .aui-scrollView {
+            width: 100%;
+            height: 100%;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            /* position: relative; */
+            margin-bottom: -1px;
+        }
+        .aui-navBar {
+            height: 44px;
+            position: relative;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            background-color: rgba(255, 255, 255, 0.98);
+        }
+        .aui-navBar-item {
+            height: 44px;
+            min-width: 25%;
+            -webkit-box-flex: 0;
+            -webkit-flex: 0 0 25%;
+            -ms-flex: 0 0 25%;
+            flex: 0 0 25%;
+            padding: 0 0.9rem;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            font-size: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            color: #5C5C5C;
+            position: relative;
+        }
+        .aui-navBar-item:first-child {
+            -webkit-box-ordinal-group: 2;
+            -webkit-order: 1;
+            -ms-flex-order: 1;
+            order: 1;
+            margin-right: -25%;
+        }
+        .aui-navBar-item:last-child {
+            -webkit-box-ordinal-group: 4;
+            -webkit-order: 3;
+            -ms-flex-order: 3;
+            order: 3;
+            -webkit-box-pack: end;
+            -webkit-justify-content: flex-end;
+            -ms-flex-pack: end;
+            justify-content: flex-end;
+        }
+        .aui-center {
+            -webkit-box-ordinal-group: 3;
+            -webkit-order: 2;
+            -ms-flex-order: 2;
+            order: 2;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            height: 44px;
+            width: 50%;
+            margin-left: 25%;
+        }
+        .aui-center-title {
+            text-align: center;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+            text-overflow: ellipsis;
+            font-size: 0.95rem;
+            color: #232326;
+        }
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+            border: none;
+            float: left;
+            background-size: 20px;
+            background-repeat: no-repeat;
+        }
+        .aui-code-box {
+            padding: 30px;
+            text-align: center;
+            padding-top: 50px;
+        }
+        .aui-code-box button {
+            background: #39bc30;
+            height: 45px;
+            line-height: 45px;
+            border: none;
+            color: #c5e9b3;
+            border-radius: 30px;
+            width: 100%;
+            font-size: 0.98rem;
+        }
+        .aui-code-box h2 {
+            color: #333333;
+            font-size: 1.4rem;
+            font-weight: normal;
+        }
+        .aui-code-box p {
+            color: #cccccc;
+            font-size: 0.85rem;
+            /* position: relative; */
+            width: 100%;
+            /* padding-top: 10px; */
+        }
+        .aui-code-line {
+            position: relative;
+        }
+        .aui-code-line:after {
+            content: '';
+            position: absolute;
+            z-index: 0;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            border-bottom: 1px solid #D9D9D9;
+            -webkit-transform: scaleY(0.5);
+            transform: scaleY(0.5);
+            -webkit-transform-origin: 0 100%;
+            transform-origin: 0 100%;
+        }
+        .aui-code-line-input {
+            padding: 10px 0;
+            height: 55px;
+            width: 100%;
+            font-size: 18px;
+            background: none;
+            border: none;
+            color: #333;
+        }
+        .aui-btn-default {
+            float: right;
+            position: absolute;
+            right: -9px;
+            top: 39px;
+            z-index: 666;
+            color: #39bc30;
+            background: none;
+            border: none;
+            margin-top: -35px;
+            width:100px;
+            height:40px;
+        }
+        .aui-code-line em {
+            position: absolute;
+            left: 0;
+            top: 17px;
+            color: #333;
+            font-style: normal;
+            font-size: 18px;
+        }
+        .aui-code-btn {
+            padding-top: 30px;
+        }
+        .aui-code-box form {
+            padding-top: 39px;
+            position: relative;
+        }
+        .aui-code-line-clear span a{
+            text-indent:-999px;
+        }
+        object,embed{                -webkit-animation-duration:.001s;-webkit-animation-name:playerInserted;                -ms-animation-duration:.001s;-ms-animation-name:playerInserted;                -o-animation-duration:.001s;-o-animation-name:playerInserted;                animation-duration:.001s;animation-name:playerInserted;}                @-webkit-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-ms-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @-o-keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}                @keyframes playerInserted{from{opacity:0.99;}to{opacity:1;}}
+        .box1{
+            width:120px;
+            height:120px;
+            margin: 12px auto;
+            border: 2px solid #oooooo;
+            text-align: center;
+            line-height: 120px;
+            font-weight: bold;
+            font-size: 24px;
+            background: burlywood;
+            border-radius: 50%;//圆角百分比
+        }
+		.footer{
+
+height: 35px;
+background: #ededed;
+width: 100%;
+padding-top:5px;
+position: fixed;
+bottom: 0;
+
+}
+    </style>
+    <script>
+        (function($) {
+                $.fn.extend({
+                    addClear: function(options) {
+                        var options = $.extend({
+                            closeSymbol: "&#10006;",
+                            color: "#CCC",
+                            top: 1,
+                            right: 4,
+                            returnFocus: true,
+                            showOnLoad: false,
+                            onClear: null
+                        }, options);
+
+                        $(this).wrap("<span style='position:relative;' class='add-clear-span'>");
+                        $(this).after("<a href='#clear'>" + options.closeSymbol + "</a>");
+                        $("a[href='#clear']").css({
+                            color: options.color,
+                            'text-decoration': 'none',
+                            display: 'none',
+                            'line-height': 1,
+                            overflow: 'hidden',
+                            position: 'absolute',
+                            right: options.right,
+                            top: options.top
+                        }, this);
+
+                        if ($(this).val().length >= 1 && options.showOnLoad === true) {
+                            $(this).siblings("a[href='#clear']").show();
+                        }
+
+                        $(this).keyup(function() {
+                            if ($(this).val().length >= 1) {
+                                $(this).siblings("a[href='#clear']").show();
+                            } else {
+                                $(this).siblings("a[href='#clear']").hide();
+                            }
+                        });
+
+                        $("a[href='#clear']").click(function() {
+                            $(this).siblings("input").val("");
+                            $(this).hide();
+                            if (options.returnFocus === true) {
+                                $(this).siblings("input").focus();
+                            }
+                            if (options.onClear) {
+                                options.onClear($(this).siblings("input"));
+                            }
+                            return false;
+                        });
+                        return this;
+                    }
+                });
+            }
+        )(jQuery);
+
+    </script>
+</head>
+<body style="">
+<section class="aui-flexView">
+    <section class="aui-scrollView">
+        <div class="aui-code-box"><div class="box1 login_head_photo" style="background-image: url('image/mumuim.png')"></div><div style="padding-bottom:10px;" class="login_head_name"><h2>木木</h2></div>
+            <input type="hidden" name="loginType" value="1" id="loginType" >
+            <p class="aui-code-line user_login_phone">
+                <em>+86</em>
+                <span style="position:relative;" class="add-clear-span"><input type="tel" class="aui-code-line-input" name="phone" value="" id="phone" autocomplete="off" placeholder="请输入手机号" style="padding-left:35px;"><a href="#clear" style="color: rgb(204, 204, 204); text-decoration: none; display: none; line-height: 1; overflow: hidden; position: absolute; right: 4px; top: 1px;">✖</a></span>
+            </p>
+
+            <p class="aui-code-line aui-code-line-clear user_login_password" id="user_login_password">
+                <span style="position:relative;" class="add-clear-span"><input type="password" id="passwd" class="aui-code-line-input"  placeholder="登录密码"><a href="#clear" style="color: rgb(204, 204, 204); text-decoration: none; display: none; line-height: 1; overflow: hidden; position: absolute; right: 4px; top: 1px;">✖</a></span>
+                <input type="button" onClick="forgetPass()" class="aui-btn-default" value="忘记密码？">
+            </p>
+
+            <p class="aui-code-line aui-code-line-clear user_login_code" style="display: none">
+                <span style="position:relative;" class="add-clear-span"><input id="code1" type="text" class="aui-code-line-input" autocomplete="off" placeholder="验证码登录"><a href="#clear" style="color: rgb(204, 204, 204); text-decoration: none; display: none; line-height: 1; overflow: hidden; position: absolute; right: 4px; top: 1px;">✖</a></span>
+                <input id="btnSendCode1" type="button"  class="aui-btn-default" value="获取验证码" onClick="getPhoneCode()">
+            </p>
+            <p class="aui-code-btn login_type" onClick="fnLogin()"><button>登录 / 注册</button></p>
+            <p class="aui-code-btn is_login" onClick="visitorLogin()" style="display: none"><button>游客</button></p>
+        </div>
+
+        <div align="center" class="weixin" style="display: none"><p><img onClick="WeiXinmsg()" src="image/weixin1.png" width="66" height="66"></p><p><font>微信登陆</font></p></div>
+
+    </section>
+</section>
+
+<div  onClick="openNew20()" tapmode="highlight" style="color:#999999; font-size:13px;" align="center" class="footer">登录即代表阅读并同意<strong><font color="#009933">服务协议</font></strong></div>
+<script type="text/javascript" src="script/common.js"></script>
+<script type="text/javascript" src="script/tishi.js"></script>
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+        $(".aui-code-line-input").addClear();
+    });
+</script>
+<script type="text/javascript">
+    var wx,dynamicToken;
+    apiready = function() {
+        api.addEventListener({
+            name:'viewdisappear'
+        },function(){
+            api.closeWin();
+        });
+        $(".user_login_code").css("display","none");
+        UIChatBox = api.require('UIChatBox');
+        api.setStatusBarStyle({
+            style: 'dark'
+        });
+
+        wx = api.require('wx');//实例化微信模块
+        //是否显示登录按钮
+        wx.isInstalled(function(ret,err){
+            if(ret.installed){
+                $(".weixin").css("display","block");
+            }
+        });
+        //检测已登录，则进入首页
+        var users=getStorage("users");
+        if(users){
+            if(parseInt(users.is_special)===0){
+                api.openWin({
+                    name: 'index',
+                    url: 'index.html',
+                    reload: true,
+                    slidBackEnabled: false,
+                    pageParam: {
+                        name: 'test'
+                    }
+                });
+            }else{
+                api.openWin({
+                    name: 'is_special',
+                    url: 'is_special.html',
+                    reload: true,
+                    slidBackEnabled: false,
+                    pageParam: {
+                        name: 'test'
+                    }
+                });
+            }
+        }
+        if(api.pageParam.logout_message){
+            login_other();
+        }
+        isLogin();
+    };
+
+    function isLogin() {
+        api.ajax({
+            url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            method:'post',
+            data:{
+                values: {
+                    "ac" :"isLogin",
+                },
+            }
+        },function(ret,err){
+            if(!err){
+                if(parseInt(ret.code) == 79966978){
+                    $(".is_login").css("display","block");
+                }
+            }
+        });
+    }
+    function visitorLogin(){
+        api.openWin({
+            name: 'is_special',
+            url: 'is_special.html',
+            reload: true,
+            slidBackEnabled: false,
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+
+    function login_other() {
+        api.toast({
+            msg: '您的账号已在其他设备登录',
+            duration: 3000,
+            location: 'bottom'
+        });
+    }
+    //微信登陆
+    function WeiXinmsg(){
+        wx.isInstalled(function(ret,err){
+            if(ret.installed){
+                getcode(wx);
+            }
+        });
+    }
+
+    //登陆授权并获取code
+    function getcode(wx){
+        wx.auth({
+        }, function(ret, err) {
+            if (ret.status) {
+                getAccessToken(wx,ret.code);
+            } else {
+                api.toast({
+                    msg: '获取code失败',
+                    duration: 4000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+
+    //获取接口调用凭证accessToken
+    function getAccessToken(wx,code){
+        wx.getToken({
+            code: code
+        }, function(ret, err) {
+            if (ret.status) {
+                dynamicToken = ret.dynamicToken;
+                getInformation(wx,ret.accessToken,ret.openId);
+            } else {
+                api.toast({
+                    msg: '获取accessToken失败',
+                    duration: 4000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+
+    //调用接口获取用户信息
+    function getInformation(wx,accessToken,openId){
+        wx.getUserInfo({
+            accessToken: accessToken,
+            openId: openId,
+            lang: 'zh_CN',
+        }, function(rets, errs) {
+            if(!rets.status){
+                wx.refreshToken({
+                    dynamicToken:dynamicToken,
+                }, function(re, err) {
+                    if (re.status) {
+                        getInformation(wx,re.accessToken,openId);
+                    }
+                });
+            }
+            if (rets.status) {
+                api.ajax({
+                    url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                    method:'get',
+                    data:{
+                        values: {
+                            "ac" :"weixinLogin",
+                            "tuijian" : 0,
+                            "openid" : rets.openid,
+                            "nickname" :rets.nickname,
+                            "sex" : rets.sex,
+                            "province" : rets.province,
+                            "city" : rets.city,
+                            "headimgurl" : rets.headimgurl,
+                            "unionid" : rets.unionid,
+                        },
+                    }
+                },function(ret,err){
+                    if(!err){
+                        if(ret.code == 200){
+                           setStorage("users",ret.data);
+                           setStorage('login_code_'+ret.data.user_id,ret.data.code);
+                            api.toast({
+                                msg: '登陆成功!',
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+
+                            api.openWin({
+                                name: 'index',
+                                url: 'index.html',
+                                reload: true,
+                                slidBackEnabled: false,
+                                pageParam: {
+                                    name: 'test'
+                                }
+                            });
+
+                        }else{
+                            api.toast({
+                                msg: ret.msg,
+                                duration: ret.code,
+                                location: 'bottom'
+                            });
+                        }
+                    }else{
+                        api.toast({
+                            msg: '网络异常!',
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                });
+            } else {
+                api.toast({
+                    msg: '网络异常',
+                    duration: 4000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+
+
+    //获取手机验证码
+    var phoneReg = /(^1[3|4|5|7|8]\d{9}$)|(^09\d{8}$)/;
+    var count = 60;
+    var InterValObj1;
+    var curCount1;
+    function getPhoneCode() {
+        curCount1 = count;
+        var phone = $.trim($('#phone').val());
+        if (!phoneReg.test(phone)) {
+            api.toast({
+                msg: '请输入正确的手机号码！',
+                duration: 3000,
+                location: 'bottom'
+            });
+            return false;
+        }
+
+        $("#btnSendCode1").attr("disabled", "true");
+        $("#btnSendCode1").val(+curCount1 + "秒再获取");
+        InterValObj1 = window.setInterval(SetRemainTime, 1000);
+
+        api.ajax({
+            url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            //url:'http://192.168.88.132:9988/index.php?m=default&c=phone&a=request',
+            method:'get',
+            data:{
+                values: {
+                    "ac" :"phoneCode",
+                    "phone" : phone,
+                },
+            }
+        },function(ret,err){
+            if(!err){
+                if(ret.code == 200){
+                    api.toast({
+                        msg: '短信验证码已发送至您的手机，请注意查收！',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            }else{
+                api.toast({
+                    msg: ret.msg,
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+    function SetRemainTime() {
+        if (curCount1 == 0) {
+            window.clearInterval(InterValObj1);
+            $("#btnSendCode1").removeAttr("disabled");
+            $("#btnSendCode1").val("重新发送");
+        } else {
+            curCount1--;
+            $("#btnSendCode1").val(+curCount1 + "秒再获取");
+        }
+    }
+
+    //忘记密码
+    function forgetPass(){
+        $('#passwd').attr('placeholder',"新的密码");
+        $(".user_login_code").css("display","block");
+        $("#loginType").val("3");//1为登录，2注册，3忘记密码
+    }
+
+    //观察用户输入的信息
+    $('#phone').bind('input propertychange', function() {
+        var phone = $(this).val();
+        if (phoneReg.test(phone)) {
+            api.ajax({
+                url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                //url:'http://192.168.88.132:9988/index.php?m=default&c=phone&a=request',
+                method:'post',
+                //timeout:1,
+                data:{
+                    values: {
+                        "ac" :"searchPhone",
+                        "phone" : phone,
+                    },
+                }
+            },function(ret,err){
+                if(!err){
+                    if(ret.code == 200){//如果不是已经注册的会员则需要输入验证码
+                    var clicktime = getStorage("clicktime") || 1;//记录登录点击次数
+                        if(clicktime && clicktime>=5){
+                            $(".user_login_code").css("display","block")
+                        }else{
+                            $(".user_login_code").css("display","none")
+                        }
+                        $("#loginType").val("1");//1为登录，2注册，3忘记密码
+                    }else{
+                        $(".user_login_code").css("display","block")
+                        $("#loginType").val("2");//1为登录，2注册，3忘记密码
+                        $(".login_head_photo").css("background-image","url('image/my/profile_default.png')");//1为登录，2注册，3忘记密码
+                    }
+                }else{
+                    api.toast({
+                        msg: '网络异常，请重新请求!',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            });
+            var loginPhoto = getStorage("loginPhoto"+phone) || "image/mumuim.png";
+            var loginName = getStorage("loginName"+phone) || "木木";
+            $(".login_head_photo").css('background-image','url("'+loginPhoto+'")');
+            $(".login_head_name").html("<h2>"+loginName+"</h2>");
+        }
+    });
+
+    //会员登陆
+    function fnLogin(){
+        var phone = $api.byId('phone').value;
+        var password = $api.byId('passwd').value;
+        var loginType = $api.byId('loginType').value;
+        //var loginType = 1;
+        var code = $api.byId('code1').value;
+        if(!phone || !password){//判断是否输入手机号码和密码
+            api.toast({
+                msg: '请输入手机号码或者密码！',
+                duration: 3000,
+                location: 'bottom'
+            });
+            return;
+        }
+
+        var display = $(".user_login_code").css("display");
+        //检查登录类型
+        if(loginType >1 && !code && display === "block"){
+            api.toast({
+                msg: '请输入验证码！',
+                duration: 3000,
+                location: 'bottom'
+            });
+            return;
+        }
+
+        var clicktime = getStorage("clicktime") || 1;//记录登录点击次数
+
+        //检查提交次数
+        if(clicktime>=5 && !code && display === "block"){
+            api.toast({
+                msg: '请输入验证码',
+                duration: 3000,
+                location: 'bottom'
+            });
+            return;
+        }
+        api.ajax({
+            url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            //url:'http://192.168.88.132:9988/index.php?m=default&c=phone&a=request',
+            method:'post',
+            //timeout:1,
+            data:{
+                values: {
+                    "ac" :"login",
+                    "phone" : phone,
+                    "password" : password,
+                    "loginType" : loginType,
+                    "code" : code,
+                    "clicktime" : clicktime,
+                },
+            }
+        },function(ret,err){
+            if(!err){
+                if(ret.code == 200){
+                   setStorage("users",ret.data);
+                   setStorage('login_code_'+ret.data.user_id,ret.data.code);
+                   setStorage("clicktime",0);
+                    //记录登录的头像和名称
+                    var user = ret.data;
+                    var photo = user.headimgurl || "image/mumuim.png";
+                    var name = user.nickname || user.username;
+                    if(!name){
+                        name = "木木"
+                    }
+                    setStorage("loginPhoto"+phone,photo);
+                    setStorage("loginName"+phone,name);
+                    api.toast({
+                        msg: '登陆成功!',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                    if(user){
+                        if(parseInt(user.is_special)===0){
+                            api.openWin({
+                                name: 'index',
+                                url: 'index.html',
+                                reload: true,
+                                slidBackEnabled: false,
+                                pageParam: {
+                                    name: 'test'
+                                }
+                            });
+                        }else{
+                            api.openWin({
+                                name: 'is_special',
+                                url: 'is_special.html',
+                                reload: true,
+                                slidBackEnabled: false,
+                                pageParam: {
+                                    name: 'test'
+                                }
+                            });
+                        }
+                    }
+
+                }else{
+                    clicktime ++;
+                    setStorage("clicktime",clicktime);
+                    if(clicktime && clicktime>=5){
+                        $(".user_login_code").css("display","block")
+                    }
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+
+            }else{
+            api.toast({
+                msg: '网络异常，请重新请求!',
+                duration: 3000,
+                location: 'bottom'
+            });
+            }
+        });
+    }
+    //服务协议
+    function openNew20() {
+        api.openWin({
+            name: 'xieyi',
+            url: 'html/xieyi.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+</script>
+</body></html>

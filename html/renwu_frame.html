@@ -1,0 +1,505 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>APICloud APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="css/tishi.css" />
+    <style>
+        html,
+        body {
+            background-color: #F4F4F4;
+        }
+
+        .h80 {height: 80px;}
+        .h40 {height: 40px;}
+        .h20 {height: 20px;}
+        .h10 {height: 10px;background: #e5e5e5;}
+        .h1 {height: 1px;margin-left: 0px;background: #e5e5e5;}
+        .fr {float: right;}
+        .fl {float: left;}
+        .hightitem {background-color: #fff;}
+
+        .empty>img {
+            float: left;
+            padding-left: 20px;
+            height: 124px;
+        }
+
+        .empty>span {
+            height: 124px;
+            line-height: 124px;
+            padding-left: 20px;
+        }
+
+        .message {
+            display: none;
+            margin-top: 8px;
+            background-color: #fff;
+        }
+
+        .message>div {
+            position: relative;
+            top: -1px;
+            box-sizing: border-box;
+            height: 49px;
+            border-top: 1px solid #eee;
+        }
+
+        .message>div>.msg {
+            box-sizing: border-box;
+            height: 48px;
+            padding-left: 16px;
+            padding-right: 96px;
+            line-height: 48px;
+            color: #888;
+            font-size: 16px;
+        }
+
+        .message>div>.time {
+            position: absolute;
+            top: 0;
+            right: 16px;
+            height: 48px;
+            line-height: 48px;
+            color: #888;
+            text-align: right;
+            font-size: 12px;
+        }
+
+        .active {
+            -webkit-opacity: 0.7;
+            opacity: 0.7;
+        }
+
+        .info {
+            background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:10%;
+            display:inline-block;
+        }
+        .info:hover{
+            cursor: pointer;
+            background: rgba(45,171,219,.6);
+        }
+
+        .info-tip{
+            background:rgba(250,60,0,1);
+            position:absolute;/*根据父元素绝对定位*/
+            width:18px;
+            height:18px;
+            top:-7px;/*在父元素的内部的顶部*/
+            right:-7px;/*在父元素的内部的右边*/
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius:50%;
+            text-align:center;
+
+        }
+        .info1 {
+            background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:10%;
+            display:inline-block;
+        }
+        .info-tip1 {
+            background:rgba(250,60,0,1);
+            position:absolute;/*根据父元素绝对定位*/
+            width:18px;
+            height:18px;
+            top:-7px;/*在父元素的内部的顶部*/
+            right:-7px;/*在父元素的内部的右边*/
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius:50%;
+            text-align:center;
+        }
+        .info-tip11 {
+            background:rgba(250,60,0,1);
+            position:absolute;/*根据父元素绝对定位*/
+            width:18px;
+            height:18px;
+            top:-7px;/*在父元素的内部的顶部*/
+            right:-7px;/*在父元素的内部的右边*/
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius:50%;
+            text-align:center;
+        }
+        .info11 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info12 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info13 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info14 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info15 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info16 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info17 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+
+        .nav{
+            cursor :pointer
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="task_info">
+
+    <div id="nav" class="nav none_info_text"   style="padding-bottom:8px; padding-top:8px; padding-right:12px; background-color:#FFFFFF; display: block;">
+        <table style="color:#999999; font-size:12px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr><td width="66" rowspan="2" align="center"></td><td height="27" valign="bottom"><span style="font-size:16px; color:#000000;">暂无数据</span></td>
+                <td width="180" rowspan="2" align="center"><div style="font-size:30px; color:#FF9933;" align="right">
+                    <div align="right"></div>
+                </div></td></tr>
+            <tr><td valign="top"><span class="subtitle"></span></td></tr></table>
+    </div>
+
+</div>
+
+<script  type="text/template" class="task_info_list">
+
+    {{ for(var vi in it) { }}
+
+    <div id="mdialog4" class="nav"  data-id="{{=it[vi].id}}" data-keyword="{{=it[vi].key_word}}" data-img="{{=it[vi].photo}}" data-content="{{=it[vi].content}}" tapmode="" data-sessions="{{=it[vi].session_count}}" data-timeline="{{=it[vi].timeline_count}}" style="padding-bottom:8px; padding-top:8px; padding-right:12px; background-color:#FFFFFF;">
+        <table style="color:#999999; font-size:12px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr><td width="66" rowspan="2" align="center"><div style=" background-image:url({{=it[vi].photo}});background-size:cover;" class="info15"></div></td><td height="27" valign="bottom"><span style="font-size:16px; color:#000000;" class="renwu_title">{{=it[vi].title}}</span><span class="friend_status_num"></span></td>
+                <td width="60" rowspan="2" align="center">
+                    <div align="center" style="font-size:13px; padding:5px; background-color:#009966; color:#ffffff;">
+                        {{? it[vi].gouwu_count>0}}
+                        <div align="center " class="friend_status_list">已完成 </div>
+                        {{?? it[vi].session_count>0}}
+                        <div align="center " class="friend_status_list">已完成 </div>
+                        {{?? it[vi].timeline_count>0}}
+                        <div align="center " class="friend_status_list">已完成 </div>
+                        {{??}}
+                        <div align="center " class="friend_status_list">去完成 </div>
+                        {{?}}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top"><span style="font-size:16px; color:#FF6600;" class="subtitle">+{{=it[vi].points}}活跃度</span></td>
+            </tr>
+
+        </table>
+    </div>
+    <div class="h1"></div>
+
+    {{ } }}
+</script>
+
+</body>
+
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../script/tishi.js"></script>
+<script type="text/javascript">
+    var wx;
+    var users=getStorage("users");
+    apiready = function() {
+        wx = api.require('wx');
+        todayTaskList();//每日任务列表
+    };
+
+    //每日任务列表
+    function todayTaskList(){
+        api.ajax({
+            url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            method: 'post',
+            data: {
+                values: {
+                    "ac": "getTask",
+                    "uid": users.user_id,
+                },
+            }
+        }, function (ret, err) {
+            //console.log("ret:"+JSON.stringify(ret)+""+"err"+JSON.stringify(err))
+            if(!err){
+                if(parseInt(ret.code) == 200){
+                    var data =  ret.data;
+                    if(data){
+                        $('.none_info_text').css("display","none");
+                        var interText = doT.template($(".task_info_list").text());
+                        $(".task_info").html(interText(data));
+                    }   
+                }else{
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            }else{
+                api.toast({
+                    msg: '网络异常，请重新请求!',
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+
+    //去完成每天任务
+    $(".task_info").on('click','#mdialog4',function() {
+        var share_id = $(this).data("id");
+        var share_keyword = $(this).data("keyword");
+        var share_content = $(this).data("content");
+        var share_title = $(this).find(".renwu_title").text();
+        var session_count = $(this).data("sessions");
+        var timeline_count = $(this).data("timeline");
+        if(share_id && share_keyword  && share_title && share_content) {
+            if (share_keyword === 'gouwu') {
+                Dialog.init('', {
+                    title: '去购物！',
+                    button: {
+                        关闭: function () {
+                            Dialog.close(this);
+                        },
+                        购物: function () {
+                            api.openWin({
+                                name: '20baoyou',
+                                url: '20baoyou.html',
+                                pageParam: {
+                                    name: 'test'
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+            //分享给朋友
+            if (share_keyword === 'session') {
+                Dialog.init('说明：分享到50人以上的微信群。', {
+                    title: '分享给朋友！',
+                    button: {
+                        领取奖励: function () {
+                            var  session_status=getStorage("session_status");
+                            if(session_status==="true"){
+                                api.ajax({
+                                    url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                                    method: 'post',
+                                    data: {
+                                        values: {
+                                            "ac": "todayTask",
+                                            "uid": users.user_id,
+                                            "renwu_id": share_id,
+                                        },
+                                    }
+                                }, function (rt, er) {
+                                    if(!er){
+                                        if(rt.code == 200){
+                                            Dialog.init("成功领取!",1000);
+                                            todayTaskList();
+                                            api.sendEvent({
+                                                name: 'todayTask',
+                                            });
+
+                                        }
+                                    }else{
+                                        Dialog.init(rt.msg,1000);
+                                    }
+                                });
+                            }else if(parseInt(session_count)>0){
+                                Dialog.init("您已领取奖励,请勿重复领取!",1000);
+                                Dialog.close(this);
+                            }else{
+                                Dialog.init('您的任务尚未完成，请完成后再点击!',1000);
+                                Dialog.close(this);
+                            }
+                            $api.rmStorage("session_status");
+                            Dialog.close(this);
+                        },
+                        去分享: function () {
+                            wx.shareWebpage({
+                                scene: share_keyword,
+                                title: share_title,
+                                description: share_content,
+                                thumb:'widget://html/images/apptuiguang.png',
+                                contentUrl:  "http://mumuim.cn/index.php?c=article&a=app&u="+users.user_id+"&from=singlemessage"
+                            }, function (ret, err) {
+                                if(ret.status==true){
+                                    setStorage("session_status",ret.status);
+                                    //分享给朋友
+                                    api.toast({
+                                        msg:"分享成功!",
+                                        duration: 3000,
+                                        location: 'bottom'
+                                    });
+                                }else{
+                                    api.toast({
+                                        msg:"取消分享!",
+                                        duration: 3000,
+                                        location: 'bottom'
+                                    });
+                                    console.log("分享给朋友失败");
+                                }
+                            });
+
+                        }
+                    }
+                });
+            }
+            //分享到朋友圈
+            if (share_keyword === 'timeline') {
+                Dialog.init('说明：分享到朋友圈必须真实有效。', {
+                    title: '分享到朋友圈！',
+                    button: {
+                        领取奖励: function () {
+                            var  timeline_status=getStorage("timeline_status");
+                            if(timeline_status==="true"){
+                                api.ajax({
+                                    url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                                    method: 'post',
+                                    data: {
+                                        values: {
+                                            "ac": "todayTask",
+                                            "uid": users.user_id,
+                                            "renwu_id": share_id,
+                                        },
+                                    }
+                                }, function (rts, ers) {
+                                    if(!ers){
+                                        if(rts.code == 200){
+                                            Dialog.init('成功领取!',1000);
+                                            todayTaskList();
+                                            api.sendEvent({
+                                                name: 'todayTask',
+                                            });
+                                        }
+                                    }else{
+                                        Dialog.init(rts.msg,1000);
+                                    }
+                                });
+                            }else if(parseInt(timeline_count)>0){
+                                Dialog.init("您已领取奖励,请勿重复领取!",1000);
+                                Dialog.close(this);
+                            }else{
+                                Dialog.init("您的任务尚未完成，请完成后再点击!",1000);
+                                Dialog.close(this);
+                            }
+                            Dialog.close(this);
+                            $api.rmStorage("timeline_status");
+                        },
+                        去分享: function () {
+                            wx.shareWebpage({
+                                scene: share_keyword,
+                                title: share_title,
+                                description:share_content ,
+                                thumb:'widget://html/images/apptuiguang.png',
+                                contentUrl: "http://mumuim.cn/index.php?c=article&a=app&u="+users.user_id+"&from=singlemessage"
+                            }, function (ret, err) {
+                                if(ret.status==true){
+                                    setStorage("timeline_status",ret.status);
+                                    //分享到朋友圈
+                                    api.toast({
+                                        msg:"分享成功!",
+                                        duration: 3000,
+                                        location: 'bottom'
+                                    });
+                                }else{
+                                    api.toast({
+                                        msg:"取消分享!",
+                                        duration: 3000,
+                                        location: 'bottom'
+                                    });
+                                    console.log("取消分享");
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+
+        }
+
+    });
+
+
+
+</script>
+</html>

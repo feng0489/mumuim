@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>frame</title>
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<link rel="stylesheet" type="text/css" href="../css/api.css" />
+
+	<link rel="stylesheet" href="css/iconfont/iconfont.css" />
+	<link rel="stylesheet" href="css/reset.css" />
+	<link rel="stylesheet" href="css/animate.css" />
+	<link rel="stylesheet" href="css/swiper-3.4.1.min.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/fontSize.js"></script>
+	<script src="js/emotion.js"></script>
+
+	<script type="text/javascript">
+		function openNew20() {
+			api.openWin({
+				bounces:false,
+				name: 'imkaihongbao',
+				url: 'imkaihongbao_window.html',
+				pageParam: {
+					name: 'test'
+				}
+			});
+		}
+
+	</script>
+
+	<style>
+		html,body {min-height:100%;background-color: #F5F5F5;height: 100%;word-wrap:break-word; word-break:break-all; font-size:12px;}
+	</style>
+</head>
+<body>
+
+<!--聊天页面样式-->
+<div class="weChatIM__panel clearfix">
+	<div class="we__chatIM-wrapper flexbox flex__direction-column">
+		<!-- //主页面 -->
+		<div class="wcim__container flex1">
+			<div id="mescroll" class="mescroll">
+				<!-- 加载聊天记录提示 -->
+				<!-- <div class="wcim__chatMsg-loading J__chatMsgLoading"><img src="img/deng.gif" /> 数据载入中...</div> -->
+				<div class="wcim__chatMsgPanel">
+
+					<!--聊天盒子-->
+					<ul class="content" id="chatbox">
+						<!--页面已有内容-->
+						<li class="time"><span>2018年09月02日 上午08:25</span></li>
+						<!-- 别人-->
+						<!--<li class="others">-->
+						<!--<a class="avatar" href="微钉-好友主页(详细资料).html"><img src="img/uimg/u__chat-img08.jpg" /></a>-->
+						<!--<div class="content">-->
+						<!--<p class="author">杨幂幂(Mimi)</p>-->
+						<!--<div class="msg">好久都没有联系了，最近还好吧。</div>-->
+						<!--</div>-->
+						<!--</li>-->
+
+						<!--&lt;!&ndash;自己&ndash;&gt;-->
+						<!--<li class="me">-->
+						<!--<div class="content">-->
+						<!--<p class="author">风铃子</p>-->
+						<!--<div class="msg">嗯，一切挺好哒~ <img class="face" src="img/emotion/face01/27.png"></div>-->
+						<!--</div>-->
+						<!--<a class="avatar" href="微钉-好友主页(详细资料).html"><img src="img/uimg/u__chat-img07.jpg" /></a></li>-->
+					</ul>
+					<div style="height:60px;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script id="send_msg_info" type="text/x-dot-template">
+	<li style="padding-bottom:5px;" class="me" data-id="{{=it.msg_id}}">
+		<div class="content"><p class="author">{{=it.username}}</p>
+			<div class="msg {{=it.type}}" >
+				{{=it.msg}}
+			</div></div>
+		<a class="avatar" href="好友主页-详细资料.html">
+			<img src="{{=it.photo}}" /></a>
+	</li>
+</script>
+
+<script id="getmsg_msg_list_me" type="text/x-dot-template">
+	{{ for(var vi in it) { }}
+	{{? it[vi].who ==1 }}
+	<li style='padding-bottom:5px;' class='me'  data-id='{{=it[vi].msg_id}}'>
+		<div class='content'><p class='author'>{{=it[vi].username}}</p>
+			<div class="msg  {{=it[vi].type}}" data-msgid='{{=it[vi].msg_id}}' ontouchstart='longpress(this,800);' >{{=it[vi].msg}}</div>
+		</div>
+		<a class='avatar'>
+			<img src="{{=it[vi].photo}}"/>
+		</a>
+	</li>
+	{{?? it[vi].who == 2}}
+	<li class="others"  data-id='{{=it[vi].msg_id}}' >
+		<a  class="avatar" onclick="openIm()"><img src="{{=it[vi].photo}}"/></a>
+		<div class="content">
+			<p class="author">{{=it[vi].username}}</p>
+			<div class="msg {{=it[vi].type}}"   data-msgid='{{=it[vi].msg_id}}' ontouchstart='longpress(this,800);'>{{=it[vi].msg}}</div>
+		</div>
+	</li>
+	{{?}}
+	{{ } }}
+</script>
+
+<div id="bottom" style=" height:10px; clear:both"></div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+
+<script type="text/javascript">
+	var page = 0,pageSine;
+	var users = getStorage('users');
+	var msg_end = 0;
+	var is_reportStatus;
+	apiready = function(){
+		var systemType = api.systemType;
+		var UIAlbumBrowser = api.require('UIAlbumBrowser');
+		var extral_bottom = systemType=='ios' ? 330:300;
+		api.addEventListener({
+			name:'refreshIm'
+		},function(ret,err){
+			location.reload();
+		});
+		var friendid = api.pageParam.uid;
+		msglist();//聊天信息列表
+		is_reportUser();//获取好友状态
+		window.setInterval(msgone, 1000*2);//定时查询未读信息
+		var UIChatBox = api.require('UIChatBox');	//引入模块UIChatBox
+		UIChatBox.open({//打开模块输入框
+			placeholder: '',
+			maxRows: 3,
+			// autoFocus:true,
+			//表情地址
+			emotionPath: 'widget://image/emotion',
+			//录音按钮文本
+			texts: {
+				recordBtn: {
+					normalTitle: '按 住 说 话',
+					activeTitle: '松 开 结 束'
+				},
+				sendBtn: {
+					title: '发送'
+				}
+			},
+			//其他按钮样式
+			styles: {
+				inputBar: {
+					borderColor: '#ededed',
+					bgColor: '#ededed'
+				},
+				inputBox: {
+					borderColor: '#ededed',
+					bgColor: '#FFFFFF'
+				},
+				//表情按钮
+				emotionBtn: {
+					normalImg: 'widget://image/face2.png'
+				},
+				//额外功能按钮
+				extrasBtn: {
+					normalImg: 'widget://image/add2.png'
+				},
+				//键盘按钮
+				keyboardBtn: {
+					normalImg: 'widget://image/key1.png'
+				},
+				//录音按钮
+				speechBtn: {
+					normalImg: 'widget://image/cam1.png'
+
+				},
+				recordBtn: {
+					normalBg: '#c4c4c4',
+					activeBg: '#999999',
+					color: '#000',
+					size: 13
+				},
+				indicator: {
+					target: 'both',
+					color: '#c4c4c4',
+					activeColor: '#9e9e9e'
+				},
+				sendBtn: {
+					titleColor: '#ffffff',
+					bg: '#999999',
+					activeBg: '#ffffff',
+					titleSize: 14
+				}
+			},
+			//额外功能内容
+			extras: {
+				titleSize: 10,
+				titleColor: '#a3a3a3',
+				btns: [{
+					title: '图片',
+					normalImg: 'widget://image/album1.png',
+					activeImg: 'widget://image/album2.png'
+				}]
+			}
+		}, function(ret, err) {
+			if(parseInt(is_reportStatus)===3){
+				api.alert({
+					msg: "已屏蔽双方会话,无法发送/接收消息!",
+				});
+				return;
+			}
+			if (ret.eventType=='show'){//模块打开成功触发事件
+
+			}else if (ret.eventType=='send') {//若点击发送触发事件
+				if(!ret.msg){
+					api.toast({
+						msg: "请输入要发送的内容！",
+						duration: 3000,
+						location: 'bottom'
+					});
+					return;
+				}
+				// if(parseInt(is_reportStatus)===3){
+				// 	api.alert({
+				// 		msg: "消息已被对方拒收!",
+				// 	});
+				// 	return;
+				// }
+				var emotion_json = JSON.parse(emotion);
+				var msg = ret.msg;
+				for(var i in emotion_json){
+					msg = msg.replace(new RegExp(emotion_json[i].text,'g'),"<img src='https://shuju.mumuim.cn/data/emotion/"+emotion_json[i].name+".png' width=20/>")
+				}
+				//var info = JSON.stringify(ret, null, 4);
+				api.ajax({
+					url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+					//url:'http://192.168.88.132:9988/index.php?m=default&c=phone&a=request',
+					method:'post',
+					data:{
+						values: {
+							"ac" :"sendMsg",
+							"uid":users.user_id,
+							"fid":friendid,
+							"content":msg
+						},
+					}
+				},function(re,er){
+					//console.log("发送的信息："+JSON.stringify(er))
+					if(!er){//发送成功
+						if(re.code == 200){
+							var content = re.data.content;
+							var content = content.replace(/\\'/g,"'");
+							//alert(content);
+							var data = {
+								username :users.nickname || users.user_name,
+								photo :users.headimgurl || '../image/my/profile_default.png',
+								msg:content,
+								msg_id:re.data.msg_id,
+								type:'text'
+							}//发送文字
+							var interText = doT.template($("#send_msg_info").text());
+							$("#chatbox").append(interText(data));
+							var os_0 = $("#bottom").offset().top;
+							$('html,body').animate({scrollTop:os_0+extral_bottom},300);
+							slideBut()
+						}
+					}else{//发送失败
+
+					}
+
+				});
+
+			} else if(ret.eventType=='clickExtras'){//用户点击额外功能按钮触发///图片上传，发送位置等
+
+				if(ret.index == 0){//图片按钮触发
+					if(systemType=='ios'){//ios
+						UIAlbumBrowser.open({
+							max: 3,
+							type: 'image',
+							styles: {
+								bg: '#fff',
+								mark: {
+									icon: '',
+									position: 'bottom_left',
+									size: 20
+								},
+								nav: {
+									bg: 'rgba(0,0,0,0.6)',
+									titleColor: '#fff',
+									titleSize: 18,
+									cancelColor: '#fff',
+									cancelSize: 16,
+									finishColor: '#fff',
+									finishSize: 16
+								}
+							},
+							rotation: true
+						}, function(rets) {
+							if (rets) {
+								// 点击确认并且选中了图片
+								if(rets.list.length>0){
+									var datas='';
+									$.each(rets.list,function (i,item) {
+										datas=item.thumbPath;//缩略图路径
+									})
+									api.ajax({
+										url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+										//url:'http://192.168.88.132:9988/index.php?m=default&c=phone&a=request',
+										method:'post',
+										data:{
+											values: {
+												"ac" :"imPicture",
+												"uid":users.user_id,
+												"fid":friendid,
+											},
+											files:{ picture:datas}
+										}
+									},function(re,er){
+										if(!er){
+											if(re.code == 200){
+												var data = {
+													username :users.nickname || users.user_name,
+													photo :users.headimgurl || '../image/my/profile_default.png',
+													url:re.data.url,
+													msg:re.data.content,
+													msg_id:re.data.msg_id,
+													type:'lgface'
+												}//发送图片
+												var interText = doT.template($("#send_msg_info").text());
+												$("#chatbox").append(interText(data));
+												var os_0 = $("#bottom").offset().top;
+												$('html,body').animate({scrollTop:os_0+extral_bottom},300);
+												//UIChatBox.closeKeyboard();
+												//UIChatBox.closeBoard();
+												slideBut()
+											}
+										}
+									});
+
+									//资源路径，返回资源在本地的绝对路径，注意：iOS 平台上需要用 transPath 接口转换之后才可读取原图
+									// UIAlbumBrowser.transPath({
+									// 	path: datas
+									// }, function(ret, err) {
+									// 	if(ret){
+									// 		api.ajax({
+									// 			url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+									// 			//url:'http://192.168.1.177:9988/index.php?m=default&c=phone&a=request',
+									// 			method:'post',
+									// 			data:{
+									// 				values: {
+									// 					"ac" :"imPicture",
+									// 					"uid":users.user_id,
+									// 					"fid":friendid,
+									// 				},
+									// 				files:{ picture:ret.path}
+									// 			}
+									// 		},function(re,er){
+									// 			if(!er){
+									// 				if(re.code == 200){
+									// 					var data = {
+									// 						username :users.nickname || users.user_name,
+									// 						photo :users.headimgurl || '../image/my/profile_default.png',
+									// 						url:re.data.url,
+									// 						msg:re.data.content,
+									// 						msg_id:re.data.msg_id,
+									// 						type:'lgface'
+									// 					}//发送图片
+									// 					var interText = doT.template($("#send_msg_info").text());
+									// 					$("#chatbox").append(interText(data));
+									// 					var os_0 = $("#bottom").offset().top;
+									// 					$('html,body').animate({scrollTop:os_0+extral_bottom},300);
+									// 					//UIChatBox.closeKeyboard();
+									// 					//UIChatBox.closeBoard();
+									// 					slideBut()
+									// 				}
+									// 			}
+									// 		});
+									// 	}
+									// });
+
+								}
+							}
+						});
+
+					}else{
+						api.actionSheet({
+							cancelTitle: '取消',
+							buttons: ['拍照', '打开相册']
+						}, function(sheret, sheerr) {
+							if (sheret.buttonIndex == 3) {
+								return;
+							}
+							var sourceType = (sheret.buttonIndex == 1) ? 'camera' : 'album';
+							api.getPicture({
+								sourceType: sourceType,
+								allowEdit: true,
+								quality: 50,
+							}, function(picret, picerr) {
+								if (picret && picret.data) {
+									var users = getStorage('users');
+									api.ajax({
+										url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+										//url:'http://192.168.88.132:9988/index.php?m=default&c=phone&a=request',
+										method:'post',
+										data:{
+											values: {
+												"ac" :"imPicture",
+												"uid":users.user_id,
+												"fid":friendid,
+											},
+											files:{ picture:picret.data}
+										}
+									},function(re,er){
+										if(!er){
+											if(re.code == 200){
+												var data = {
+													username :users.nickname || users.user_name,
+													photo :users.headimgurl || '../image/my/profile_default.png',
+													url:re.data.url,
+													msg:re.data.content,
+													msg_id:re.data.msg_id,
+													type:'lgface'
+												}//发送图片
+												var interText = doT.template($("#send_msg_info").text());
+												$("#chatbox").append(interText(data));
+												var os_0 = $("#bottom").offset().top;
+												$('html,body').animate({scrollTop:os_0+extral_bottom},300);
+												//UIChatBox.closeKeyboard();
+												//UIChatBox.closeBoard();
+												slideBut()
+											}
+										}
+									});
+								}
+							});
+						});
+					}
+				}
+
+			}else if(ret.eventType=='clickRecord'){//用户点击录音功能按钮触发
+
+			}
+
+		});
+
+		//按下语音按钮
+		UIChatBox.addEventListener({
+			target : 'recordBtn',
+			name : 'press'
+		}, function(ret, err) {
+			var newstimes = new Date().valueOf();
+			api.startRecord({
+				path : 'fs://audio.amr'//语音保存路径(10000的随机数)
+			});
+		});
+		//松开语音按钮
+		UIChatBox.addEventListener({
+			target : 'recordBtn',
+			name : 'press_cancel'
+		}, function(ret, err) {
+			//停止录音
+			api.stopRecord(function(ret, err) {
+				if (ret) {
+					is_reportUser();
+					var friendid = api.pageParam.uid;
+					if(parseInt(is_reportStatus)===3){
+						api.alert({
+							msg: "消息已被对方拒收，已屏蔽双方会话!",
+						});
+						return;
+					}
+					var users = getStorage('users');
+					//录音文件路径
+					var ss_path = ret.path;
+					//录音长度
+					var voice_length = ret.duration;
+					var path  = api.fsDir + "/audio.amr";
+
+					if(voice_length<=1){
+						return;
+					}
+					api.ajax({
+						url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+						//url: 'http://192.168.88.132:9988/index.php?m=default&c=phone&a=request',
+						method: 'post',
+						data: {
+							values: {
+								"uid": users.user_id,
+								"fid": friendid,
+								"audio_length": voice_length,
+								"ac": "audio",
+
+							},
+							files:{ audio:path}
+						}
+					}, function(rets, errs) {
+						if(!errs){
+							var data = {
+								username :users.nickname ||users.user_name,
+								photo :users.headimgurl ||'../image/my/profile_default.png',
+								url:rets.data.url,
+								length:rets.data.audio_length,
+								msg:rets.data.content,
+								msg_id:rets.data.msg_id,
+								type:'audio'
+							}//发送语音
+							var interText = doT.template($("#send_msg_info").text());
+							$("#chatbox").append(interText(data));
+							var os_0 = $("#bottom").offset().top;
+							$('html,body').animate({scrollTop:os_0+extral_bottom},300)
+							slideBut()
+						} else {
+							api.toast({
+								msg: "网络异常，请稍后重试！",
+								duration: 3000,
+								location: 'bottom'
+							});
+							console.log("网络异常"+JSON.stringify(errs));
+						}
+					});
+				}
+			});
+		});
+
+
+		//点击图片放大
+		var photoBrowser = api.require('photoBrowser');
+		$(document).on('touchend','.lgface',function(){
+			var url = $(this).children('img').attr('src');
+			if(url){
+				photoBrowser.open({
+					images: [
+						url,
+					],
+					placeholderImg: 'widget://image/deng.gif',
+					bgColor: '#000'
+				}, function(ret, err) {
+					if (ret) {
+						if(ret.eventType==="click"){
+							photoBrowser.close();
+						}
+					} else {
+						console.log("点击图片效果异常"+JSON.stringify(err));
+					}
+				});
+			}
+		});
+
+		//未读信息
+		function msgone(){
+			var friendphoto = api.pageParam.photo;
+			var friendusername= api.pageParam.username;
+			var friendid = api.pageParam.uid;
+			var lastli= $("#chatbox").children("li").last();
+			var msg_id = lastli.data("id") || msg_end;
+			// console.log("发送即时信息数据：msg_id:"+msg_id)
+			api.ajax({
+				url:'http://shujunode.mumuim.cn:8080/im/listMsgNew?msg_id='+msg_id,
+				//url:'http://192.168.88.132:8080/im/listMsgNew?msg_id='+msg_id,
+				method:'get',
+				data:{
+					values: {
+						"uid":users.user_id,
+						"fid":friendid,
+					},
+				}
+			},function(getMsg,er){
+				if(!er){
+					if(getMsg.code == 200){
+						var data = [];
+						if(!getMsg.data){
+							return;
+						}
+						for(var j = 0,len=getMsg.data.length; j < len; j++) {
+							var msg= getMsg.data[j];
+							var type ;
+							if(msg.msg_title==='聊天语音'){
+								type='audio';
+							}else if(msg.msg_title==='聊天图片'){
+								type='lgface';
+							}else{
+								type='text';
+							}
+							if(msg.user_id != users.user_id){
+								var m={
+									who:2,//1表示自己，2表示他人
+									username: friendusername,
+									uid: friendid ,
+									photo: friendphoto || "../image/my/profile_default.png",
+									msg: msg.msg_content,
+									msg_id: msg.msg_id,
+									length:msg.audio_length,
+									url: msg.message_img,
+									type:type,
+								};
+								data.push(m);
+							}
+
+						}
+						if(data[0].msg_id>msg_end){
+							msg_end=data[0].msg_id;
+						}
+						data=data.reverse();//jq倒序
+						var interText = doT.template($("#getmsg_msg_list_me").text());
+						$("#chatbox").append(interText(data));
+						var os_0 = $("#bottom").offset().top;
+						$('html,body').animate({scrollTop:os_0+extral_bottom},300)
+					}
+				}else {
+					//console.log("网络异常"+JSON.stringify(er));
+				}
+			});
+		}
+
+		//聊天信息列表
+		function msglist() {
+			var friendphoto = api.pageParam.photo;
+			var friendusername= api.pageParam.username;
+			var friendid = api.pageParam.uid;
+			api.ajax({
+				url:'http://shujunode.mumuim.cn:8080/im/listMsg',
+				//url:'http://192.168.88.132:8080/im/listMsg',
+				method:'get',
+				data:{
+					values: {
+						"uid":users.user_id,
+						"fid":friendid,
+						"page":page,
+						"pageSine":10
+					},
+				}
+			},function(getMsg,er){
+				var msg_times = 0;
+				if(!er){
+					if(getMsg.code == 200){
+						var data = [];
+						var num=getMsg.data.list;
+						for(var j = 0,len=num.length; j < len; j++) {
+							var msg= num[j];
+							var type ;
+							if(msg.msg_title==='聊天语音'){
+								type='audio';
+							}else if(msg.msg_title==='聊天图片'){
+								type='lgface';
+							}else{
+								type='text';
+							}
+							if(msg.user_id == users.user_id){
+								var m={
+									who:1,//1表示自己，2表示他人
+									username: users.nickname || users.user_name,
+									uid: users.user_id ,
+									photo: users.headimgurl || "../image/my/profile_default.png",
+									msg: msg.msg_content,
+									msg_id: msg.msg_id,
+									length:msg.audio_length,
+									url: msg.message_img,
+									type: type,
+									msg_time :msg.msg_time
+								}
+								data.push(m);
+							}else{
+								var m={
+									who:2,//1表示自己，2表示他人
+									username: friendusername,
+									uid: friendid ,
+									photo: friendphoto || "../image/my/profile_default.png",
+									msg: msg.msg_content,
+									msg_id: msg.msg_id,
+									length:msg.audio_length,
+									url: msg.message_img,
+									type: type,
+									msg_time :msg.msg_time
+								}
+								data.push(m);
+							}
+							msg_times=data[0].msg_time;
+						}
+						if(data[0].msg_id>msg_end){
+							msg_end=data[0].msg_id;
+						}
+						data=data.reverse();//jq倒序
+						page = getMsg.data.page;
+						var interText = doT.template($("#getmsg_msg_list_me").text());
+						$("#chatbox").prepend(interText(data));
+						var os_0 = $("#bottom").offset().top;
+						$('html,body').animate({scrollTop:os_0+extral_bottom},300)
+						if(msg_times !== 0){
+							$('.time').find("span").text(imlastTime(msg_times))
+						}
+					}
+				}else {
+					console.log("网络异常"+er);
+				}
+			});
+		}
+
+	};
+
+	function slideBut() {
+		// 所有的聊天内容都放置在.main这个div中
+		$api.dom('#chatbox').scrollIntoView(false);
+	}
+	$(document).on(' touchend','.audio',function(){
+		var path = $(this).children('audio').data("url");
+		var time = $(this).children('audio').data("time");
+		var uid = $(this).children('audio').data("uid");
+		var users = getStorage('users');
+		var sss = $(this).children("s");
+		if(!path){
+			api.toast({
+				msg: "该语音已不存在",
+				duration: 3000,
+				location: 'bottom'
+			});
+			return;
+		}
+		var audio = path.substr(-36)
+		$(this).find("i").css("display","none")
+		sss.addClass("active")
+		api.download({
+			url: path,
+			savePath: 'fs://'+audio,
+			report: false,
+			cache: true,
+			allowResume: true
+		}, function(ret, err) {
+			if (ret.state == 1) {
+				api.startPlay({
+					path: ret.savePath
+				}, function(rets, errs) {
+					sss.removeClass("active");
+				})
+			} else {
+				console.log("下载失败:"+JSON.stringify(err)+"下载地址："+path);
+			}
+
+		});
+		// console.log(path);
+	});
+	//打开好友资料
+	function openIm() {
+		var uid = api.pageParam.uid;
+		api.openWin({
+			bounces:false,
+			name: 'imziliao',
+			url: 'imziliao_window.html',
+			reload:true,
+			pageParam: {
+				uid:uid,
+			}
+		});
+	}
+	//获取好友状态 是否黑名单
+	function is_reportUser() {
+		var friendid = api.pageParam.uid;
+		api.ajax({
+			url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+			method: 'post',
+			data: {
+				values: {
+					"ac": "isReportUser",
+					"uid": users.user_id,
+					"fid": friendid
+				},
+			}
+		}, function (ret, err) {
+			if(!err){
+				if(parseInt(ret.code )== 200){
+					is_reportStatus=ret.data;
+				}else{
+					api.toast({
+						msg: ret.msg,
+						duration: 3000,
+						location: 'bottom'
+					});
+				}
+			}else{
+				api.toast({
+					msg: '网络异常，请重新请求!',
+					duration: 3000,
+					location: 'bottom'
+				});
+			}
+		});
+	}
+
+	//删除/撤回信息
+	function longpress(el,longpressTime) {
+		longpressTime = longpressTime || 800;
+		time_longpress = setTimeout(function(){
+			time_longpress = 0;
+			var msgId=$(el).data("msgid");
+			api.confirm({
+				title: '是否删除',
+				buttons: ['确定', '取消']
+			}, function(ret, err) {
+				var buttons_num = ret.buttonIndex;
+				if(parseInt(buttons_num)===1){
+					api.ajax({
+						url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+						method: 'post',
+						data: {
+							values: {
+								"ac": "removeMsg",
+								"uid": users.user_id,
+								"msg_id": msgId
+							},
+						}
+					}, function (rets, errs) {
+						if(!errs){
+							if(parseInt(rets.code )== 200){
+								$(el).parent('div').parent('li').remove();
+							}
+						}
+					});
+				}
+			})
+		}, longpressTime);
+		el.ontouchmove = function() {
+			clearTimeout(time_longpress);
+			time_longpress = 0;
+		}
+		el.ontouchend = function() {
+			clearTimeout(time_longpress);
+			if (time_longpress!= 0) {
+				//eval(fn_click);
+			}
+		}
+	}
+
+
+
+</script>
+
+
+
+</html>		

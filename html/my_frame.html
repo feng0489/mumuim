@@ -1,0 +1,442 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>APICloud APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #f0f0f0;
+            
+        }
+
+        .h10 {
+            height: 10px;
+            background: #f0f0f0;
+        }
+
+        .h1 {
+            height: 1px;
+            margin-left: 15px;
+            background: #f0f0f0;
+        }
+
+        .fr {
+            float: right;
+        }
+
+        .hint {
+            color: #666;
+            font-size: 12px;
+            margin-right: 5px;
+        }
+
+        .firstblock,
+        .secondblock,
+        .thirdblock {
+            background-color: #fff;
+        }
+
+        .login {
+            background-image: url(../image/my/personal_bkg.jpg);
+            background-repeat: no-repeat;
+            background-size: contain;
+            position: relative;
+            cursor :pointer
+        }
+
+        .loginbg {
+            width: 100%;
+            -webkit-filter: blur(10px); /* Chrome, Opera */
+            -moz-filter: blur(10px);
+            -ms-filter: blur(10px);
+            filter: blur(10px);
+        }
+
+        .login .personal_logo {
+            position: absolute;
+            top: -104px;
+            left: 16px;
+            width: 70px;
+            height: 70px;
+            margin: 20px auto;
+            border: 2px solid #oooooo;
+            text-align: center;
+            line-height: 70px;
+            font-weight: bold;
+            font-size: 24px;
+            background: burlywood;
+            border-radius: 15%;
+        //圆角百分比
+
+        }
+
+        .person_arrow {
+            position: absolute;
+            height: 20px;
+            right: 28px;
+            top: -70px;
+        }
+
+        .login .userinfo {
+            position: absolute;
+            top: -79px;
+            margin-left: 100px;
+            left: 11px;
+        }
+
+        .login .userinfo .title {
+            font-size: 25px;
+            color: #666666;
+        }
+
+        .login .userinfo .subtitle {
+            font-size: 14px;
+            color: #666666;
+            border: 0px solid #fff;
+            display: inline-block;
+            padding: 3px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        .item {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 15px;
+            background-color: #fff;
+        }
+
+        .item_ico {
+            float: left;
+            width: 30px;
+            padding: 10px 10px 10px 0;
+        }
+
+        .item_arrow {
+            float: right;
+            width: 16px;
+            padding: 17px 15px 15px 0;
+        }
+
+        .item-hov {
+            background-color: #E8E8E8;
+        }
+    </style>
+</head>
+
+<body>
+<div style="padding-top:130px; padding-left:20px;"></div>
+<div class="login person_info"  id="list_my" >
+    <img id="userAvatar" src="../image/my/profile_default.png" class="personal_logo  personal_photo">
+    <div class="userinfo">
+    <div id="userAccount" class="title">
+    <span class="user_name" id="userName">昵称：未设置</span>
+    <!--<span class="user_gender" > <img style="height: 10px;width: 10px;" id="userGender" src="../image/icon/head.png" class="personal_logo"></span>-->
+    </div>
+    <div id="userRegion" class="subtitle">账号：未设置</div>
+  </div>
+</div>
+
+<!--<script id="list_my_finfo" type="text/x-dot-template">-->
+
+    <!--<img id="userAvatar" src="{{=it.photo}}" class="personal_logo">-->
+    <!--<div class="userinfo">-->
+        <!--<div id="userAccount" class="title">{{=it.username}}-->
+            <!--&lt;!&ndash;<span class="user_name" id="userName">点击登录</span>&ndash;&gt;-->
+            <!--&lt;!&ndash;<span class="user_gender" > <img style="height: 10px;width: 10px;" id="userGender" src="../image/icon/head.png" class="personal_logo"></span>&ndash;&gt;-->
+        <!--</div>-->
+        <!--<div id="userRegion" class="subtitle">{{=it.city}}</div>-->
+    <!--</div>-->
+
+<!--</script>-->
+
+<!--<img src="../image/my/personal_icon_arrow.png" class="person_arrow">-->
+<div class="h10"></div>
+<div class="firstblock" >
+    <div class="item" onClick="openNew8()" >
+        <img src="../image/my/15.png" alt="" class="item_ico">
+        <span>等级活跃度</span>
+        <strong><font color="#FF0000" class="user_points">0</font></strong><img src="../image/arrow.png" class="item_arrow">   </div>
+    <div class="h1"></div>
+	<div class="item open-win" win="vip" >
+        <img src="../image/my/16.png" alt="" class="item_ico">
+        <span>SVIP超级用户</span>
+        <font color="#999999" class="svip_info"></font><img src="../image/arrow.png" class="item_arrow">
+    </div>
+</div>
+
+<div class="h10"></div>
+<div class="firstblock">
+    <div  class="item nav" onClick="openNew9()" tapmode="" win="mygroupvolume" login="true">
+        <img src="../image/my/3.png" class="item_ico">
+        <span>钱包</span>
+        <img src="../image/arrow.png" class="item_arrow">
+    </div>
+    <div class="h1"></div>
+    <div  class="item nav" onClick="openNew12()" tapmode="" win="mygroupvolume" login="true">
+        <img src="../image/my/5.png" class="item_ico">
+        <span>提现</span>
+        <img src="../image/arrow.png" class="item_arrow">
+    </div>
+</div>
+
+<div class="h10"></div>
+<div class="secondblock">
+    <div class="item open-win" win="myorder" >
+        <img src="../image/my/10.png" class="item_ico">
+        <span>我的订单</span>
+        <img src="../image/arrow.png" class="item_arrow">
+    </div>
+    <div class="h1"></div>
+    <div class="item open-win" win="taobao_window">
+        <img src="../image/my/2.png" class="item_ico">团队订单<img src="../image/arrow.png" class="item_arrow">
+    </div>
+    <div class="h1"></div>
+</div>
+
+<div class="h10"></div>
+<!--<div class="thirdblock">-->
+    <!--<div class="h1"></div>-->
+    <!--<div class="item open-win" win="bangzhu">-->
+        <!--<img src="../image/my/8.png" class="item_ico">-->
+        <!--<span>帮助中心</span>-->
+        <!--<img src="../image/arrow.png" class="item_arrow">-->
+    <!--</div>-->
+<!--</div>-->
+
+<div class="thirdblock">
+    <div class="h1"></div>
+    <div class="item open-win" win="setting">
+        <img src="../image/my/9.png" class="item_ico">
+        <span>设置</span>
+        <img src="../image/arrow.png" class="item_arrow">
+    </div>
+</div>
+<div class="h10"></div>
+
+
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnReadyOpenWin();
+        fnUpdateUserInfo();
+        var users=getStorage("users");
+        //用户等级活跃度
+        api.ajax({
+            url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            method:'post',
+            data:{
+                values: {
+                    "ac" :"getUserSvip",
+                    "uid" : users.user_id,
+                },
+            }
+        },function(ret,err) {
+            if(!err){
+                if(ret.code==200){
+                    var points=ret.data.rank_points || 0;
+                    var svip=ret.data.svip || 0;
+                    $('.user_points').text(tranNumber(parseInt(points)));
+                    if(points >= (Math.pow(10,parseInt(svip)))*10000){
+                        $(".svip_info").text("SVIP资格待领取");
+                    }
+                }else{
+                    api.toast({
+                        msg: ret.msg,
+                        duration: ret.code,
+                        location: 'bottom'
+                    });
+                }
+            }else{
+                api.toast({
+                    msg: "网络请求超时，请稍后重试",
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+        });
+
+        //修改昵称刷新页面
+        api.addEventListener({
+            name: 'upNickname'
+        }, function(ret, err) {
+            location.reload();
+        });
+
+        //更新头像刷新页面
+        api.addEventListener({
+            name: 'upPhoto'
+        }, function(ret, err) {
+            location.reload();
+        });
+    };
+    //活跃度转大写
+    function tranNumber(money) {
+        //汉字的数字
+        var cnNums = new Array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+        //基本单位
+        var cnIntRadice = new Array('', '十', '百', '千');
+        //对应整数部分扩展单位
+        var cnIntUnits = new Array('', '万', '亿', '兆');
+        //整数金额时后面跟的字符
+        var cnInteger = '整';
+        //整型完以后的单位
+        var cnIntLast = '活跃度';
+        //最大处理的数字
+        var maxNum = 999999999999999.9999;
+        //金额整数部分
+        var integerNum;
+        //金额小数部分
+        var decimalNum;
+        //输出的中文金额字符串
+        var chineseStr = '';
+        //分离金额后用的数组，预定义
+        var parts;
+        if (money === '') { //不能用==
+            return '';
+        }
+        money = parseFloat(money);
+        if (money >= maxNum) {
+            //超出最大处理数字
+            return '';
+        }
+        if (money == 0) {
+            chineseStr = cnNums[0] + cnIntLast;
+            return chineseStr;
+        }
+        //转换为字符串
+        money = money.toString();
+        if (money.indexOf('.') == -1) {
+            integerNum = money;
+            decimalNum = '';
+        } else {
+            parts = money.split('.');
+            integerNum = parts[0];
+            decimalNum = parts[1].substr(0, 4);
+        }
+        //获取整型部分转换
+        if(parseInt(money)<10000){
+            return parseInt(money);
+        } else{
+            if(parseInt(integerNum, 10) > 0){
+                var zeroCount = 0;
+                var IntLen = integerNum.length;
+                for (var i = 0; i < IntLen; i++) {
+                    var n = integerNum.substr(i, 1);
+                    var p = IntLen - i - 1;
+                    var q = p / 4;
+                    var m = p % 4;
+                    if (n == '0') {
+                        zeroCount++;
+                    } else {
+                        if (zeroCount > 0) {
+                            chineseStr += cnNums[0];
+                        }
+                        //归零
+                        zeroCount = 0;
+                        chineseStr += cnNums[parseInt(n)] + cnIntRadice[m];
+                    }
+                    if (m == 0 && zeroCount < 4) {
+                        chineseStr += cnIntUnits[q];
+                    }
+                }
+                chineseStr+=cnIntLast;
+            }
+            return chineseStr;
+        }
+    }
+
+    //进入个人中心
+    $(document).on('click','.person_info',function(){
+        api.openWin({
+            name: 'person_info',
+            url: 'person_info.html',
+            reload:true,
+            pageParam: {
+                name: 'test'
+            }
+        });
+    });
+
+    //计算字符串长度   2个数字/英文相当于1个汉字
+    function getStrLen(str) {
+        var strlen = 0;
+        for (var i = 0; i < str.length; i++) {
+            if (str.charCodeAt(i) > 255) { //如果是汉字或中文符号，则字符串长度加2
+                strlen += 2;
+            } else {
+                strlen++;
+            }
+        }
+        return strlen;
+    }
+
+    //展示个人信息
+    function fnUpdateUserInfo() {
+        var  users = getStorage("users");
+        var username,photo;
+        photo = users.headimgurl || "../image/my/profile_default.png";
+        username = users.nickname ||'昵称：未设置';
+        $(".person_info").find(".personal_photo").attr("src",photo);
+        $(".person_info").find(".subtitle").text("账号:"+users.user_name);
+        if(getStrLen(username)>14){
+            $(".person_info").find("#userName").attr('style','font-size:12px;').text(username);
+        }else{
+           $(".person_info").find("#userName").text(username);
+        }
+    }
+
+    function openNew8() {
+        api.openWin({
+            name: 'huoyedu',
+            url: 'huoyedu.html',
+            reload:true,
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+
+    function openNew9() {
+        api.openWin({
+            name: 'qianbao',
+            url: 'qianbao_window.html',
+            reload:true,
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+
+    function openNew12() {
+        var users=getStorage("users");
+        if (users.tixian_password == 2) {
+            api.openWin({
+                name: 'tixian',
+                url: 'tixian_window.html',
+                reload:true,
+                pageParam: {
+                    name: 'test'
+                }
+            });
+        } else {
+            api.openWin({
+                name: 'submit_password',
+                url: 'submit_password.html',
+            });
+        }
+    }
+
+</script>
+
+</html>

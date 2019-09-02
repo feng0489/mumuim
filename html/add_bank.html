@@ -1,0 +1,191 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>APICloud APP</title>
+        <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+
+        <style>
+            header {
+                background-color: #ededed;
+                border-bottom: solid #ededed 1px;
+            }
+            
+            h1 {
+                height: 50px;
+                line-height: 50px;
+                color: rgb(38, 38, 38);
+                font-size: 20px;
+                text-align: center;
+            }
+            
+            .back {
+                position: absolute;
+                left: 0px;
+                bottom: 0px;
+                width: 50px;
+                height: 50px;
+                background: url(../image/cm2_icn_back.png) center center no-repeat;
+                background-size: 15px auto;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header id="header">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="80"><div class="back event-back"></div></td>
+    <td><h1>添加收款账号</h1></td>
+    <td  tapmode="highlight" width="80"></td>
+  </tr>
+</table>
+</header>
+
+        <div class="aui-content aui-margin-b-15">
+            <ul class="aui-list aui-form-list">
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            账号姓名:
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input type="text" name="name" id="user_name" placeholder="">
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                      <div class="aui-list-item-label"> 绑定账号: </div>
+                      <div class="aui-list-item-input">
+                            <input type="text" name="number" id="number" placeholder="">
+                      </div>
+                  </div>
+                </li>
+
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label">
+                            选择平台:
+                        </div>
+                        <div class="aui-list-item-input" style=" margin-top:10px; margin-bottom:10px;">
+                            <label  class="weixin_type">
+                                <input style="background-image:url(img/weixin.png); background-size:cover; width:50px; height:50px; border-radius: 1.6rem;" class="aui-radio" type="radio" name="bankType" value="1" style="margin-top: 0px" >
+                            </label>
+                            &nbsp;&nbsp;
+                          <label class="zhifubao_type">
+                                <input style="background-image:url(img/zhifubao.png); background-size:cover; width:50px; height:50px; border-radius: 1.6rem;" class="aui-radio" type="radio" name="bankType" value="2" style="margin-top: 0px" >
+                            </label>
+                        </div>
+                    </div>
+                </li>
+
+
+            </ul>
+        </div>
+		<div style="margin:10px; padding:10px; background-color:#00CC33; color:#FFFFFF;">
+<div align="center" style="width:100%" onClick="addBank()">提交</div>
+</div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            fnReady();
+            //fnReadyFrame();
+            var systemType = api.systemType;  // 获取手机类型，比如： ios
+            if(systemType=='ios'){//兼容ios和安卓
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="30px";
+            }else{
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="35px";
+            }
+        };
+
+        $(document).on('touchstart','.weixin_type',function(){
+
+            $(this).find('img').attr('src','img/weixin.png');//给更改图标
+            $('.zhifubao_type').find('img').attr('src','img/zhifubao1.png');//给更改图标
+
+            $('.zhifubao_type').find("input").removeAttr("checked");
+
+            $(this).find("input").attr("checked",true); //改为选择
+
+        });
+
+
+        $(document).on('touchstart','.zhifubao_type',function(){
+
+            $(this).find('img').attr('src','img/zhifubao.png');//给更改图标
+            $('.weixin_type').find('img').attr('src','img/weixin1.png');//给更改图标
+
+            $('.weixin_type').find("input").removeAttr("checked");
+            $(this).find("input").attr("checked",true); //改为选择
+
+        });
+
+
+        function addBank() {
+            var users = getStorage("users")
+            var name = $("#user_name").val()
+            var number = $("#number").val()
+            var bankType = $("input[name='bankType'][checked]").val();
+          if(!name || !number || !bankType){
+                return ;
+            }
+            api.ajax({
+                url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                method: 'post',
+                data: {
+                    values: {
+                        "ac": "addBank",
+                        "uid": users.user_id,
+                        "name": name,
+                        "number": number,
+                        "bankType": bankType,
+                    },
+                }
+            }, function (ret, err) {
+                if(!err){
+                    if(parseInt(ret.code) == 200){
+
+                        api.toast({
+                            msg: '绑定成功！',
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+
+                        api.openWin({
+                            name: 'tixian',
+                            url: 'tixian_window.html',
+                            pageParam: {
+                                name: 'test'
+                            }
+                        });
+
+                    }else{
+                        api.toast({
+                            msg: ret.msg,
+                            duration: ret.code,
+                            location: 'bottom'
+                        });
+                    }
+                }else{
+                    api.toast({
+                        msg: '网络异常，请重新请求!',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+
+    </script>
+
+</html>

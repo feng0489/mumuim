@@ -1,0 +1,249 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <meta content="yes" name="apple-mobile-web-app-capable"/>
+        <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+        <meta content="telephone=no" name="format-detection"/>
+        <title>钱包</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <style>
+            header {
+                background-color: #ededed;
+                border-bottom-width: 1px;
+                border-bottom-style: solid;
+                border-bottom-color: #ededed;
+            }
+            
+            h1 {
+                height: 40px;
+                line-height: 40px;
+                color: #ffffff;
+                color: #ffffff;
+                font-size: 18px;
+                text-align: center;
+            }
+            
+            .back {
+                position: absolute;
+                left: 3px;
+                bottom: 0px;
+                width: 35px;
+                height: 35px;
+                background: url(../image/cm2_icn_back.png) center center no-repeat;
+                background-size: 15px auto;
+            }
+            
+            nav {
+                position: relative;
+                height: 180px;
+                background-color: #ededed;
+                display: flex;
+                display: -webkit-flex;
+                display: flex;
+                border-bottom: solid #f0f0f0 1px;
+            }
+            
+            nav>div {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                flex: 1;
+                width: 100%;
+                line-height: 50px;
+                color: #666666;
+                font-size: 15px;
+                text-align: center;
+            }
+            
+            .nav-act {
+                color: #333333;
+                font-size: 18px;
+            }
+            
+            .nav-hov {
+                background-color: rgba(250, 240, 230, 0.7);
+            }
+            
+            mark {
+                position: absolute;
+                bottom: 0px;
+                left: 0px;
+                text-align: center;
+                background: transparent;
+                -webkit-transition: 300ms;
+            }
+            
+            mark>img {
+                height: 8px;
+            }
+        </style>
+    </head>
+
+    <body>
+	
+<header id="header">
+<div style="padding:8px;">
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="50"><div class="back event-back"></div>    </td>
+    <td><div style="color:#333333" align="center">钱包</div></td>
+	
+    <!--<td width="20"><span style="color:#FFFFFF;"><img src="../image/chu1.png" width="18" height="18"></span></td>-->
+    <td width="39"><div style="color:#333333;" align="right">
+      <div align="center" onClick="openNew10()" tapmode="">提现</div>
+    </div></td>
+
+  </tr>
+</table>
+</div>
+</header>
+
+		<div style="height:130px; background-color:#ededed;">
+		<div style=" color:#666666; padding-top:10px;" align="center">可用余额（元）</div>
+		<div style="font-size:50px; color:#000000;" align="center" class="user_money">0</div>
+		<div style=" color:#666666;" align="center">你比3%用户更懂得赚钱</div>
+		<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+	</div>
+        <nav id="nav">
+            <div class="nav-act" tapmode="nav-hov" onClick="fnChange(0);">活跃度</div>
+            <!--<div tapmode="nav-hov" onClick="fnChange(1);">消费</div>-->
+            <div tapmode="nav-hov" onClick="fnChange(1);">提现/充值</div>
+			<div tapmode="nav-hov" onClick="fnChange(2);">流水</div>
+            <mark></mark>
+        </nav>
+
+
+
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript">
+      function openNew10() {
+          var users = getStorage("users");
+          if (users.tixian_password == 2) {
+              var user_money = $('.user_money').text();
+              api.openWin({
+                  name: 'tixian',
+                  url: 'tixian_window.html',
+                  pageParam: {
+                      user_money: user_money
+                  }
+              });
+          } else {
+              api.openWin({
+                  name: 'submit_password',
+                  url: 'submit_password.html',
+              });
+          }
+      }
+
+        apiready = function() {
+            fnReady();
+            fnInit();
+			var systemType = api.systemType;  // 获取手机类型，比如： ios
+            if(systemType=='ios'){//兼容ios和安卓
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="30px";
+            }else{
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="35px";
+            }
+            var users = getStorage('users');
+            //用户可用余额
+            api.ajax({
+                url:'http://shujunode.mumuim.cn:8080/users/recash',
+                method:'get',
+                data:{
+                    values: {
+                        "uid" : users.user_id,
+                    },
+                }
+            },function(ret,err) {
+                if(!err){
+                    if(parseInt(ret.code)===200){
+                        var money=ret.data || 0;
+                        $('.user_money').text(money);
+                    }else {
+                        api.toast({
+                            msg:ret.msg,
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                }else{
+                    api.toast({
+                        msg: "网络请求超时，请稍后重试",
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            })
+
+            api.openFrameGroup({
+                name: 'message_group',
+                scrollEnabled: true,
+                rect: {
+                    x: 0,
+                    y: 250,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                index: 0,
+                frames: [{
+                    name: 'qianbao_frame',
+                    url: 'qianbao_frame.html'
+                }, {
+                    name: 'qianbao_frame1',
+                    url: 'qianbao_frame1.html'
+                },{
+                     name: 'qianbao_frame3',
+                     url: 'qianbao_frame3.html'
+                 }]
+            }, function(ret, err) {
+                fnChangeStyle(ret.index);
+            });
+        };
+
+        var navs, mark;
+
+        function fnInit() {
+            navs = $api.domAll(nav, 'div');
+            mark = $api.dom(nav, 'mark');
+            mark.style.width = (api.winWidth / 3) + 'px';
+        };
+
+        function fnChange(index) {
+            fnChangeStyle(index);
+            api.setFrameGroupIndex({
+                name: 'message_group',
+                index: index,
+                scroll: true
+            });
+        };
+
+        function fnChangeStyle(index) {
+            for (var i = 0; i < navs.length; i++) {
+                if (i == index) {
+                    $api.addCls(navs[i], 'nav-act');
+                } else {
+                    $api.removeCls(navs[i], 'nav-act');
+                }
+            };
+
+            var markPosX = (api.winWidth / 3) * index + 'px';
+            $api.css(mark, '-webkit-transform: translate(' + markPosX + ', 0)');
+        }
+		
+ </script>
+
+</html>

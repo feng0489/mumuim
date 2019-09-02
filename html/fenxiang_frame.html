@@ -1,0 +1,1112 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>代理申请</title>
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"/>
+        <meta content="yes" name="apple-mobile-web-app-capable"/>
+        <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+        <meta content="telephone=no" name="format-detection"/>
+        <link rel="stylesheet" type="text/css" href="css/tishi.css" />
+        <script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+        <script>
+		!function(window) {
+
+    "use strict";
+
+    var doc = window.document
+      , ydui = {};
+
+    var util = ydui.util = {
+
+        parseOptions: function(string) {},
+
+        sessionStorage: function() {}(),
+
+        serialize: function(value) {},
+
+        deserialize: function(value) {}
+    };
+
+    function storage(ls) {}
+
+    $.fn.emulateTransitionEnd = function(duration) {}
+    ;
+
+    if (typeof define === 'function') {
+        define(ydui);
+    } else {
+        window.YDUI = ydui;
+    }
+    ;function Slider(element, options) {
+        this.$element = $(element);
+        this.options = $.extend({}, Slider.DEFAULTS, options || {});
+        this.init();
+    }
+
+    Slider.DEFAULTS = {
+        speed: 300,
+        autoplay: 5000,
+
+        lazyLoad: false,
+        pagination: '.slider-pagination',
+        wrapperClass: 'slider-wrapper',
+        slideClass: 'slider-item',
+        bulletClass: 'slider-pagination-item',
+        bulletActiveClass: 'slider-pagination-item-active'
+    };
+
+    function Slider(element, options) {
+        this.$element = $(element);
+        this.options = $.extend({}, Slider.DEFAULTS, options || {});
+        this.init();
+    }
+
+    Slider.DEFAULTS = {
+        speed: 300,
+        autoplay: 3000,
+        lazyLoad: false,
+        pagination: '.slider-pagination',
+        wrapperClass: 'slider-wrapper',
+        slideClass: 'slider-item',
+        bulletClass: 'slider-pagination-item',
+        bulletActiveClass: 'slider-pagination-item-active'
+    };
+
+    Slider.prototype.init = function() {
+        var _this = this
+          , options = _this.options
+          , $element = _this.$element;
+
+        _this.index = 1;
+        _this.autoPlayTimer = null;
+        _this.$pagination = $element.find(options.pagination);
+        _this.$wrapper = $element.find('.' + options.wrapperClass);
+        _this.itemNums = _this.$wrapper.find('.' + options.slideClass).length;
+
+        options.lazyLoad && _this.loadImage(0);
+
+        _this.createBullet();
+
+        _this.cloneItem().bindEvent();
+    }
+    ;
+
+    Slider.prototype.bindEvent = function() {
+        var _this = this
+          , touchEvents = _this.touchEvents();
+
+        _this.$wrapper.find('.' + _this.options.slideClass).on(touchEvents.start, function(e) {
+            _this.onTouchStart(e);
+        }).on(touchEvents.move, function(e) {
+            _this.onTouchMove(e);
+        }).on(touchEvents.end, function(e) {
+            _this.onTouchEnd(e);
+        });
+
+        $(window).on('resize.ydui.slider', function() {
+            _this.setSlidesSize();
+        });
+
+        ~~_this.options.autoplay > 0 && _this.autoPlay();
+
+        _this.$wrapper.on('click.ydui.slider', function(e) {
+            if (!_this.touches.allowClick) {
+                e.preventDefault();
+            }
+        });
+    }
+    ;
+
+    Slider.prototype.cloneItem = function() {
+        var _this = this
+          , $wrapper = _this.$wrapper
+          , $sliderItem = _this.$wrapper.find('.' + _this.options.slideClass)
+          , $firstChild = $sliderItem.filter(':first-child').clone()
+          , $lastChild = $sliderItem.filter(':last-child').clone();
+
+        $wrapper.prepend($lastChild);
+        $wrapper.append($firstChild);
+
+        _this.setSlidesSize();
+
+        return _this;
+    }
+    ;
+
+    Slider.prototype.createBullet = function() {
+
+        var _this = this;
+
+        if (!_this.$pagination[0])
+            return;
+
+        var initActive = '<span class="' + (_this.options.bulletClass + ' ' + _this.options.bulletActiveClass) + '"></span>';
+
+        _this.$pagination.append(initActive + new Array(_this.itemNums).join('<span class="' + _this.options.bulletClass + '"></span>'));
+    }
+    ;
+
+    Slider.prototype.activeBullet = function() {
+        var _this = this;
+
+        if (!_this.$pagination[0])
+            return;
+
+        var itemNums = _this.itemNums
+          , index = _this.index % itemNums >= itemNums ? 0 : _this.index % itemNums - 1
+          , bulletActiveClass = _this.options.bulletActiveClass;
+
+        !!_this.$pagination[0] && _this.$pagination.find('.' + _this.options.bulletClass).removeClass(bulletActiveClass).eq(index).addClass(bulletActiveClass);
+    }
+    ;
+
+    Slider.prototype.setSlidesSize = function() {
+        var _this = this
+          , _width = _this.$wrapper.width();
+
+        _this.$wrapper.css('transform', 'translate3d(-' + _width + 'px,0,0)');
+        _this.$wrapper.find('.' + _this.options.slideClass).css({
+            width: _width
+        });
+    }
+    ;
+
+    Slider.prototype.autoPlay = function() {
+        var _this = this;
+
+        _this.autoPlayTimer = setInterval(function() {
+
+            if (_this.index > _this.itemNums) {
+                _this.index = 1;
+                _this.setTranslate(0, -_this.$wrapper.width());
+            }
+
+            _this.setTranslate(_this.options.speed, -(++_this.index * _this.$wrapper.width()));
+
+        }, _this.options.autoplay);
+    }
+    ;
+
+    Slider.prototype.stopAutoplay = function() {
+        var _this = this;
+        clearInterval(_this.autoPlayTimer);
+        return _this;
+    }
+    ;
+
+    Slider.prototype.setTranslate = function(speed, x) {
+        var _this = this;
+
+        _this.options.lazyLoad && _this.loadImage(_this.index);
+
+        _this.activeBullet();
+
+        _this.$wrapper.css({
+            'transitionDuration': speed + 'ms',
+            'transform': 'translate3d(' + x + 'px,0,0)'
+        });
+    }
+    ;
+
+    Slider.prototype.touches = {
+        moveTag: 0,
+        startClientX: 0,
+        moveOffset: 0,
+        touchStartTime: 0,
+        isTouchEvent: false,
+        allowClick: false// 用于判断事件为点击还是拖动
+    };
+
+    Slider.prototype.onTouchStart = function(event) {
+        if (event.originalEvent.touches)
+            event = event.originalEvent.touches[0];
+
+        var _this = this
+          , touches = _this.touches;
+
+        touches.allowClick = true;
+
+        touches.isTouchEvent = event.type === 'touchstart';
+
+        if (!touches.isTouchEvent && 'which'in event && event.which === 3)
+            return;
+
+        if (touches.moveTag == 0) {
+            touches.moveTag = 1;
+
+            touches.startClientX = event.clientX;
+            touches.touchStartTime = Date.now();
+
+            var itemNums = _this.itemNums;
+
+            if (_this.index == 0) {
+                _this.index = itemNums;
+                _this.setTranslate(0, -itemNums * _this.$wrapper.width());
+                return;
+            }
+
+            if (_this.index > itemNums) {
+                _this.index = 1;
+                _this.setTranslate(0, -_this.$wrapper.width());
+            }
+        }
+    }
+    ;
+
+    Slider.prototype.onTouchMove = function(event) {
+        event.preventDefault();
+
+        if (event.originalEvent.touches)
+            event = event.originalEvent.touches[0];
+
+        var _this = this
+          , touches = _this.touches;
+
+        touches.allowClick = false;
+
+        if (touches.isTouchEvent && event.type === 'mousemove')
+            return;
+
+        var deltaSlide = touches.moveOffset = event.clientX - touches.startClientX;
+
+        if (deltaSlide != 0 && touches.moveTag != 0) {
+
+            if (touches.moveTag == 1) {
+                _this.stopAutoplay();
+                touches.moveTag = 2;
+            }
+            if (touches.moveTag == 2) {
+                _this.setTranslate(0, -_this.index * _this.$wrapper.width() + deltaSlide);
+            }
+        }
+    }
+    ;
+
+    Slider.prototype.onTouchEnd = function() {
+        var _this = this
+          , speed = _this.options.speed
+          , _width = _this.$wrapper.width()
+          , touches = _this.touches
+          , moveOffset = touches.moveOffset;
+
+        setTimeout(function() {
+            touches.allowClick = true;
+        }, 0);
+
+        if (touches.moveTag == 1) {
+            touches.moveTag = 0;
+        }
+
+        if (touches.moveTag == 2) {
+            touches.moveTag = 0;
+
+            var timeDiff = Date.now() - touches.touchStartTime;
+
+            if (timeDiff > 300 && Math.abs(moveOffset) <= _this.$wrapper.width() * .5) {
+                _this.setTranslate(speed, -_this.index * _this.$wrapper.width());
+            } else {
+                _this.setTranslate(speed, -((moveOffset > 0 ? --_this.index : ++_this.index) * _width));
+            }
+            _this.autoPlay();
+        }
+    }
+    ;
+
+    Slider.prototype.touchEvents = function() {
+        var supportTouch = (window.Modernizr && !!window.Modernizr.touch) || (function() {
+            return !!(('ontouchstart'in window) || window.DocumentTouch && document instanceof DocumentTouch);
+        }
+        )();
+
+        return {
+            start: supportTouch ? 'touchstart.ydui.slider' : 'mousedown.ydui.slider',
+            move: supportTouch ? 'touchmove.ydui.slider' : 'mousemove.ydui.slider',
+            end: supportTouch ? 'touchend.ydui.slider' : 'mouseup.ydui.slider'
+        };
+    }
+    ;
+
+    function Plugin(option) {
+        return this.each(function() {
+
+            var $this = $(this)
+              , slider = $this.data('ydui.slider');
+
+            if (!slider) {
+                $this.data('ydui.slider', new Slider(this,option));
+            }
+        });
+    }
+
+    $(window).on('load.ydui.slider', function() {
+        $('[data-ydui-slider]').each(function() {
+            var $this = $(this);
+            $this.slider(window.YDUI.util.parseOptions($this.data('ydui-slider')));
+        });
+    });
+
+    $.fn.slider = Plugin;
+
+}(window);
+		</script>
+<style>
+html,body {
+    color: #333;
+    margin: 0;
+    height: 100%;
+    font-family: "Myriad Set Pro","Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: normal;
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+a, label, button, input, select {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+img {
+    border: 0;
+}
+
+body {
+    background: #fff;
+    color: #666;
+}
+
+html, body, div, dl, dt, dd, ol, ul, li, h1, h2, h3, h4, h5, h6, p, blockquote, pre, button, fieldset, form, input, legend, textarea, th, td {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #08acee;
+}
+
+button {
+    outline: 0;
+}
+
+img {
+    border: 0;
+}
+
+button,input,optgroup,select,textarea {
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    outline: none;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    color: #666;
+}
+
+.clearfix::after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+.clearfix {
+}
+
+
+.divHeight {
+    width: 100%;
+    height: 10px;
+    background: #f5f5f5;
+    position: relative;
+    overflow: hidden;
+}
+
+.r-line {
+    position: relative;
+}
+
+.r-line:after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    height: 100%;
+    border-right: 1px solid #D9D9D9;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
+    -webkit-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+}
+
+.b-line {
+    position: relative;
+}
+
+.b-line:after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px solid #e2e2e2;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+}
+
+.aui-flex {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    padding: 15px;
+    position: relative;
+}
+
+.aui-flex-box {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+
+/* 必要布局样式css */
+.aui-flexView {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.aui-scrollView {
+    width: 100%;
+    height: 100%;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    margin-top: 0;
+    padding-bottom: 50px;
+}
+
+.aui-navBar {
+    height: 44px;
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    z-index: 1002;
+    background: #f6f6f6;
+}
+
+
+.aui-navBar-item {
+    height: 44px;
+    min-width: 25%;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 25%;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    padding: 0 0.9rem;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #808080;
+    position: relative;
+}
+
+.aui-navBar-item:first-child {
+    -webkit-box-ordinal-group: 2;
+    -webkit-order: 1;
+    -ms-flex-order: 1;
+    order: 1;
+    margin-right: -25%;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.aui-navBar-item:last-child {
+    -webkit-box-ordinal-group: 4;
+    -webkit-order: 3;
+    -ms-flex-order: 3;
+    order: 3;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+
+.aui-center {
+    -webkit-box-ordinal-group: 3;
+    -webkit-order: 2;
+    -ms-flex-order: 2;
+    order: 2;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 44px;
+    width: 50%;
+    margin-left: 25%;
+}
+
+.aui-center-title {
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    border: none;
+    float: left;
+    background-size: 20px;
+    background-repeat: no-repeat;
+}
+
+.m-slider {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.slider-wrapper {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    -webkit-transform: translate3d(0px, 0px, 0px);
+    transform: translate3d(0px, 0px, 0px);
+    position: relative;
+    z-index: 1;
+    -webkit-transition-property: -webkit-transform;
+    transition-property: -webkit-transform;
+    transition-property: transform;
+    transition-property: transform, -webkit-transform;
+}
+
+.slider-item {
+    width: 100%;
+    height: 100%;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+}
+
+.slider-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: none;
+}
+
+.slider-pagination {
+    text-align: right;
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+    right: 0;
+    bottom: 5px;
+    pointer-events: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: end;
+    -webkit-align-items: flex-end;
+    -ms-flex-align: end;
+    align-items: flex-end;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.slider-pagination > .slider-pagination-item {
+    margin: 0 .25rem;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 100%;
+    background-color:#fbc4b8;
+    border:1px solid #fff;
+    /*background-color: rgba(255,255,255,0.4);*/
+}
+
+.slider-pagination > .slider-pagination-item.slider-pagination-item-active {
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+
+
+
+.aui-palace-grid {
+    position: relative;
+    float: left;
+    padding: 15px 0;
+    width: 33%;
+    box-sizing: border-box;
+}
+
+.aui-palace-grid-icon {
+    width: 45px;
+    height: 45px;
+    margin: 0 auto;
+}
+
+.aui-palace-grid-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+    /* border-radius: 5px; */
+}
+
+.aui-palace-grid-text {
+    display: block;
+    text-align: center;
+    color: #333333;
+    font-size: 13px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-top: 0.1rem;
+}
+
+.aui-palace-grid-text h2 {
+    font-size: 0.8rem;
+    font-weight: normal;
+    color: #4a4a4a;
+}
+
+
+
+.aui-loan-img {
+    width: 60px;
+    height: 60px;
+    margin-right: 10px;
+}
+
+.aui-loan-img img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: none;
+    border-radius: 10px;
+}
+
+.aui-flex-box h2 {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #222;
+    padding-bottom: 5px;
+}
+
+.aui-flex-box h2 em {
+    color: #ff9c00;
+    font-style: normal;
+    background: #fff8e7;
+}
+
+.aui-flex-box p {
+    color: #999;
+    font-size: 0.9rem;
+    padding-bottom: 5px;
+}
+
+.aui-flex-fr {
+	position: relative;
+	text-align: right;
+	color: #fff;
+	font-size: 0.9rem;
+	padding: 0.2rem 0.4rem;
+	border-radius: 21px;
+	background-color: #FF3300;
+}
+
+
+.aui-footer:after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    border-top: 1px solid #e4e4e4;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+}
+
+.aui-footer {
+    width: 100%;
+    position: relative;
+    z-index: 100;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 7px 5px 7px 5px;
+    background: #ffffff;
+}
+
+.aui-tabBar-item {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #979797;
+}
+
+.aui-tabBar-item-text {
+    display: inline-block;
+    font-size: 0.65rem;
+    color: #9c9c9c;
+    padding-top: 2px;
+}
+
+.aui-tabBar-item-active .aui-tabBar-item-text {
+    color: #ff552e;
+}
+
+.aui-footer-fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 49;
+}
+
+.click-info{
+    position: relative;
+}
+
+</style>
+    </head>
+    <body>
+
+        <section class="aui-flexView">
+            <section class="aui-scrollView">
+                <div class="aui-m-slider">
+                    <div class="m-slider" data-ydui-slider>
+                        <div class="slider-wrapper">
+                            <div class="slider-item">
+                                <a href="javascript:;">
+                                    <img src="images/daili.png">
+                                </a>
+                            </div>
+                            <div class="slider-item">
+                                <a href="javascript:;">
+                                    <img src="images/daili.png">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="slider-pagination"></div>
+                    </div>
+                </div>
+                <div class="aui-palace">
+                    <a href="javascript:;" class="aui-palace-grid">
+                        <div class="aui-palace-grid-icon">
+                            <img src="images/icon-lay-001.png" alt="">
+                        </div>
+                        <div class="aui-palace-grid-text">
+                            <h2>独立管理</h2>
+                        </div>
+                    </a>
+                    <a href="javascript:;" class="aui-palace-grid">
+                        <div class="aui-palace-grid-icon">
+                            <img src="images/icon-lay-002.png" alt="">
+                        </div>
+                        <div class="aui-palace-grid-text">
+                            <h2>推广扶持</h2>
+                        </div>
+                    </a>
+                    <a href="javascript:;" class="aui-palace-grid">
+                        <div class="aui-palace-grid-icon">
+                            <img src="images/icon-lay-003.png" alt="">
+                        </div>
+                        <div class="aui-palace-grid-text">
+                            <h2>敬请期待</h2>
+                        </div>
+                    </a>
+                </div>
+                <div class="divHeight"></div>
+                <div class="aui-flex">
+                    <div class="aui-flex-box">
+                        <b>完成下面所有任务获得申请资格</b>
+                    </div>
+                </div>
+                <div class="aui-loan-action">
+                    <a href="javascript:;" class="aui-flex b-line">
+                        <div style="background-color:#D5D5D5;" class="aui-loan-img">
+                            <div style="padding:13px; padding-top:9px;">邀请资格</div>
+                    </div>
+                        <div class="aui-flex-box">
+                            <h2>有效邀请1个用户</h2>
+                            <p>累计有效分享1名好友获得资格</p>
+                        </div>
+                        <div class="aui-flex-fr friend_count">未获得</div>
+                    </a>
+                    <a href="javascript:;" class="aui-flex b-line">
+                        <div style="background-color:#D5D5D5;" class="aui-loan-img">
+                            <div style="padding:13px; padding-top:9px;">收益资格</div>
+                    </div>
+                        <div class="aui-flex-box">
+                            <h2>累计获得收益100元</h2>
+                            <p>签到加任务收益超过100元获得</p>
+                        </div>
+                        <div class="aui-flex-fr taobao_money">未获得</div>
+                    </a>
+                    <a href="javascript:;" class="aui-flex b-line">
+                        <div style="background-color:#D5D5D5;" class="aui-loan-img">
+                            <div style="padding:13px; padding-top:9px;">SVIP资格</div>
+                    </div>
+                        <div class="aui-flex-box">
+                            <h2>开通SVIP2</h2>
+                            <p>必须获得SIVP2资格才可获得</p>
+                        </div>
+                        <div class="aui-flex-fr svip_info">未获得</div>
+                    </a>
+                    
+                </div>
+            </section>
+            <div style="background-color:#FF0000; color:#FFFFFF;">
+                <div style="padding:15px;" align="center" class="click-info apply">申请开通</div>
+            </div>
+        </section>
+
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript" src="../script/tishi.js"></script>
+    <script type="text/javascript">
+        var data;
+        apiready=function(){
+            condition();  //用户申请代理条件
+            api.addEventListener({
+                name:'viewdisappear'
+            },function(){
+                api.closeWin();
+            });
+        }
+
+        //用户申请代理条件
+        function condition(){
+            var users=getStorage("users");
+            api.ajax({
+                url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                method: 'post',
+                data: {
+                    values: {
+                        "ac": "openDailiInfo",
+                        "uid": users.user_id,
+                    },
+                }
+            }, function (rt, er) {
+                if(!er){
+                    if(rt.code == 200){
+                        data=rt.data;
+                        //data:{"svipInfo":true,"friend_count":false,"taobao_money":false}
+                        if(data.friend_count===true){
+                            $('.friend_count').text('已获得');
+                        }
+                        if(data.taobao_money===true){
+                            $('.taobao_money').text('已获得');
+                        }
+                        if(data.svipInfo===true){
+                            $('.svip_info').text('已获得');
+                        }
+                    }else{
+                        api.toast({
+                            msg:ret.msg,
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                }else{
+                    api.toast({
+                        msg:'网络异常，请重新请求',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        //开通代理
+        $(document).on('click','.apply',function() {
+            Dialog.init('<textarea type="text" class="pids" placeholder="请输入pid,用逗号分隔"  style="margin:8px 0;width:100%;height:100%;padding:11px 8px;font-size:15px; border:1px solid #999;"></textarea>',{
+                title : '请您认真填写pid，点击开通后无法修改！',
+                button : {
+                    关闭 : function(){
+                        Dialog.close(this);
+                    },
+                    开通 : function(){
+                        var pid=$(".pids").val();
+                        if(pid.length >= 10){
+                            if(data.svipInfo===true && data.taobao_money===true &&  data.friend_count===true){
+                                var users=getStorage("users");
+                                api.ajax({
+                                    url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                                    method: 'post',
+                                    data: {
+                                        values: {
+                                            "ac": "openDaili",
+                                            "uid": users.user_id,
+                                            "pid": pid,
+                                        },
+                                    }
+                                }, function (rt, er) {
+                                    //console.log("rt:"+JSON.stringify(rt)+""+"er:"+JSON.stringify(er))
+                                    if(!er){
+                                        if(parseInt(rt.code) == 200){
+                                            Dialog.init(rt.msg,3000);
+                                            users.is_daili=1;
+                                            setStorage("users",users);
+                                            Dialog.init("申请代理成功，需要对您的账号进行数据初始化处理！如您重新登录，请您前往运营商控制台进行账号授权！",{
+                                                title : '请您重新登录！',
+                                                button : {
+                                                    退出: function () {
+                                                        logout();
+                                                        Dialog.close(this);
+                                                    },
+                                                }
+                                            });
+                                        }else{
+                                            Dialog.init(rt.msg,3000);
+                                        }
+                                    }else{
+                                        Dialog.init('网络异常，请重新请求',3000);
+                                    }
+                                });
+                                Dialog.close(this);
+                            }else{
+                                Dialog.init('您尚未达到申请资格，无法为您开通代理！',3000);
+                                Dialog.close(this);
+                            }
+                        }else{
+                            Dialog.init('您输入的内容不符合要求！',3000);
+                            Dialog.close(this);
+                        };
+                    }
+                }
+            });
+        });
+        //用户申请代理成功，进行数据初始化处理（退出）
+        function logout() {
+            $api.rmStorage("users");
+            api.addEventListener({
+                name:'viewdisappear'
+            },function(){
+                $api.rmStorage("users");
+                api.closeWin();
+            });
+
+            api.closeWin({
+                name: 'index'
+            });
+
+            //关闭所有窗口
+            api.closeToWin({
+                name: 'root'
+            });
+
+            api.openWin({
+                name: 'login',
+                url: '../login_frame.html',
+                reload:true,
+                slidBackEnabled: false,
+                pageParam: {
+                    name: 'test'
+                }
+            })
+        }
+    </script>
+</html>

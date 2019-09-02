@@ -1,0 +1,437 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>APICloud APP</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="css/tishi.css" />
+        <style>
+            html,
+            body {
+                background-color: #ededed;
+            }
+            .h80 {height: 80px;}
+            .h40 {height: 40px;}
+            .h20 {height: 20px;}
+            .h10 {height: 10px;}
+            .h1 {height: 1px;margin-left: 0px;}
+            .fr {float: right;}
+            .fl {float: left;}
+            .hightitem {background-color: #fff;}
+            
+            .empty>img {
+                float: left;
+                padding-left: 20px;
+                height: 124px;
+            }
+            
+            .empty>span {
+                height: 124px;
+                line-height: 124px;
+                padding-left: 20px;
+            }
+            
+            .message {
+                display: none;
+                margin-top: 8px;
+                background-color: #fff;
+            }
+            
+            .message>div {
+                position: relative;
+                top: -1px;
+                box-sizing: border-box;
+                height: 49px;
+                border-top: 1px solid #eee;
+            }
+            
+            .message>div>.msg {
+                box-sizing: border-box;
+                height: 48px;
+                padding-left: 16px;
+                padding-right: 96px;
+                line-height: 48px;
+                color: #888;
+                font-size: 16px;
+            }
+            
+            .message>div>.time {
+                position: absolute;
+                top: 0;
+                right: 16px;
+                height: 48px;
+                line-height: 48px;
+                color: #888;
+                text-align: right;
+                font-size: 12px;
+            }
+            
+            .active {
+                -webkit-opacity: 0.7;
+                opacity: 0.7;
+            }
+
+            .info {
+                background: rgba(45,171,219,.9);
+                position:relative;/*设置子元素相对定位*/
+                color: white;
+                text-align: center;
+                width:50px;
+                height:50px;
+                -webkit-border-radius: 10%;
+                -moz-border-radius: 10%;
+                border-radius:10%;
+                display:inline-block;
+            }
+            .info:hover{
+                cursor: pointer;
+                background: rgba(45,171,219,.6);
+            }
+
+            .info-tip{
+                background:rgba(250,60,0,1);
+                position:absolute;/*根据父元素绝对定位*/
+                width:18px;
+                height:18px;
+                top:-7px;/*在父元素的内部的顶部*/
+                right:-7px;/*在父元素的内部的右边*/
+                -webkit-border-radius: 50%;
+                -moz-border-radius: 50%;
+                border-radius:50%;
+                text-align:center;
+
+            }
+            .info1 {          background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:10%;
+                  display:inline-block;
+            }
+            .info-tip1 {
+                background:rgba(250,60,0,1);
+                position:absolute;/*根据父元素绝对定位*/
+                width:18px;
+                height:18px;
+                top:-7px;/*在父元素的内部的顶部*/
+                right:-7px;/*在父元素的内部的右边*/
+                -webkit-border-radius: 50%;
+                -moz-border-radius: 50%;
+                border-radius:50%;
+                text-align:center;
+            }
+            .info-tip11 {background:rgba(250,60,0,1);
+                    position:absolute;/*根据父元素绝对定位*/
+                    width:18px;
+                    height:18px;
+                    top:-7px;/*在父元素的内部的顶部*/
+                    right:-7px;/*在父元素的内部的右边*/
+                    -webkit-border-radius: 50%;
+                    -moz-border-radius: 50%;
+                    border-radius:50%;
+                    text-align:center;
+            }
+            .info11 {background: rgba(45,171,219,.9);
+                      position:relative;/*设置子元素相对定位*/
+                      color: white;
+                      text-align: center;
+                      width:50px;
+                      height:50px;
+                      -webkit-border-radius: 10%;
+                      -moz-border-radius: 10%;
+                      border-radius:50%;
+                      display:inline-block;
+            }
+            .info12 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info13 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info14 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info15 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info16 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info17 {
+                background: rgba(45,171,219,.9);
+                position:relative;/*设置子元素相对定位*/
+                color: white;
+                text-align: center;
+                width:50px;
+                height:50px;
+                -webkit-border-radius: 10%;
+                -moz-border-radius: 10%;
+                border-radius:50%;
+                display:inline-block;
+            }
+
+            .aui-flex-button button{
+                border:1px solid #f56b53;
+                color:#f56b53;
+                background:none;
+                font-size:14px;
+                border-radius:20px;
+                padding:2px 10px;
+            }
+
+            .update_buttion{
+                cursor :pointer
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <div class="tixian_info_list">
+
+            <div id="nav" class="nav none_info_text"   style="padding-bottom:8px; padding-top:8px; padding-right:12px; background-color:#FFFFFF; display: block">
+                <div align="center" style="color:#999999;">
+                  <p><strong>没有记录哦</strong></p>
+                </div>
+            </div>
+
+        </div>
+        <!--<div style="padding-bottom:8px; padding-top:8px; padding-right:12px; background-color:#FFFFFF;">-->
+            <!--<table style="color:#999999; font-size:12px;" width="100%" border="0" cellspacing="0" cellpadding="0">-->
+                <!--<tr><td width="66" rowspan="2" align="center"><div style=" background-image:url(../image/chu.png);background-size:cover;" class="info15"></div></td>-->
+                    <!--<td valign="bottom"><span style="font-size:16px; color:#000000;">用户4682提现</span> 审核中</td>-->
+                    <!--<td width="180" rowspan="2" align="center"><div style="font-size:30px; color:#000000;" align="right">-->
+                        <!--<div align="right">¥1.00 </div>-->
+                        <!--<buttion align="right" style=" padding:2px;font-size:16px; background-color:#009966; color:#ffffff;">通过</buttion>-->
+                    <!--</div></td></tr>-->
+                <!--<tr>-->
+
+                    <!--<td valign="top" colspan="3"><span class="subtitle">2019-03-18 20：00：00<br></span></td>-->
+                <!--</tr>-->
+            <!--</table>-->
+        <!--</div>-->
+        <!--<div class="h1"></div>-->
+    </body>
+
+
+    <script class="tixian_info" type="text/template">
+        {{ for(var vi in it) { }}
+        <div style="padding-bottom:8px; padding-top:8px; padding-right:12px; background-color:#FFFFFF;">
+            <table style="color:#999999; font-size:12px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr><td width="66" rowspan="2" align="center"><div style=" background-image:url(../image/chu.png);background-size:cover;" class="info15"></div></td>
+                    <td valign="bottom"><span style="font-size:16px; color:#000000;">用户{{=it[vi].nickname}}提现</span> {{=it[vi].is_paid}} </td>
+                    <td width="180" rowspan="2" align="center"><div style="font-size:30px; color:#000000;" align="right">
+                        {{? it[vi].is_paid==='审核中'}}
+                        <buttion align="right" style=" padding:2px;font-size:16px; background-color:#009966; color:#ffffff;" class="update_buttion update_is_paid" data-tixianid="{{=it[vi].id}}"  data-uid="{{=it[vi].user_id}}"  data-parentid="{{=it[vi].parent_id}}">点击通过</buttion>
+                        {{?}}
+                        <div align="right">¥{{=it[vi].amount}}</div>
+                    </div></td></tr>
+                <tr>
+                    <td valign="top" colspan="3"><span class="subtitle">{{=it[vi].add_time}}<br></span></td>
+                </tr>
+            </table>
+        </div>
+        <div class="h1"></div>
+
+        {{ } }}
+    </script>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../script/tishi.js"></script>
+    <script type="text/javascript">
+        var page=0;
+        var totalPage =1;
+        apiready = function() {
+            tixian();
+            //向上轻扫加载更多提现信息
+            api.addEventListener({
+                name:'swipeup',
+            }, function(ret, err){
+                page=Number(page)+1;//页码+1
+                if(page<=totalPage){
+                    tixian();
+                }
+            });
+        };
+
+        //使用代理pid的用户提现信息
+        function tixian(){
+            var users = getStorage("users");
+            api.ajax({
+                url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                method: 'post',
+                data: {
+                    values: {
+                        "ac":"uPidExtract",
+                        "uid": users.user_id,
+                        "page":page
+                    },
+                }
+            }, function (ret, err) {
+                //console.log("提现信息ret:"+JSON.stringify(ret)+""+"提现信息err:"+JSON.stringify(err))
+                if(!err){
+                    if(parseInt(ret.code) == 200){
+                        totalPage = ret.data.totalPage;
+                        page = ret.data.page;
+                        var data = ret.data.list;
+                        if(data.length>0){
+                            $('.none_info_text').css('display','none');
+                            var interText = doT.template($(".tixian_info").text());
+                            $(".tixian_info_list").append(interText(data));
+                        }
+                    }else{
+                        api.toast({
+                            msg:ret.msg,
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                }else{
+                    api.toast({
+                        msg: '网络异常，请重新请求!',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+
+            });
+        }
+
+        //刷新用户提现信息
+        function tixianRefresh(){
+            var users = getStorage("users");
+            api.ajax({
+                url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                method: 'post',
+                data: {
+                    values: {
+                        "ac":"uPidExtract",
+                        "uid": users.user_id,
+                    },
+                }
+            }, function (ret, err) {
+                if(!err){
+                    if(parseInt(ret.code) == 200){
+                        var data = ret.data.list;
+                        if(data.length>0){
+                            $('.none_info_text').css('display','none');
+                            var interText = doT.template($(".tixian_info").text());
+                            $(".tixian_info_list").html(interText(data));
+                        }
+                    }else{
+                        api.toast({
+                            msg:ret.msg,
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                }else{
+                    api.toast({
+                        msg: '网络异常，请重新请求!',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+
+            });
+        }
+
+
+        //修改提现进度状态
+        $(".tixian_info_list").on('click','.update_is_paid',function() {
+            var tixianId = $(this).data("tixianid");//提现记录id
+            var uid = $(this).data("uid");//提现用户id
+            var parentId = $(this).data("parentid");//代理id
+            Dialog.init('注意：该操作不可逆，请您谨慎选择！如果您点击通过，就视为您同意从您的账号转出相应金额到指定账号！', {
+                title: '审核状态！',
+                button: {
+                    关闭: function () {
+                        Dialog.close(this);
+                    },
+                    通过: function () {
+                        api.ajax({
+                            url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                            method: 'post',
+                            data: {
+                                values: {
+                                    "ac":"uptixianInfo",
+                                    "uid": uid,
+                                    "tixianId":tixianId,
+                                    "parentId":parentId
+                                },
+                            }
+                        }, function (ret, err) {
+                            if(!err){
+                                if(parseInt(ret.code) == 200){
+                                    Dialog.init("通过审核",3000);
+                                    tixianRefresh();
+                                    api.sendEvent({
+                                        name: 'refreshDailiMoney',
+                                    });
+                                }else{
+                                    Dialog.init(ret.msg,3000);
+                                }
+                            }else{
+                                Dialog.init("网络异常，请重新请求!",3000);
+                            }
+
+                        });
+                        Dialog.close(this);
+                    }
+                }
+            });
+
+
+        })
+    </script>
+
+</html>

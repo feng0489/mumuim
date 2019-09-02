@@ -1,0 +1,347 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>活跃度流水</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <style>
+            html,
+            body {
+                background-color: #ededed;
+            }
+            .h80 {height: 80px;}
+            .h40 {height: 40px;}
+            .h20 {height: 20px;}
+            .h10 {height: 10px;}
+            .h1 {height: 1px;margin-left: 0px;}
+            .fr {float: right;}
+            .fl {float: left;}
+            .hightitem {background-color: #fff;}
+            
+            .empty>img {
+                float: left;
+                padding-left: 20px;
+                height: 124px;
+            }
+            
+            .empty>span {
+                height: 124px;
+                line-height: 124px;
+                padding-left: 20px;
+            }
+            
+            .message {
+                display: none;
+                margin-top: 8px;
+                background-color: #fff;
+            }
+            
+            .message>div {
+                position: relative;
+                top: -1px;
+                box-sizing: border-box;
+                height: 49px;
+                border-top: 1px solid #eee;
+            }
+            
+            .message>div>.msg {
+                box-sizing: border-box;
+                height: 48px;
+                padding-left: 16px;
+                padding-right: 96px;
+                line-height: 48px;
+                color: #888;
+                font-size: 16px;
+            }
+            
+            .message>div>.time {
+                position: absolute;
+                top: 0;
+                right: 16px;
+                height: 48px;
+                line-height: 48px;
+                color: #888;
+                text-align: right;
+                font-size: 12px;
+            }
+            
+            .active {
+                -webkit-opacity: 0.7;
+                opacity: 0.7;
+            }
+
+            .info {
+                background: rgba(45,171,219,.9);
+                position:relative;/*设置子元素相对定位*/
+                color: white;
+                text-align: center;
+                width:50px;
+                height:50px;
+                -webkit-border-radius: 10%;
+                -moz-border-radius: 10%;
+                border-radius:10%;
+                display:inline-block;
+            }
+            .info:hover{
+                cursor: pointer;
+                background: rgba(45,171,219,.6);
+            }
+
+            .info-tip{
+                background:rgba(250,60,0,1);
+                position:absolute;/*根据父元素绝对定位*/
+                width:18px;
+                height:18px;
+                top:-7px;/*在父元素的内部的顶部*/
+                right:-7px;/*在父元素的内部的右边*/
+                -webkit-border-radius: 50%;
+                -moz-border-radius: 50%;
+                border-radius:50%;
+                text-align:center;
+
+            }
+            .info1 {          background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:10%;
+                  display:inline-block;
+            }
+            .info-tip1 {
+                background:rgba(250,60,0,1);
+                position:absolute;/*根据父元素绝对定位*/
+                width:18px;
+                height:18px;
+                top:-7px;/*在父元素的内部的顶部*/
+                right:-7px;/*在父元素的内部的右边*/
+                -webkit-border-radius: 50%;
+                -moz-border-radius: 50%;
+                border-radius:50%;
+                text-align:center;
+            }
+            .info-tip11 {background:rgba(250,60,0,1);
+                    position:absolute;/*根据父元素绝对定位*/
+                    width:18px;
+                    height:18px;
+                    top:-7px;/*在父元素的内部的顶部*/
+                    right:-7px;/*在父元素的内部的右边*/
+                    -webkit-border-radius: 50%;
+                    -moz-border-radius: 50%;
+                    border-radius:50%;
+                    text-align:center;
+            }
+            .info11 {background: rgba(45,171,219,.9);
+                      position:relative;/*设置子元素相对定位*/
+                      color: white;
+                      text-align: center;
+                      width:50px;
+                      height:50px;
+                      -webkit-border-radius: 10%;
+                      -moz-border-radius: 10%;
+                      border-radius:50%;
+                      display:inline-block;
+            }
+            .info12 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info13 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info14 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info15 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info16 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info17 {
+                background: rgba(45,171,219,.9);
+                position:relative;/*设置子元素相对定位*/
+                color: white;
+                text-align: center;
+                width:50px;
+                height:50px;
+                -webkit-border-radius: 10%;
+                -moz-border-radius: 10%;
+                border-radius:50%;
+                display:inline-block;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="sum_points">
+
+          <div id="nav" class="nav none_info_text"   style="padding-bottom:8px; padding-top:8px; padding-right:12px; background-color:#FFFFFF; display: block">
+            <div align="center" style="color:#999999;">
+              <p><strong>没有记录哦</strong></p>
+              <p>分享给好友快速赚钱</p>
+            </div>
+          </div>
+
+        </div>
+
+        <div  class="nav none_is_daili"   style="padding-bottom:8px; padding-top:8px; padding-right:12px; background-color:#FFFFFF; display: none">
+            <div align="center" style="color:#999999;">
+                <p><strong>您是代理用户</strong></p>
+                <p>没有记录哦</p>
+            </div>
+        </div>
+
+
+    </body>
+
+
+    <script id="template" type="text/template">
+        {{ for(var vi in it) { }}
+
+        {{? it[vi].pay_points<0}}
+        <div style="padding-bottom:8px; padding-top:8px; padding-right:12px; background-color:#FFFFFF;">
+            <table style="color:#999999; font-size:12px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr><td width="66" rowspan="2" align="center"><div style=" background-image:url(../image/chu.png);background-size:cover;" class="info15"></div></td>
+                    <td valign="bottom"><span style="font-size:16px; color:#000000;">{{=it[vi].change_desc}}</span></td>
+                    <td width="180" rowspan="2" align="center"><div style="font-size:30px; color:#000000;" align="right">
+                        <div align="right">{{=it[vi].pay_points}} </div>
+                    </div></td></tr>
+                <tr>
+                    <td valign="top" colspan="3"><span class="subtitle">{{=it[vi].change_time}} <br>
+   </span></td>
+                </tr></table>
+        </div>
+        <div class="h1"></div>
+        {{??}}
+        <div style="padding-bottom:8px; padding-top:8px; padding-right:12px; background-color:#FFFFFF;">
+            <table style="color:#999999; font-size:12px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr><td width="66" rowspan="2" align="center"><div style=" background-image:url(../image/jin.png);background-size:cover;" class="info15"></div></td><td height="27" valign="bottom"><span style="font-size:16px; color:#000000;">{{=it[vi].change_desc}}</span></td>
+                    <td width="180" rowspan="2" align="center"><div style="font-size:30px; color:#FF9933;" align="right">
+
+                        <div align="right">+{{=it[vi].pay_points}} </div>
+                    </div></td></tr>
+                <tr><td valign="top" colspan="3"><span class="subtitle"> {{=it[vi].change_time}}<br></span></td></tr></table>
+        </div>
+        <div class="h1"></div>
+        {{?}}
+
+        {{ } }}
+    </script>
+
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript">
+        var page=0;
+        var totalPage =1;
+        apiready = function() {
+            var users = getStorage("users");
+            if(parseInt(users.is_daili)===1){
+                $('.none_info_text').css('display','none');
+                $('.none_is_daili').css('display','block');
+                return;
+            }else{
+                zongzhang();
+                api.addEventListener({
+                    name:'swipeup',
+                    extra:{
+                        threshold:500  //设置距离底部多少距离时触发，默认值为0，数字类型
+                    }
+                }, function(ret, err){
+                    page=parseInt(page)+1; //页码+1
+                    if(page<=totalPage){
+                        zongzhang();
+                    }
+                });
+            }
+        };
+
+        //活跃度
+        function zongzhang() {
+            var users = getStorage("users");
+            api.ajax({
+                url: 'http://shujunode.mumuim.cn:8080/users/huoyuelst',
+                method: 'get',
+                data: {
+                    values: {
+                        "uid": users.user_id,
+                        "page":page
+                    },
+                }
+            }, function (ret, err) {
+                if(!err){
+                    if(parseInt(ret.code) == 200){
+                        totalPage =ret.data.totalPage;
+                        page = ret.data.page;
+                        var data = ret.data.list;
+                        if(data){
+                            $('.none_info_text').css('display','none');
+                            var interText = doT.template($("#template").text());
+                            $(".sum_points").prepend(interText(data));
+                        }
+                    }else{
+                        api.toast({
+                            msg:ret.msg,
+                            duration: ret.code,
+                            location: 'bottom'
+                        });
+                    }
+                }else{
+                    api.toast({
+                        msg: '网络异常，请重新请求!',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            });
+
+        }
+    </script>
+
+</html>

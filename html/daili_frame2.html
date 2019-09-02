@@ -1,0 +1,328 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>APICloud APP</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <style>
+            html,
+            body {
+                background-color: #ededed;
+            }
+            .h80 {height: 80px;}
+            .h40 {height: 40px;}
+            .h20 {height: 20px;}
+            .h10 {height: 10px;}
+            .h1 {height: 1px;margin-left: 0px;}
+            .fr {float: right;}
+            .fl {float: left;}
+            .hightitem {background-color: #fff;}
+            
+            .empty>img {
+                float: left;
+                padding-left: 20px;
+                height: 124px;
+            }
+            
+            .empty>span {
+                height: 124px;
+                line-height: 124px;
+                padding-left: 20px;
+            }
+            
+            .message {
+                display: none;
+                margin-top: 8px;
+                background-color: #fff;
+            }
+            
+            .message>div {
+                position: relative;
+                top: -1px;
+                box-sizing: border-box;
+                height: 49px;
+                border-top: 1px solid #eee;
+            }
+            
+            .message>div>.msg {
+                box-sizing: border-box;
+                height: 48px;
+                padding-left: 16px;
+                padding-right: 96px;
+                line-height: 48px;
+                color: #888;
+                font-size: 16px;
+            }
+            
+            .message>div>.time {
+                position: absolute;
+                top: 0;
+                right: 16px;
+                height: 48px;
+                line-height: 48px;
+                color: #888;
+                text-align: right;
+                font-size: 12px;
+            }
+            
+            .active {
+                -webkit-opacity: 0.7;
+                opacity: 0.7;
+            }
+
+            .info {
+                background: rgba(45,171,219,.9);
+                position:relative;/*设置子元素相对定位*/
+                color: white;
+                text-align: center;
+                width:50px;
+                height:50px;
+                -webkit-border-radius: 10%;
+                -moz-border-radius: 10%;
+                border-radius:10%;
+                display:inline-block;
+            }
+            .info:hover{
+                cursor: pointer;
+                background: rgba(45,171,219,.6);
+            }
+
+            .info-tip{
+                background:rgba(250,60,0,1);
+                position:absolute;/*根据父元素绝对定位*/
+                width:18px;
+                height:18px;
+                top:-7px;/*在父元素的内部的顶部*/
+                right:-7px;/*在父元素的内部的右边*/
+                -webkit-border-radius: 50%;
+                -moz-border-radius: 50%;
+                border-radius:50%;
+                text-align:center;
+
+            }
+            .info1 {          background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:10%;
+                  display:inline-block;
+            }
+            .info-tip1 {
+                background:rgba(250,60,0,1);
+                position:absolute;/*根据父元素绝对定位*/
+                width:18px;
+                height:18px;
+                top:-7px;/*在父元素的内部的顶部*/
+                right:-7px;/*在父元素的内部的右边*/
+                -webkit-border-radius: 50%;
+                -moz-border-radius: 50%;
+                border-radius:50%;
+                text-align:center;
+            }
+            .info-tip11 {background:rgba(250,60,0,1);
+                    position:absolute;/*根据父元素绝对定位*/
+                    width:18px;
+                    height:18px;
+                    top:-7px;/*在父元素的内部的顶部*/
+                    right:-7px;/*在父元素的内部的右边*/
+                    -webkit-border-radius: 50%;
+                    -moz-border-radius: 50%;
+                    border-radius:50%;
+                    text-align:center;
+            }
+            .info11 {background: rgba(45,171,219,.9);
+                      position:relative;/*设置子元素相对定位*/
+                      color: white;
+                      text-align: center;
+                      width:50px;
+                      height:50px;
+                      -webkit-border-radius: 10%;
+                      -moz-border-radius: 10%;
+                      border-radius:50%;
+                      display:inline-block;
+            }
+            .info12 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info13 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info14 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info15 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info16 {background: rgba(45,171,219,.9);
+                  position:relative;/*设置子元素相对定位*/
+                  color: white;
+                  text-align: center;
+                  width:50px;
+                  height:50px;
+                  -webkit-border-radius: 10%;
+                  -moz-border-radius: 10%;
+                  border-radius:50%;
+                  display:inline-block;
+            }
+            .info17 {
+                background: rgba(45,171,219,.9);
+                position:relative;/*设置子元素相对定位*/
+                color: white;
+                text-align: center;
+                width:50px;
+                height:50px;
+                -webkit-border-radius: 10%;
+                -moz-border-radius: 10%;
+                border-radius:50%;
+                display:inline-block;
+            }
+        </style>
+    </head>
+    <body>
+
+<!--<div style=" background-color:#666666; padding:10px; margin-bottom:5px; color:#FFFFFF;">-->
+<!--<div style="font-size:17px; padding-bottom:10px;"><strong>mm_29815155_2617118_97261700463</strong></div>-->
+<!--<div><table width="100%" border="0" cellspacing="0" cellpadding="0">-->
+  <!--<tr>-->
+    <!--<td width="33%"><p style="font-size:12px;">用户(200上限)</p>-->
+      <!--<p><strong>200</strong></p></td>-->
+    <!--<td width="34%" align="center"><p style="font-size:12px;">本月佣金</p>-->
+      <!--<p><strong>1939.09</strong></p></td>-->
+    <!--<td width="33%" align="right"><p style="font-size:12px;">累计佣金</p>-->
+      <!--<p><strong>21922.00</strong></p></td>-->
+  <!--</tr>-->
+<!--</table>-->
+<!--</div>-->
+<!--</div>-->
+    <div class="pid_info_list">
+
+        <div id="nav" class="nav none_info_text"   style="padding-bottom:8px; padding-top:8px; padding-right:12px; background-color:#FFFFFF; display: block">
+            <div align="center" style="color:#999999;">
+                <p><strong>没有记录哦</strong></p>
+            </div>
+        </div>
+
+    </div>
+
+    <script class="pid_info" type="text/x-dot-template">
+    {{ for(var vi in it) { }}
+        <div style=" background-color:#666666; padding:10px; margin-bottom:5px; color:#FFFFFF;">
+            <div style="font-size:17px; padding-bottom:10px;"><strong>{{=it[vi].pid}}</strong></div>
+            <div>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="33%"><p style="font-size:12px;">用户(100上限)</p>
+                          <p><strong>{{=it[vi].use_count}}</strong></p></td>
+                        <td width="33%" align="right"><p style="font-size:12px;">累计佣金</p>
+                          <p><strong>{{=it[vi].total_yongjin}}</strong></p></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    {{ } }}
+    </script>
+
+<div align="center" style="padding:20px; color:#CCCCCC;">让玩手机变得有价值</div>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript">
+        var page = 0;var totalPage = 1;
+        apiready = function(){
+            pidInfo();
+            //向上轻扫加载更多代理pid管理信息
+            api.addEventListener({
+                name:'swipeup',
+            }, function(ret, err){
+                //页码+1
+                page=Number(page)+1;
+                if(page<=totalPage){
+                    pidInfo();
+                }
+            });
+        }
+
+        //代理pid管理信息
+        function pidInfo(){
+            var users = getStorage("users");
+            api.ajax({
+                url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                method: 'post',
+                data: {
+                    values: {
+                        "ac":"dailiPid",
+                        "uid": users.user_id,
+                        "page":page,
+                    },
+                }
+            }, function(ret, err) {
+                //console.log("pid管理信息ret:"+JSON.stringify(ret)+""+"pid管理信息err:"+JSON.stringify(err))
+                if(!err){
+                    if(parseInt(ret.code) == 200){
+                        var data=ret.data.list;
+                        page=ret.data.page;
+                        totalPage=ret.data.totalPage;
+                        if(data.length>0){
+                            $(".none_info_text").css("display","none");
+                            var interText = doT.template($(".pid_info").text());
+                            $(".pid_info_list").append(interText(data));
+                        }
+                    }else{
+                        api.toast({
+                            msg: ret.msg,
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                }else{
+                    api.toast({
+                        msg: '网络异常，请重新请求!',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+    </script>
+
+</html>

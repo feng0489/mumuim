@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>APICloud APP</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <style>
+            header {
+                background-color: #ededed;
+                border-bottom-width: 1px;
+                border-bottom-style: solid;
+                border-bottom-color: #ededed;
+            }
+            
+            h1 {
+                height: 40px;
+                line-height: 40px;
+                color: #333333;
+                font-size: 18px;
+                text-align: center;
+            }
+
+            .back {
+                position: absolute;
+                left: 0px;
+                bottom: 0px;
+                width: 40px;
+                height: 40px;
+                background: url(../image/cm2_icn_back.png) center center no-repeat;
+                background-size: 15px auto;
+            }
+            
+            nav {
+                position: relative;
+                height: 50px;
+                background-color: #ededed;
+                display: flex;
+                display: -webkit-flex;
+                display: flex;
+                border-bottom: solid #f0f0f0 1px;
+            }
+            
+            nav>div {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                flex: 1;
+                width: 100%;
+                line-height: 50px;
+                color: #666666;
+                font-size: 15px;
+                text-align: center;
+            }
+            
+            .nav-act {
+	color: #333333;
+	font-size: 18px;
+            }
+            
+            .nav-hov {
+                background-color: rgba(250, 240, 230, 0.7);
+            }
+            
+            mark {
+                position: absolute;
+                bottom: 0px;
+                left: 0px;
+                text-align: center;
+                background: transparent;
+                -webkit-transition: 300ms;
+            }
+            
+            mark>img {
+                height: 8px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header id="header">
+           <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="80"><div class="back event-back"></div></td>
+    <td><h1 class="friend_talking_title">我的发布任务</h1></td>
+    <td onClick="openNew20()" tapmode="highlight" width="80"><font color="#333333">回到首页</font></td>
+  </tr>
+</table>
+        </header>
+        <nav id="nav">
+            <div class="nav-act" tapmode="nav-hov" onClick="fnChange(0);">新增任务</div>
+            <div tapmode="nav-hov" onClick="fnChange(1);">已发布任务</div>
+            <mark></mark>
+        </nav>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            fnReady();
+
+            fnInit();
+			var systemType = api.systemType;  // 获取手机类型，比如： ios
+            if(systemType=='ios'){//兼容ios和安卓
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="30px";
+            }else{
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="35px";
+            }
+
+            api.openFrameGroup({
+                name: 'message_group',
+                scrollEnabled: true,
+                rect: {
+                    x: 0,
+                    y: 115,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                index: 0,
+                frames: [{
+                    name: 'renwudisanfangfabu_frame',
+                    url: 'renwudisanfangfabu_frame.html'
+                }, {
+                    name: 'renwudisanfangfabu_frame1',
+                    url: 'renwudisanfangfabu_frame1.html'
+                }]
+            }, function(ret, err) {
+                fnChangeStyle(ret.index);
+            });
+        };
+
+        var navs, mark;
+
+        function fnInit() {
+            navs = $api.domAll(nav, 'div');
+            mark = $api.dom(nav, 'mark');
+            mark.style.width = (api.winWidth / 3) + 'px';
+        };
+
+        function fnChange(index) {
+            fnChangeStyle(index);
+            api.setFrameGroupIndex({
+                name: 'message_group',
+                index: index,
+                scroll: true
+            });
+        };
+
+        function fnChangeStyle(index) {
+            for (var i = 0; i < navs.length; i++) {
+                if (i == index) {
+                    $api.addCls(navs[i], 'nav-act');
+                } else {
+                    $api.removeCls(navs[i], 'nav-act');
+                }
+            };
+
+            var markPosX = (api.winWidth / 3) * index + 'px';
+            $api.css(mark, '-webkit-transform: translate(' + markPosX + ', 0)');
+        };
+		function openNew20() {
+        api.openWin({
+            name: 'index',
+            url: '../index.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+    </script>
+</html>

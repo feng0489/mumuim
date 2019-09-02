@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>APICloud APP</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <style>
+            header {
+                background-color: #ededed;
+                border-bottom: solid #ededed 1px;
+            }
+            
+            h1 {
+                height: 50px;
+                line-height: 50px;
+                color: #333333;
+                font-size: 20px;
+                text-align: center;
+            }
+            
+            .back {
+                position: absolute;
+                left: 0px;
+                bottom: 0px;
+                width: 50px;
+                height: 50px;
+                background: url(../image/cm2_icn_back.png) center center no-repeat;
+                background-size: 15px auto;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header id="header">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="80"><div class="back event-back"></div></td>
+    <td><h1 class="friend_talking_title">申请开通代理</h1></td>
+    <td onClick="openNew20()" tapmode="highlight" width="80"><font color="#333333"></font></td>
+  </tr>
+</table>
+        </header>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            fnReady();
+            fnReadyFrame();
+            var systemType = api.systemType;  // 获取手机类型，比如： ios
+            if(systemType=='ios'){//兼容ios和安卓
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="30px";
+            }else{
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="35px";
+            }
+            var systemType = api.systemType;  // 获取手机类型，比如： ios
+            if(systemType=='ios'){//兼容ios和安卓
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="30px";
+            }else{
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="35px";
+            }
+        };
+    </script>
+
+</html>

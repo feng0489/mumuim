@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="screen-orientation" content="">
+<title>红包雨获得</title>
+<link rel="stylesheet" type="text/css" href="hongbao/css/style.css">
+<style>
+
+</style>
+</head>
+<body>
+<div class="main" id="main">
+	<div class="container" id="container">
+			
+	</div>
+	
+	<div class="mask" id="mask">
+	<div><img src="hongbao/img/hongbao.png" width="100%"></div>
+	<div id="caifu1" style="font-size:60px; color:#FFFFFF; margin-bottom:10px; margin-top:15px; line-height: 60px;">0</div>
+	<div align="center" style="color:#FFFFFF; font-size:18px;">当前红包总数(金)</div>
+	<div align="left" style="color:#FFCC66; font-size:22px; line-height:30px; padding:30px;">老铁你还没有资格哦，去淘宝购买任意产品获得资格</div>
+		<span id="start"><img src="hongbao/img/a1.png"></span>
+	</div>
+
+<div class="ft"><img src="hongbao/img/g1.png" ></div>
+</div>
+
+<script src="hongbao/js/Block.js"></script>
+<script type="text/javascript" src="../script/countUp.min.js"></script>
+<script type="text/javascript">
+    var options = {
+        useEasing : true,
+        separator : ',',
+        decimal : '.',
+        prefix : '',
+        suffix : ''
+    };
+    var caifu1 = new CountUp('caifu1', 0, 18113678, 0, 200, options);
+
+    caifu1.start();
+
+
+</script>
+<script>
+	var oContainer = document.getElementById('container');
+	var block = new Block(oContainer);
+	block.init();
+
+	var mask = document.getElementById('mask');
+	var start = document.getElementById('start');
+	start.onclick = function(){
+		block.start();
+		mask.style.display = 'none';
+	}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="UTF-8" />
+	<title>趣聊</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+	<link rel="stylesheet" href="css/iconfont/iconfont.css" />
+	<link rel="stylesheet" href="css/reset.css" />
+	<link rel="stylesheet" href="css/animate.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	<link rel="stylesheet" href="./js/mescroll/mescroll.min.css" />
+
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/zepto.min.js"></script>
+	<script src="js/fontSize.js"></script>
+	<script src="js/rippleEffect.js"></script>
+	<script src="js/wcPop/wcPop.js"></script>
+	<style>
+		.mescroll{
+			position: fixed;
+			top: 15px;
+			bottom: 15px;
+			height: auto; /*如设置bottom:50px,则需height:auto才能生效*/
+		}
+	</style>
+</head>
+
+<body>
+<div id="mescroll" class="mescroll" >
+	<div>
+
+	</div>
+
+	<!-- <>主容器 -->
+	<div class="weChatIM__panel clearfix">
+		<div class="we__chatIM-wrapper flexbox flex__direction-column">
+			<!-- //顶部 -->
+			
+			<!-- //主页面 -->
+			<div class="wcim__container flex1">
+				<div class="tabBar__tmpl tabBar02">
+					<!-- >>2、通讯录模块 -->
+					<div class="wc__addrFriend-list" id="J__addrFriendList">
+						<ul class="clearfix rmt-25">
+
+<li>
+
+<div  onClick="openNew32()" tapmode="highlight" class="row flexbox flex-alignc wcim__material-cell" id="J__popScreen_newFriends">
+<span class="icobg wcim__bg02"><i class="iconfont icon-haoyou"></i></span><span class="name flex1">新的朋友</span>
+</div>
+
+</li>
+<div style="height:10px;"></div>
+
+<!--<li id="A">-->
+<!--<h2 class="initial">A</h2>-->
+
+<!--&lt;!&ndash;<div onClick="openNew30()" tapmode="highlight" class="row flexbox flex-alignc wcim__material-cell">&ndash;&gt;-->
+<!--&lt;!&ndash;<img class="uimg" src="img/uimg/u__chat-img09.jpg" /><span class="name flex1">Aster</span>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">&ndash;&gt;-->
+<!--&lt;!&ndash;<img class="uimg" src="img/uimg/u__chat-img01.jpg" /><span class="name flex1">Alibaba-马云</span>&ndash;&gt;-->
+<!--&lt;!&ndash;</div>&ndash;&gt;-->
+<!--</li>-->
+
+							<!--<li id="B">-->
+							<!--<h2 class="initial">B</h2>-->
+								<!--<div  class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img02.jpg" /><span class="name flex1">马蓉 ▪ ☀☼㈱</span>-->
+								<!--</div>-->
+								<!--<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img03.jpg" /><span class="name flex1">科比</span>-->
+								<!--</div>-->
+								<!--<div  class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img10.jpg" /><span class="name flex1">Bear</span>-->
+								<!--</div>-->
+							<!--</li>-->
+
+							<li class="findFriends_list_info" >
+
+								<!--<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img15.jpg" /><span class="name flex1">CC_李嘉诚</span>-->
+								<!--</div>-->
+								<!--<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img05.jpg" /><span class="name flex1">雷军</span>-->
+								<!--</div>-->
+								<!--<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img04.jpg" /><span class="name flex1">张小龙</span>-->
+								<!--</div>-->
+							</li>
+							<!--<li id="D">-->
+								<!--<h2 class="initial">D</h2>-->
+								<!--<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img06.jpg" /><span class="name flex1">李彦宏-Robin</span>-->
+								<!--</div>-->
+								<!--<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img07.jpg" /><span class="name flex1">刘强东</span>-->
+								<!--</div>-->
+							<!--</li>-->
+							<!--<li id="E">-->
+								<!--<h2 class="initial">E</h2>-->
+								<!--<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img08.jpg" /><span class="name flex1">Lm杨幂幂</span>-->
+								<!--</div>-->
+								<!--<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img11.jpg" /><span class="name flex1">Wqq_王巧巧</span>-->
+								<!--</div>-->
+								<!--<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img12.jpg" /><span class="name flex1">杨迪</span>-->
+								<!--</div>-->
+							<!--</li>-->
+							<!--<li id="F">-->
+								<!--<h2 class="initial">F</h2>-->
+								<!--<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img13.jpg" /><span class="name flex1">wuli凡凡</span>-->
+								<!--</div>-->
+								<!--<div class="row flexbox flex-alignc wcim__material-cell" routeUrl="好友主页-详细资料.html">-->
+									<!--<img class="uimg" src="img/uimg/u__chat-img14.jpg" /><span class="name flex1">Nice奶思</span>-->
+								<!--</div>-->
+							<!--</li>-->
+						</ul>
+						<!--<div class="total">15位联系人</div>-->
+					</div>
+
+					<!-- //字母显示 -->
+
+					<!-- //26字母 -->
+
+				</div>
+			</div>
+			<!-- 底部tabBar -->
+		</div>
+	</div>
+</div>
+	<script id="findFriends_list_info_last" type="text/x-dot-template">
+		{{ for(var vi in it) { }}
+		<div onclick="open_imziliao(this)" class="row flexbox flex-alignc wcim__material-cell" data-id="{{=it[vi].fid}}"  >
+			{{? it[vi].fid_photo}}
+			<img  class="uimg" src="{{=it[vi].fid_photo}}"/>
+			{{??}}
+			<img  class="uimg" src="../image/my/profile_default.png"/>
+			{{?}}
+			<span class="name flex1" data-id="{{=it[vi].fid}}">{{=it[vi].fid_name}}</span>
+		</div>
+		{{ } }}
+	</script>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="./js/mescroll/mescroll.min.js"></script>
+	<script type="text/javascript">
+		apiready = function() {
+			var users = getStorage('users');
+			if(!users) {
+				api.alert({
+					title: '请先登录',
+					msg: '去登录',
+				}, function (ret, err) {
+					if (parseInt(ret.buttonIndex) === 1) {
+						api.closeWin({
+							name: 'is_special'
+						});
+						//关闭所有窗口
+						api.closeToWin({
+							name: 'root'
+						});
+						api.openWin({
+							name: 'login',
+							url: '../login_frame.html',
+							reload: true,
+							slidBackEnabled: false,
+							pageParam: {
+								name: 'test'
+							}
+						})
+					}
+				});
+				api.closeWin();
+				return;
+			}
+			friendslist();//好友列表
+			api.addEventListener({
+				name:'addFriend'
+			},function(ret,err){
+				if(ret){
+					//刷新好友列表
+					friendslist();
+				}
+			});
+		};
+
+		//打开聊天页面
+		function open_imziliao(obj){
+			var uid=$(obj).data('id');
+			api.openWin({
+				name: 'imziliao',
+				url: 'imziliao_window.html',
+				pageParam: {
+					uid: uid
+				}
+			});
+		}
+
+		//好友列表
+		function friendslist() {
+			var users = getStorage('users');
+			if(!users) {
+				return;
+			}
+			api.ajax({
+				url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+				method: 'post',
+				data: {
+					values: {
+						"ac": "findFriends",
+						"uid": users.user_id,
+					},
+				}
+			}, function (ret, er) {
+				if(!er){
+					if(parseInt(ret.code) == 200){
+						var frinds = ret.data;
+						var interText = doT.template($("#findFriends_list_info_last").text());
+						$(".findFriends_list_info").html(interText(frinds));
+					}else{
+						api.toast({
+							msg:ret.msg ,
+							duration: 3000,
+							location: 'bottom'
+						});
+					}
+				}else{
+					api.toast({
+						msg: '网络异常，请重新请求!',
+						duration: 3000,
+						location: 'bottom'
+					});
+				}
+
+			});
+
+		}
+
+		function openNew31() {
+			api.openWin({
+				bounces:false,
+				name: 'imqun',
+				url: 'imqun_window.html',
+				pageParam: {
+					name: 'test'
+				}
+			});
+		}
+
+		function openNew32() {
+			api.openWin({
+				bounces:false,
+				name: 'imxin',
+				url: 'imxin.html',
+				pageParam: {
+					name: 'test'
+				}
+			});
+		}
+
+		//下拉刷新
+		$(function() {
+			//创建MeScroll对象,内部已默认开启下拉刷新;
+			var mescroll = new MeScroll("mescroll", {
+				down:{
+					use: true, //是否初始化下拉刷新; 默认true
+					auto: false, //是否在初始化完毕之后自动执行下拉回调callback; 默认true
+					autoShowLoading: true, //如果在初始化完毕之后自动执行下拉回调,是否显示下拉刷新进度; 默认false. (需配置down的callback才生效)
+					isLock: false, //是否锁定下拉,默认false;
+					isBoth: true, //下拉刷新时,如果滑动到列表底部是否可以同时触发上拉加载;默认false,两者不可同时触发;
+					callback:getListData,
+					//function(mescroll) {
+					//     console.log("down --> callback");
+					//     getListData;
+					// },
+					offset: 80, //触发刷新的距离,默认80
+					outOffsetRate: 0.2, //超过指定距离范围外时,改变下拉区域高度比例;值小于1且越接近0,越往下拉高度变化越小;
+					bottomOffset: 20, //当手指touchmove位置在距离body底部20px范围内的时候结束上拉刷新,避免Webview嵌套导致touchend事件不执行
+					minAngle: 45, //向下滑动最少偏移的角度,取值区间  [0,90];默认45度,即向下滑动的角度大于45度则触发下拉;而小于45度,将不触发下拉,避免与左右滑动的轮播等组件冲突;
+					hardwareClass: "mescroll-hardware", //硬件加速样式;解决iOS下拉因隐藏进度条而闪屏的问题,参见mescroll.css
+					mustToTop: false, // 是否滚动条必须在顶部,才可以下拉刷新.默认false. 当您发现下拉刷新会闪白屏时,设置true即可修复.
+					warpId: null, //可配置下拉刷新的布局添加到指定id的div;默认不配置,默认添加到mescrollId
+					warpClass: "mescroll-downwarp", //容器,装载布局内容,参见mescroll.css
+					resetClass: "mescroll-downwarp-reset", //高度重置的动画,参见mescroll.css
+					textInOffset: '↓ 下拉刷新 ↓', // 下拉的距离在offset范围内的提示文本
+					textOutOffset: '释放更新', // 下拉的距离大于offset范围的提示文本
+					textLoading: '加载中 ...', // 加载中的提示文本
+					htmlContent: '<p class="downwarp-progress"></p><p class="downwarp-tip" style="font-size: 16px"></p>', // 布局内容
+					inited: function(mescroll, downwarp) {
+						//console.log("down --> inited");
+						//初始化完毕的回调,可缓存dom
+						mescroll.downTipDom = downwarp.getElementsByClassName("downwarp-tip")[0];
+						mescroll.downProgressDom = downwarp.getElementsByClassName("downwarp-progress")[0];
+					},
+					inOffset: function(mescroll) {
+						//console.log("down --> inOffset");
+						//进入指定距离offset范围内那一刻的回调
+						if (mescroll.downTipDom) mescroll.downTipDom.innerHTML = mescroll.optDown.textInOffset;
+						if(mescroll.downProgressDom) mescroll.downProgressDom.classList.remove("mescroll-rotate");
+					},
+					outOffset: function(mescroll) {
+						//console.log("down --> outOffset");
+						//下拉超过指定距离offset那一刻的回调
+						if (mescroll.downTipDom) mescroll.downTipDom.innerHTML = mescroll.optDown.textOutOffset;
+					},
+					onMoving: function(mescroll, rate, downHight) {
+						//下拉过程中的回调,滑动过程一直在执行; rate下拉区域当前高度与指定距离offset的比值(inOffset: rate<1; outOffset: rate>=1); downHight当前下拉区域的高度
+						//console.log("down --> onMoving --> mescroll.optDown.offset="+mescroll.optDown.offset+", downHight="+downHight+", rate="+rate);
+						if(mescroll.downProgressDom) {
+							var progress = 360 * rate;
+							mescroll.downProgressDom.style.webkitTransform = "rotate(" + progress + "deg)";
+							mescroll.downProgressDom.style.transform = "rotate(" + progress + "deg)";
+						}
+					},
+					beforeLoading: function(mescroll, downwarp) {
+						//console.log("down --> beforeLoading");
+						//准备触发下拉刷新的回调
+						return false; //如果要完全自定义下拉刷新,那么return true,此时将不再执行showLoading(),callback();
+					},
+					showLoading: function(mescroll) {
+						//console.log("down --> showLoading");
+						//触发下拉刷新的回调
+						if (mescroll.downTipDom) mescroll.downTipDom.innerHTML = mescroll.optDown.textLoading;
+						if(mescroll.downProgressDom) mescroll.downProgressDom.classList.add("mescroll-rotate");
+					},
+					afterLoading: function (mescroll) {
+						//console.log("down --> afterLoading");
+						// 结束下拉之前的回调. 返回延时执行结束下拉的时间,默认0ms; 常用于结束下拉之前再显示另外一小段动画,才去结束下拉的场景, 参考案例【dotJump】
+						return 2000
+					}
+				},
+			});
+			function getListData() {
+				friendslist();
+				mescroll.endErr();
+			}
+		});
+
+
+	</script>
+
+</html>

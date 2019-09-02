@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html><head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<title>淘宝视频</title>
+	<link rel="stylesheet" type="text/css" href="douyin_files/public.css">
+	<link rel="stylesheet" type="text/css" href="css/weui.css" />
+	<link rel="stylesheet" type="text/css" href="css/tishi.css" />
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script type="text/javascript" src="../script/common.js"></script>
+	<script type="text/javascript" src="../script/doT.min.js"></script>
+	<script src="douyin_files/jquery.js"></script>
+	<script type="text/javascript" src="../script/tishi.js"></script>
+	<script type="text/javascript">
+		var babyarray=[];
+		var wx;
+		apiready = function() {
+			fnReady();
+			wx = api.require('wx');
+			var users=getStorage("users");
+			if(users){
+				if(parseInt(users.is_special)===0){
+					$(".is_special_none_one").css("display","block");
+					$(".is_special_none_two").css("display","block");
+					$(".is_special_none_three").css("display","block");
+				}
+			}
+			var list=api.pageParam;
+			babyarray=list.babyarray;
+			$('.list_videoid').attr("src",list.video);//宝贝视频
+			$('.list_videoid').attr("poster",list.photo);//宝贝图片
+			$('.list_photo').attr("src",list.photo);//宝贝图片
+			$('.list_shopname').text(list.shopname);//宝贝店铺
+			$('.list_title').text(list.itemshorttitle);//宝贝标题
+			$('.list_couponmoney').text(list.couponmoney+"元");//宝贝优惠券金额
+			$('.none').text(list.sn);//宝贝下标
+			$('.none_id').text(list.id);//宝贝id
+			$('.list_itemsale').text(list.itemsale);//宝贝月销量
+			$('.baby_pinglun').text(list.general_index);//宝贝评论数
+
+			$('.baby_info').data('id',list.id);//宝贝id
+			$('.baby_info').data('sn',list.sn);//宝贝下标
+			$('.baby_info').data('title',list.itemshorttitle);//宝贝标题
+			$('.baby_info').data('shoptype',list.shoptype);//宝贝来源
+			$('.baby_info').data('img',list.photo);//宝贝图片
+			$('.baby_info').data('price',list.itemprice);//宝贝实际价格
+			$('.baby_info').data("saount",list.itemsale);//宝贝月销量
+			$('.baby_info').data("nick",list.shopname);//宝贝店铺
+			$('.baby_info').data("youhuijuan",list.couponmoney);//宝贝优惠券金额
+
+			api.addEventListener({
+				name:'viewdisappear'
+			},function(){
+				api.closeWin();
+			});
+
+			var systemType = api.systemType;
+			if(systemType=='ios'){
+				var tou=66;
+			}else{
+				var tou=50;
+			}
+		};
+
+		//宝贝评论
+		var pinglunStatus = false;
+		function pinglun() {
+			pinglunStatus = !pinglunStatus;
+			if (pinglunStatus) {
+				var babyid = $('.none_id').text();//宝贝id
+				var baby_shoptype = $('.none_shoptype').text();//宝贝来源
+				baby_shoptype = baby_shoptype == 'B' ? 'tmall' : 'taobao';
+				var url = "https://rate." + baby_shoptype + ".com/list_detail_rate.htm?itemId=" + parseInt(babyid) + "&sellerId=1&currentPage=1";//商品评论API
+				api.ajax({
+					url: url,
+					method: 'get',
+					dataType: "text",
+					async: false,
+					cache: true,
+				}, function (ret, err) {
+					ret = ret.substring(11, ret.length - 1);
+					ret = JSON.parse(ret);
+					var data = ret.rateDetail.rateList;
+					var list = [];
+					$.each(data, function (i, item) {
+						var entity = {};
+						item.gmtCreateTime.time = timestamToTime(item.gmtCreateTime.time);
+						item.gmtCreateTime.time = getDateDiff(item.gmtCreateTime.time);
+						entity.displayUserNick = item.displayUserNick;
+						entity.rateContent = item.rateContent;
+						entity.gmtCreateTime = item.gmtCreateTime.time;
+						list.push(entity);
+
+					});
+
+					if(list.length>0){
+						$(".pinglun_none").attr("display","none");
+						var interText = doT.template($(".index_shoping_info").html());
+						$(".shoping_index_info").html(interText(list));
+					}
+				});
+				pinglunStatus=false;
+			}
+		}
+
+		var page=1;
+		//加载更多
+		function refreshShoping() {
+			var url = '';
+			url = 'http://v2.api.haodanku.com/column/apikey/mumu/type/10/back/100/min_id/'+page+'';//商品筛选
+			// $.showLoading();
+			api.ajax({//最高为1000（back）个宝贝一页
+				url: url,
+				method: 'get',
+				cache: true,
+				async: false,
+			}, function (ret, err) {
+				//$.hideLoading();
+				if (!err) {
+					if (ret.data.length<1) {
+						page=1;
+						refreshShoping();
+						return;
+					}
+					page=ret.min_id;
+					var data = ret.data;
+					var list = [];
+					$.each(data, function (i, item) {
+						var entity = {};
+						entity.sn=i;//数组下标
+						entity.id=item.itemid;//宝贝id
+						entity.shoptype=item.shoptype;//宝贝来源
+						entity.tkrates=item.tkrates;//佣金比例
+						entity.tkmoney=item.tkmoney;//预计可得佣金
+						entity.itemsale=item.itemsale;//宝贝月销量
+						entity.itemprice=item.itemprice;//宝贝在售价格
+						entity.shopname=item.shopname;//宝贝店铺
+						entity.couponurl=item.couponurl;//宝贝优惠券链接
+						entity.couponmoney=item.couponmoney;//宝贝优惠金额
+						entity.itemshorttitle=item.itemshorttitle;//宝贝短标题
+						entity.general_index=item.general_index;//宝贝好单指数 代替评论条数
+						if(parseInt(item.videoid)>0){//宝贝视频
+							entity.video='http://cloud.video.taobao.com/play/u/1/p/1/e/6/t/1/'+item.videoid+'.mp4';
+						}else{
+							entity.video=item.videoid;
+						}
+						if(item.itempic){//宝贝图片
+							entity.itempic=item.itempic+'_310x310.jpg';
+						}
+						list.push(entity);
+					});
+					babyarray=list;
+				}
+			})
+			return babyarray;
+		}
+
+		function pinglun_button(){
+			var text = $(".pinglun_text").val();
+			$(".pinglunneirong").text(text);
+		}
+
+		function dianji() {
+			$(".updata_phpoto").attr("src","douyin_files/guanzhu.png");
+		}
+
+	</script>
+	<style type="text/css">
+		* {
+			-webkit-tap-highlight-color:transparent;
+		}
+		.cotr{
+			width: 100%;
+		}
+		.selectitem{
+			color: #fff;
+			font-size: 18px;
+			font-weight: bold;
+		}
+		.rimg{
+			width: 40px;
+			height: 40px;
+		}
+		.sendgiftfoot{
+			height:20px;line-height: 20px;background-color: #161824;padding: 5px 0;
+		}
+		.senddouyinbi{
+			float: left;display: inline-block;margin: 3px 4px 0 13px;width: 13px;height: 13px;
+		}
+		.torecharge{
+			color: #efcc3e;bottom: 7px;text-align: right;padding-right: 10px;font-weight: 600;font-size: 13px;
+		}
+		.pinglunneirong{
+			color: #000;
+			margin:5px 0;
+			font-size: 15px;
+			font-weight: 600;
+		}
+		.pinglunshijian{
+			color: #8c8c8c;
+			font-size: 13px;
+			margin: 8px 0;
+		}
+		.guanzhubiao{
+			width: 19px;
+			height: 19px;
+			margin: -10px 0 0 31%;
+		}
+	</style>
+</head>
+<body style="width: 100%;">
+<div class="cotr" style="cursor: pointer;">
+	<input type="hidden" class="none"/>
+	<input type="hidden" class="none_id"/>
+	<input type="hidden" class="baby_pinglun"/>
+	<video id="video" class="list_videoid" src="http://cloud.video.taobao.com/play/u/1714128138/p/1/e/6/t/1/218254707529.mp4" poster="douyin_files/deng.gif" preload="auto" x5-video-player-type="h5" x5-video-player-fullscreen="true" autoplay="autoplay" playsinline="true" webkit-playsinline="true" loop style="width: 100%; height: 100%;"></video>
+</div>
+<div class="btn">
+	<div class="is_special_none_one" style="display: none">
+		<div class="headimg baby_info" onclick="goSoping(this);" data-id=""  data-sn="" data-title="" data-shoptype="" data-img=""  data-price=""  data-saount="" data-nick="" data-couponurl="" data-youhuijuan="">
+			<img  style="border-radius: 50%;width: 45px;height: 45px;border:1px solid #fff;margin: -13px 0 0 0;" src="douyin_files/deng.gif" class="rimg list_photo">
+			<div onclick="guanZhu();">
+				<img class="guanzhubiao" src="douyin_files/guanzhubiao.png">
+			</div>
+		</div>
+	</div>
+	<div style="color: #fff;width: 42px;margin: 2px 0 0 0;" class="guanzhu" onclick="setzan();">
+		<img style="width:42px;" src="douyin_files/weiguanzhu.png"  class="updata_phpoto" onclick="dianji();">
+		<span style="color:#fff;font-weight:400;" class="list_itemsale">0</span>
+	</div>
+	<div class="zan">
+		<img style="margin: 6px 0 8px 0;" src="douyin_files/caili.png" class="rimg">
+		<span style="color: #fff;font-weight:400;" class="list_couponmoney">0</span>
+	</div>
+	<div class="is_special_none_two" style="display: none">
+	<div class="comment" onclick="setcomment();">
+		<img onclick="pinglun();" style="margin: 18px 0 2px 0;" src="douyin_files/pinglun.png" class="rimg">
+		<span style="color: #fff;font-weight:400;" class="baby_pinglun">0</span>
+	</div>
+	<div class="gift" onclick="setgift();">
+		<img src="douyin_files/xinxiliwu.png" class="rimg" style="position: relative;border-radius: 25px;bottom: 3px;border:1px solid #fff;" id="liwuico">
+	</div>
+	</div>
+</div>
+<div class="search event-back">
+	<img style="width: 25px;height: 25px;" src="douyin_files/search.png">
+</div>
+
+<div class="nickname">
+	<div style="margin: 10px 0px 10px 0px;font-size: 15px;color: #fff" class="list_title"></div>
+	<div style="margin: 10px 0px 10px 0px;font-size: 15px;color: #fff" class="list_shopname"></div>
+</div>
+<!-- <div class="like" onclick="guanZhu();">
+    关注
+</div> -->
+<div id="sendgift" class="liwukuang">
+	<div style="height: 57px;font-size: 13px; float: none;width: 100%;line-height: 57px;font-weight: normal;text-align: left;position: relative;box-sizing: border-box;padding-left: 50px;color:#a0a3a8;">
+		<img style="display: inline;width: 27px;height: 20px;position: absolute;left: 15px;top: 18px;" src="douyin_files/liwuding.png">分享好货，赚佣金
+		<div style="position: absolute;top:20px;right: 15px;z-index: 500;" onclick="liwucha();"><img style="width: 15px;height: 15px;" src="douyin_files/baisecha.png"></div>
+	</div>
+	<div onclick="share(9)" data-gid="9">
+		<img src="douyin_files/d6dc34d0cb488ed49bf1ac6e1fc463d3.png" style="margin: 5px auto;"><p class="liwuname" style="color: #e7e6eb;font-size: 11px;font-weight: 600;">微信</p><p style="color: #5a5d64;font-size: 11px;font-weight: 600;">发给朋友</p>
+	</div>
+	<div onclick="share(10)" data-gid="10">
+		<img src="douyin_files/04a31866e0f1c9b5d6a53f9860572b75.png" style="margin: 5px auto;"><p class="liwuname" style="color: #e7e6eb;font-size: 11px;font-weight: 600;">朋友圈</p><p style="color: #5a5d64;font-size: 11px;font-weight: 600;">发到朋友圈</p>
+	</div>
+	<div onclick="share(9)" data-gid="11">
+		<img src="douyin_files/dc9d80b539c36ccdf4691577360a5026.png" style="margin: 5px auto;"><p class="liwuname" style="color: #e7e6eb;font-size: 11px;font-weight: 600;">微信群</p><p style="color: #5a5d64;font-size: 11px;font-weight: 600;">大于50人</p>
+	</div>
+
+	<div class="sendgiftfoot" style="width: 100%;margin: 8px 0 2px 0;">
+
+	</div>
+</div>
+<div class="comment1" >
+	<div style="width: 100%;height: 13px;font-size:12px;text-align:center;margin-top: 10px;color: #252429;font-weight: 600;"><span></span>评论<div style="position: absolute;top:10px;right: 15px;z-index: 500;" onclick="hideall();"><img style="width: 15px;height: 15px;" src="douyin_files/chahao.png"></div>
+	</div>
+	<div style="margin-top: 15px;overflow: scroll;height: 443px;" class="shoping_index_info">
+
+		<div class="commentitem pinglun_none" style="display: block"><img src="images/taobaophoto.png" class="chead"/><div class="ccontent"><p>s****1</p ><div class="pinglunneirong ">一个字好！</div><p class="pinglunshijian">1周前</p ></div><div class="czan"></div></div>
+
+	</div>
+</div>
+<div id="cinput" style="border:1px solid rgba(95, 95, 95, 0.15);">
+	<input color:red;="" type="text" style="width: 70%; color: #000;font-weight: 600;text-indent:4%; font-size: 14px;border-radius:1px solid #fff;" placeholder="留下你的精彩评论吧" class="pinglun_text">
+	<button type="submit" style="width: 10%;"><img style="width: 20px;height: 20px;padding: 0 0 0 13px;" src="douyin_files/aite.png"></button>
+
+	<button type="submit" style="width: 20%;" onclick="pinglun_button();"><img style="width: 20px;height: 20px;margin: 0 25px;" src="douyin_files/fasong.png"></button>
+</div>
+<style type="text/css">
+	.songliwu{
+		display: none;
+		position: fixed;
+		width: 195px;
+		height: 50px;
+		/*background-color: #000;*/
+		bottom: 43.5%;
+		left: 10px;
+		border-bottom-left-radius: 50px;
+		border-top-left-radius: 50px;
+		box-sizing: border-box;
+		padding:7px 0 7px 55px;
+		color:#fff;
+		background: linear-gradient(to right, rgba(0,0,0,.75) , rgba(0,0,0,0)); /* 标准的语法 */
+	}
+	.songliwu .head{
+		position: absolute;
+		left: 3px;
+		top: 3px;
+		width: 44px;
+		height: 44px;
+	}
+	.songliwu .head img{
+		width: 100%;
+		height: 100%;
+		border-radius: 50px;
+		margin: 0;
+	}
+	.songliwu .liwuinfo{
+		width: 80%;
+	}
+	.songliwu .liwuinfo p{
+		color: #fff;
+		font-size: 14px;
+		height: 18px;
+		line-height: 18px;
+		font-weight: normal;
+		overflow: hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
+	}
+	.songliwu .number{
+		color: #fff;
+		position: absolute;
+		top: -5px;
+		right: -30px;
+	}
+	.songliwu .number img{
+		float: left;
+		width: 50px;
+		height: 50px;
+		border-radius: 50px;
+		position: absolute;
+		top: -7px;
+		right: 42px;
+		z-index: -1;
+	}
+	.songliwu .liwuinfo .liname{
+		color: #fff;
+		font-size: 12px;
+		font-weight: 200;
+	}
+	.songliwu .number .linum{
+		float: left;
+		line-height: 30px;
+		margin-left: 10px;
+		color: #fff;
+		font-size: 18px;
+		text-align: center;
+		white-space: nowrap;
+		font-weight: normal;
+	}
+	.add_transform{
+		transform:rotate(360deg);
+		-ms-transform:rotate(360deg);/* IE9 */
+		-moz-transform:rotate(360deg);/* Firefox */
+		-webkit-transform:rotate(360deg);/* Safari和Chrome */
+		-o-transform:rotate(360deg);/* Opera */
+		transition:all 0.5s ease-in-out;
+		-moz-transition:all 0.5s ease-in-out;/*Firefox 4 */
+		-webkit-transition:all 0.5s ease-in-out;/* Safari和Chrome */
+		-o-transition:all 0.5s ease-in-out;/* Opera */
+	}
+</style>
+<div class="songliwu" id="songliwu">
+	<div class="head">
+		<img src="douyin_files/usertouxiang.png">
+	</div>
+	<div class="liwuinfo">
+		<p>130</p>
+		<p style="font-size: 12px;">送出 <span class="liname">礼物</span></p>
+	</div>
+	<div class="number">
+		<img class="liimg" src="douyin_files/caili.png">
+		<div class="linum">x<span style="color: #fff;font-weight: 500;">1</span></div>
+	</div>
+</div>
+<img src="douyin_files/guanzhu.png" class="toastimg" style="top: 313.5px; left: 167.5px;">
+<img src="douyin_files/3-180.png" class="toastimg1" style="display: none;">
+<div class="alert"></div>
+<div class="is_special_none_three" style="display: none">
+<div onclick="setcomment();pinglun();" class="footer" style=" background-color:black; opacity:0.6;filter:alpha(opacity:40);">
+	<input color:red;="" type="text" readonly="readonly" style="width: 79%; color: #ffffff;font-weight: 600;text-indent:4%; font-size: 14px;border-radius:1px solid #fff;" placeholder="留下你的精彩评论吧" onclick="catchtap()">
+
+	<button type="submit" style="width: 20%; border-style: none; background-color:black;" onclick="sendcomment()"><img style="width: 20px;height: 20px;margin: 0 35px;" src="douyin_files/fasong.png"></button>
+</div>
+</div>
+<script type="text/x-dot-template"  class="index_shoping_info">
+	{{ for(var vi in it) { }}
+	<div class="commentitem"><img src="images/taobaophoto.png" class="chead"/><div class="ccontent"><p>{{=it[vi].displayUserNick}}</p ><div class="pinglunneirong ">{{=it[vi].rateContent}}</div><p class="pinglunshijian">{{=it[vi].gmtCreateTime}}</p ></div><div class="czan"></div></div>
+	{{ } }}
+</script>
+
+<script src="douyin_files/jquery-animate-css-rotate-scale.js"></script>
+<script src="douyin_files/jweixin-1.js"></script>
+<script type="text/javascript" src="js/jquery-weui.js"></script>
+<script type="text/javascript">
+	var page = 1;  //当前正在显示的page
+	var videoList = [];
+	var index = 0;
+	var video = document.getElementById('video');
+	var flag = true; //body事件标记
+	var cate = 1; //1推荐  ！1 是最新
+	var count = 0;
+	var firstopen = true;
+	var u = navigator.userAgent;
+	var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+	var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+
+	// var t = 0;
+	// var icodou = setInterval(function(){
+	// 	$('#liwuico').animate({rotate: t+'deg'}, 50);
+	// 	t += 5;
+	// },50)
+	/*判断上下滑动：*/
+	$('body').bind('touchstart',function(e){
+
+		startX = e.originalEvent.changedTouches[0].pageX;
+		startY = e.originalEvent.changedTouches[0].pageY;
+	});
+	$("body").bind("touchend",function(e){
+		if($("#sendgift").is(":hidden") == false || $(".comment1").is(":hidden") == false){
+		}else{
+			//获取滑动屏幕时的X,Y
+			endX = e.originalEvent.changedTouches[0].pageX;
+			endY = e.originalEvent.changedTouches[0].pageY;
+			//获取滑动距离
+			distanceX = endX-startX;
+			distanceY = endY-startY;
+			//判断滑动方向
+			if(Math.abs(distanceX)>Math.abs(distanceY) && distanceX>0){
+				//console.log('往右滑动');//右滑回退
+
+
+			}else if(Math.abs(distanceX)>Math.abs(distanceY) && distanceX<0){
+				//console.log('往左滑动');//左滑前进
+
+
+			}else if(Math.abs(distanceX)<Math.abs(distanceY) && distanceY<0){
+				index++;
+				if(index < videoList.length){
+					//setData(videoList[index]);
+				}else{ //获取下一页
+					var sn =parseInt($('.none').text()) || 0;//宝贝下标
+					if(sn>=(parseInt(babyarray.length)-1)){
+						refreshShoping();
+						sn=0;
+					}
+					var up = babyarray[parseInt(sn)+1];
+					$('.list_videoid').attr("src",up.video);//宝贝视频
+					$('.list_videoid').attr("poster",up.itempic);//宝贝图片
+					$('.list_photo').attr("src",up.itempic);//宝贝图片
+					$('.list_shopname').text(up.shopname);//宝贝店铺
+					$('.list_title').text(up.itemshorttitle);//宝贝标题
+					$('.list_couponmoney').text(up.couponmoney+"元");//宝贝优惠券金额
+					if(up.itemid){
+						up.itemid=up.itemid;
+					}else{
+						up.itemid=up.id;
+					}
+					$('.none').text(up.sn);//宝贝下标
+					$('.none_id').text(up.itemid);//宝贝id
+					$('.none_shoptype').text(up.shoptype);//宝贝来源
+					$('.list_itemsale').text(up.itemsale);//宝贝月销量
+					$('.baby_pinglun').text(up.general_index);//宝贝评论数
+
+					$('.baby_info').data('id',up.itemid);//宝贝id
+					$('.baby_info').data('sn',up.sn);//宝贝下标
+					$('.baby_info').data('title',up.itemshorttitle);//宝贝标题
+					$('.baby_info').data('shoptype',up.shoptype);//宝贝来源
+					$('.baby_info').data('img',up.itempic);//宝贝图片
+					$('.baby_info').data('price',up.itemprice);//宝贝实际价格
+					$('.baby_info').data('saount',up.itemsale);//宝贝月销量
+					$('.baby_info').data('nick',up.shopname);//店铺
+					$('.baby_info').data('youhuijuan',up.couponmoney);//宝贝优惠券金额
+
+					index--;
+					page++;
+					var res = getList(page,cate);
+					if(videoList.length == 0){
+						page--;
+					}
+				}
+			}else if(Math.abs(distanceX)<Math.abs(distanceY) && distanceY>0){
+				var down;
+				index--;
+				if(index >= 0){
+					//setData(videoList[index]);
+				}else{ //获取上一页
+					var sn =parseInt($('.none').text());//宝贝下标
+					if(sn<=1){
+						refreshShoping();
+						sn=parseInt(babyarray.length);
+					}
+					var up = babyarray[parseInt(sn)-1];
+					$('.list_videoid').attr("src",up.video);//宝贝视频
+					$('.list_videoid').attr("poster",up.itempic);//宝贝图片
+					$('.list_photo').attr("src",up.itempic);//宝贝图片
+					$('.list_shopname').text(up.shopname);//宝贝店铺
+					$('.list_title').text(up.itemshorttitle);//宝贝标题
+					$('.list_couponmoney').text(up.couponmoney+"元");//宝贝优惠券金额
+					$('.none').text(up.sn);//宝贝下标
+					if(up.itemid){
+						up.itemid=up.itemid;
+					}else{
+						up.itemid=up.id;
+					}
+					$('.none_id').text(up.itemid);//宝贝id
+					$('.none_shoptype').text(up.shoptype);//宝贝来源
+					$('.list_itemsale').text(up.itemsale);//宝贝月销量
+					$('.baby_pinglun').text(up.general_index);//宝贝评论数
+
+					$('.baby_info').data('id',up.itemid);//宝贝id
+					$('.baby_info').data('sn',up.sn);//宝贝下标
+					$('.baby_info').data('title',up.itemshorttitle);//宝贝标题
+					$('.baby_info').data('shoptype',up.shoptype);//宝贝来源
+					$('.baby_info').data('img',up.itempic);//宝贝图片
+					$('.baby_info').data('price',up.itemprice);//宝贝实际价格
+					$('.baby_info').data('saount',up.itemsale);//宝贝月销量
+					$('.baby_info').data('nick',up.shopname);//店铺
+					$('.baby_info').data('youhuijuan',up.couponmoney);//宝贝优惠券金额
+
+					index++;
+					page--;
+					var res = getList(page,cate);
+					if(videoList.length == 0){
+						page++;
+					}
+				}
+			}
+		}
+	});
+
+	var prompt = function (message, style, time){
+		style = (style === undefined) ? 'alert-success' : style;
+		time = (time === undefined) ? 1200 : time;
+		$('<div>')
+				.appendTo('body')
+				.addClass('alert ' + style)
+				.html(message)
+				.show()
+				.delay(time)
+				.fadeOut();
+	};
+
+	function setData(v){
+		$("#video").css("width",$(window).width());
+		$("#video").css("height",$(window).height());
+		if(!v){
+			v='';
+		}
+		$(".headimg").find("img").eq(0).attr('src',v.headimgurl);
+		if(v.is_zan == 0){
+			$(".guanzhu").html('<img style="width:42px;" src="/static/images/weiguanzhu.png"/><span style="color:#fff;font-weight:400;">'+v.zan+'</span>');
+		}else{
+			$(".guanzhu").html('<img style="width:42px;" src="/static/images/guanzhu.png"/><span style="color:#fff;font-weight:400;">'+v.zan+'</span>');
+		}
+		$(".zan").find("span").eq(0).text(v.caifu);
+		$(".comment").find("span").eq(0).text(v.commentNum);
+		$(".nickname").find("div").eq(0).text(v.nickname);
+		$(".nickname").find("div").eq(1).text(v.title);
+		if(v.is_like != 0){
+			$(".like").hide();
+			$(".guanzhubiao").parent().hide();
+		}else{
+			$(".like").show();
+			$(".like").attr('class','like');
+			$(".like").text('关注');
+			$(".guanzhubiao").parent().show();
+		}
+		$("#video").attr('src',v.url);
+		$("#video").attr('poster',v.video_img);
+		doshare();
+
+		if(video.paused && isAndroid && firstopen){
+			$(".toastimg1").show();
+			video.play();
+			firstopen = false;
+			//$(".toastimg1").click();
+		}else{
+			$(".toastimg1").hide();
+			video.play();
+		}
+		// clearInterval(icodou);
+		// t = 0;
+		// var icodou = setInterval(function(){
+		// $('#liwuico').animate({rotate: t+'deg'}, 50);
+		// 	t += 5;
+		// },50)
+
+	}
+
+
+	$(function(){
+		$("body").css("height",$(window).height());
+		$("body").css("width",$(window).width());
+		$(".cotr").css("height",$(window).height());
+		$(".toastimg").css({"top":$(window).height() / 2 - 20,"left":$(window).width() / 2 - 20});
+
+		$(".toastimg1").click(function(){
+			flag = false;
+			if(video.paused){
+				$(".toastimg1").hide();
+				video.play();
+			}
+			flag = true;
+		});
+
+
+		getList(page,cate);
+
+		$(window).resize(function(){
+			$("body").css("height",$(window).height());
+			$("body").css("width",$(window).width());
+			$(".cotr").css("height",$(window).height());
+			$("#video").css("width",$(window).width());
+			$("#video").css("height",$(window).height());
+		});
+
+
+		document.addEventListener("WeixinJSBridgeReady",function(){
+			if(video.paused){
+				video.play();
+			}
+		},false);
+	});
+
+	$(".cotr").on('click',function(){  console.log(flag);
+		if(flag == false){
+			flag = true;
+			return false;
+		}
+
+		count++;
+		if(count == 1){
+			timer = setTimeout(function(){
+				if(count == 1){  //danji
+					if($("#sendgift").is(":hidden") == false || $(".comment1").is(":hidden") == false){
+						closeall();
+					}else{
+						if(video.paused){
+							$(".toastimg1").hide();
+							video.play();
+						}else{
+							$(".toastimg1").show();
+							video.pause();
+						}
+					}
+				}else if(count == 2){ //shuangji
+					// doanimate("/static/images/guanzhu.png");
+					// if(videoList[index].is_zan == 0){
+					// 	//zanvideo(videoList[index].id);
+					// }
+				}
+				count = 0;
+				clearTimeout(timer);
+			},400)
+		}
+
+	});
+
+	function zuixin(){
+		$(".zuixin").attr("class","zuixin selectitem");
+		$(".tuijian").attr("class","tuijian");
+		if(cate == 1){
+			cate = 0;
+			page = 1;
+			videoList = [];
+			getList(page,cate);
+		}
+		return false;
+	}
+
+	function tuijian(){
+		$(".tuijian").attr("class","tuijian selectitem");
+		$(".zuixin").attr("class","zuixin");
+		if(cate != 1){
+			cate = 1;
+			page = 1;
+			videoList = [];
+			getList(page,cate);
+		}
+		return false;
+	}
+
+	function getList(p,c){
+		$.ajax({
+			url : "/web/index/getvideo",
+			method : "get",
+			data : {page : p,cate : c},
+			dataType : "json",
+			success : function(res){   console.log(res);
+				if(res != ''){
+					videoList = [];
+					for(var k in res){
+						videoList.push(res[k]);
+					}
+					index = 0; //指针位置
+					setData(videoList[index]);
+					return 0;
+				}else{
+					return 1;
+				}
+			},
+			error : function(a,b,c){
+				console.log(a);
+			}
+		});
+	}
+
+	function setcomment(){
+		flag = false;
+		closeall();
+		$("#comment").html("");
+		getCommentList();
+		flag = true;
+	}
+	function hideall() {
+		flag = false;
+		$(".comment1").hide();
+		$("#cinput").hide();
+
+		flag = true;
+
+		// if(video.paused && isAndroid){
+		// 	$("#video").attr('poster',videoList[index].video_img);
+		// }
+	}
+	function liwucha() {
+		flag = false;
+		$(".liwukuang").hide();
+		flag = true;
+	}
+	function getCommentList(p,id){
+		$(".comment1").show();
+		$("#cinput").show();
+
+		// $.ajax({
+		// 	url : '/web/index/getComment',
+		// 	method : "get",
+		// 	data : {page : p,vid : id},
+		// 	dataType : "json",
+		// 	success : function(res){
+		// 		if(res != ''){
+		// 			var html = "";
+		// 			if(p == 1){
+		// 				$(".comment1").find("span").text(res.count);
+		// 			}
+		// 			res = res.list;
+		// 			for(var k in res){
+		// 				html += "<div class=\"commentitem\"><img src=\""+res[k].headimgurl+"\" class=\"chead\" onclick=\"tousercenter1("+res[k].uid+")\" />";
+		// 				html += "<div class=\"ccontent\"><p>"+res[k].nickname+"</p><div class=\"pinglunneirong\">"+res[k].content+"</div><p class=\"pinglunshijian\">"+res[k].addtime+"</p></div><div class=\"czan\">"
+		// 				// if(res[k].is_zan == 0){
+		// 				// 	html += "<img src=\"/static/images/guanzhu.png\" />"+res[k].zan+"</div></div>";
+		// 				// }else{
+		// 				// 	html += "<img src=\"/static/images/weiguanzhu.png\" />"+res[k].zan+"</div></div>";
+		// 				// }
+		// 				html += "</div></div>"
+		// 			}
+		// 			$("#comment").append(html);
+		// 		}
+		// 	}
+		// })
+	}
+
+	function guanZhu(){
+		closeall();
+		flag = false;
+		//setGuanZhu(videoList[index].uid);
+	}
+
+	//关注或者取关
+	function setGuanZhu(buid){  console.log(buid);
+		$.ajax({
+			url : '/web/index/like',
+			method : "get",
+			data : {buid : buid},
+			dataType : "json",
+			success : function(res){   console.log(res);
+				if(res == 1){
+					$(".like").attr('class','like');
+					$(".like").text('关注');
+				}else if(res == 0){
+					$(".like").hide();
+				}
+			}
+		})
+	}
+
+	function setzan(){
+		// closeall();
+		// flag = false;
+		// zanvideo(videoList[index].id);
+	}
+
+	function zanvideo(vid){
+		if (videoList[index].is_zan == 1) {
+			// return false;
+		}
+		$.ajax({
+			url : '/web/index/zan',
+			method : "get",
+			data : {vid : vid},
+			dataType : "json",
+			success : function(res){   console.log(res);
+				if(res.is == 1){
+					$(".guanzhu").html('<img style="width:42px;" src="/static/images/guanzhu.png"/><span style="color:#fff;font-weight:400;">'+res.num+'</span>');
+				}else{
+					$(".guanzhu").html('<img style="width:42px;" src="/static/images/weiguanzhu.png"/><span style="color:#fff;font-weight:400;">'+res.num+'</span>');
+				}
+				videoList[index].is_zan = res.is;
+				videoList[index].zan = res.num;
+			}
+		})
+	}
+
+	function setgift(){
+		flag = false;
+		$("#sendgift").toggle();
+		flag = true;
+	}
+
+	var dhflag = false
+	function sendgift(e){
+		flag = false;
+		if(!dhflag)dhflag = true;
+		var gid = $(e).attr("data-gid");
+		var vid = videoList[index].id;
+		if(dhflag){
+			$.ajax({
+				url : "/web/index/sendGift",
+				method : "get",
+				data : {gid:gid,vid:vid},
+				dataType : "json",
+				success : function(res){
+					if(res.error == 0){
+						console.info(res);
+						videoList[index].caifu = res.caifu;
+						videoList[index].zan = res.zan;
+						$(".sendgiftfoot").find("span").text(res.money);
+						$(".zan").find("span").eq(0).text(res.caifu);
+						$(".guanzhu").find("span").eq(0).text(res.zan);
+						var animateImg = $(e).find("img").eq(0).attr("src");
+						var animateName = $(e).find(".liwuname").eq(0).text();
+						songliwudonghua(animateImg,animateName);
+						dhflag = false;
+					}else{
+						alert(res.msg);
+						location.href = "/web/index/qianbao";
+					}
+					// $("#sendgift").hide();
+				}
+			})
+		}
+	}
+
+
+	function doanimate(url){   console.log(url);
+
+		$(".toastimg").show();
+		$(".toastimg").attr('src',url);
+
+		$(".toastimg").animate({
+			width: "120px",
+			height: "120px",
+			opacity : 0,
+			left:$(window).width() / 2 - 40,
+			top:$(window).height() / 2 - 40
+		},800,function(){
+			$(".toastimg").hide();
+			$(".toastimg").animate({
+				width: "60px",
+				height: "60px",
+				opacity : 1,
+				left:$(window).width() / 2 - 6,
+				top:$(window).height() / 2 - 6
+			});
+		});
+		closeall();
+	}
+
+	var liwutimer;
+	function songliwudonghua(url,liwuname){
+		$('#songliwu').find('img.liimg').attr('src',url);
+		$('#songliwu').find('.liname').text(liwuname);
+
+		var isshow = $('#songliwu').is(":hidden")? false : true;
+		if(isshow){
+			var oldnum = parseInt($('#songliwu').find('.linum span').text());
+			var newnum = oldnum+1;
+			$('#songliwu').find('.linum span').text(newnum);
+			$('#songliwu').find('.linum').stop().animate({
+				fontSize: '32px'
+			},50).animate({
+				fontSize: '9px'
+			},100).animate({
+				fontSize: '18px'
+			},300)
+		}else{
+			$('#songliwu').find('.linum span').text(1);
+			$('#songliwu').css('left','-300px').show().stop().animate({
+				left: '10px'
+			},300);
+		}
+
+		clearTimeout(liwutimer)
+		liwutimer = setTimeout(function(){
+			$('#songliwu').hide();
+		},2000);
+	}
+
+
+	function closeall(){
+		$("#sendgift").hide();
+		$(".comment1").hide();
+		$("#cinput").hide();
+	}
+
+	function catchtap(){
+		flag = false;
+		return false;
+	}
+
+	function sendcomment(){
+		flag = false;
+		var c = $(".pinglun_text").val();
+		// if(c.trim() == ""){
+		//  alert("请输入内容");
+		//  return false;
+		// }
+
+		$.ajax({
+			url : "/web/index/comment",
+			method : "post",
+			data : {comment : c},
+			dataType : "json",
+			success : function(res){
+
+				if(res.error == 0){
+
+					//closeall();
+					prompt("评论成功", 'alert-success',1500);
+
+				}else{
+					prompt("评论失败", 'alert-danger', time);
+				}
+			}
+		})
+	}
+
+	function tosearch(){
+		flag = false;
+		window.location.href = "/web/index/search";
+	}
+
+	//购买宝贝
+	function goSoping(obj) {
+		var shop_id = $(obj).data("id");//宝贝id
+		var title = $(obj).data("title");//宝贝标题
+		title = title.replace(/<.*?>/ig,"");//span标签替换为空
+		var pic_url = $(obj).data("img");//宝贝图片
+		var real_price = $(obj).data("price");//宝贝实际价格
+		var shop_type = $(obj).data("shoptype");//宝贝来源
+		shop_type=shop_type=='B'?1:0;
+		var leafCatId = $(obj).data("sss") || '';
+		var users=getStorage("users");
+		$.showLoading();
+		api.ajax({
+			url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+			method: 'post',
+			data: {
+				values: {
+					"ac": "doQuan",
+					"uid": users.user_id,
+					"shop_id": shop_id,
+					"title": title,
+					"pic_url": pic_url,
+					"real_price": real_price,
+					"shop_type": shop_type,
+					"pid": users.pid,
+				},
+			}
+		}, function (ret, err) {
+			if(!err){
+				$.hideLoading();
+				if(parseInt(ret.code) == 200){
+					var data=ret.data;
+					if(data){//高佣
+						var link=data.tbk_privilege_get_response.result.data.coupon_click_url;
+						api.openWin({
+							name: 'lingquan',
+							url: 'lingquan.html',
+							pageParam: {
+								url:link,
+							}
+						});
+					}else{
+						var  click_url = 'https://uland.taobao.com/coupon/edetail?e=activityId='+leafCatId+'&pid='+users.pid+'&itemId='+shop_id+'&src=cd_cdll';
+						api.openWin({
+							name: 'lingquan',
+							url: 'lingquan.html',
+							pageParam: {
+								url:click_url,
+							}
+						});
+					}
+
+				}else{
+					api.toast({
+						msg: ret.msg,
+						duration: ret.code,
+						location: 'bottom'
+					});
+				}
+			}else{
+				api.toast({
+					msg: '网络异常，请重新请求!',
+					duration: 3000,
+					location: 'bottom'
+				});
+			}
+		});
+
+
+	};
+
+	//分享
+	function share(num) {
+		var shop_id = $(".baby_info").data("id");//宝贝id
+		var title = $(".baby_info").data("title");//宝贝标题
+		title = title.replace(/<.*?>/ig,"");//span标签替换为空
+		var pic_url = $(".baby_info").data("img");//宝贝图片
+		var real_price = $(".baby_info").data("price");//宝贝实际价格
+		var shop_type = $(".baby_info").data("shoptype");//宝贝来源
+		shop_type=shop_type=='B'?1:0;
+		var youhuijuan = $(".baby_info").data("youhuijuan");//宝贝优惠券金额
+		var leafCatId = $(".baby_info").data("sss") || '';
+		var saleCount = $('.baby_info').data('saount');//宝贝月销量;
+		var nick = $('.baby_info').data('nick');//宝贝店铺;
+		var users=getStorage("users");
+		var link='&shop_id='+shop_id+'&title='+title+'&pic_url='+pic_url+'&real_price='+real_price+'&shop_type='+shop_type+"&uid="+users.user_id+"&youhuijuan="+youhuijuan+"&saleCount="+saleCount+"&nick="+nick+"&leafCatId="+leafCatId;
+		var scenes= parseInt(num)===9 ? 'session':'timeline';
+		wx.shareWebpage({
+			scene: scenes,
+			title: '你的朋友给你分享一个宝贝',
+			description:title,
+			thumb:'widget://html/images/fenxiang.png',
+			contentUrl: "http://mumuim.cn/index.php?m=default&c=weixin&a=share"+link,
+		}, function (ret, err) {
+			if(ret.status==true){
+
+				api.toast({
+					msg:"分享成功!",
+					duration: 3000,
+					location: 'bottom'
+				});
+			}else{
+				api.toast({
+					msg:"取消分享!",
+					duration: 3000,
+					location: 'bottom'
+				});
+				console.log("分享失败");
+			}
+		});
+	};
+
+	function tousercenter1(e){
+		flag = false;
+		window.location.href = "/web/index/usercenter?uid="+e;
+	}
+
+	function doshare(){
+		$.ajax({
+			url : "/web/index/getshare?vid="+encodeURIComponent(window.location.href),
+			method : "get",
+			dataType : "json",
+			success : function(res){    //console.log(res);
+				var signPackage = res;
+				wx.config({
+					debug: false,
+					appId: signPackage.appId,
+					timestamp: signPackage.timestamp,
+					nonceStr: signPackage.nonceStr,
+					signature: signPackage.signature,
+					jsApiList: [
+						"onMenuShareAppMessage",
+						"onMenuShareTimeline",
+
+					] // 必填，需要使用的JS接口列表
+				});
+				wx.ready(function () {
+					wx.onMenuShareAppMessage({
+						title: '淘宝视频', // 分享标题
+						desc: videoList[index].title, // 分享描述
+						link: 'http://'+window.location.host+'/web/index/seevideo?vid='+videoList[index].id, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+						imgUrl: videoList[index].video_img, // 分享图标
+						type: 'video', // 分享类型,music、video或link，不填默认为link
+						dataUrl: videoList[index].url, // 如果type是music或video，则要提供数据链接，默认为空
+						success: function () {
+
+						}
+					});
+					wx.onMenuShareTimeline({
+						title: '淘宝视频', // 分享标题
+						link: 'http://'+window.location.host+'/web/index/seevideo?vid='+videoList[index].id, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+						imgUrl: videoList[index].video_img, // 分享图标
+						success: function () {
+							// 用户点击了分享后执行的回调函数
+						},
+					});
+
+				});
+				// wx.error(function(res){
+				// 		console.log(res);
+				// 	});
+			}
+		});
+
+	}
+</script>
+
+</body></html>

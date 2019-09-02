@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"/>
+    <meta content="yes" name="apple-mobile-web-app-capable"/>
+    <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+    <meta content="telephone=no" name="format-detection"/>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="css/weui.css" />
+    <style>
+        html,body {
+            color: #333;
+            margin: 0;
+            height: 100%;
+            font-family: "Myriad Set Pro","Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: normal;
+        }
+
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        a {
+            text-decoration: none;
+            color: #000;
+        }
+
+        a, label, button, input, select {
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        img {
+            border: 0;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #666;
+        }
+
+        html, body, div, dl, dt, dd, ol, ul, li, h1, h2, h3, h4, h5, h6, p, blockquote, pre, button, fieldset, form, input, legend, textarea, th, td {
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #08acee;
+        }
+
+        button {
+            outline: 0;
+        }
+
+        img {
+            border: 0;
+        }
+
+        button,input,optgroup,select,textarea {
+            margin: 0;
+            font: inherit;
+            color: inherit;
+            outline: none;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        a {
+            color: #666;
+        }
+
+        .clearfix::after {
+            clear: both;
+            content: ".";
+            display: block;
+            height: 0;
+            visibility: hidden;
+        }
+
+        .clearfix {
+        }
+
+        /* 必要布局样式css */
+        .aui-flexView {
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            background: none;
+        }
+
+        .aui-scrollView {
+            width: 100%;
+            height: 100%;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            margin-bottom: -120px;
+        }
+
+        .aui-navBar {
+            z-index: 10002;
+            height: 44px;
+            position: relative;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            background: #fff;
+        }
+
+        .aui-navBar-item {
+            height: 44px;
+            min-width: 25%;
+            -webkit-box-flex: 0;
+            -webkit-flex: 0 0 25%;
+            -ms-flex: 0 0 25%;
+            flex: 0 0 25%;
+            padding: 0 0.9rem;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            font-size: 0.3rem;
+            white-space: nowrap;
+            overflow: hidden;
+            color: #5C5C5C;
+            position: relative;
+        }
+
+        .aui-navBar-item:first-child {
+            -webkit-box-ordinal-group: 2;
+            -webkit-order: 1;
+            -ms-flex-order: 1;
+            order: 1;
+            margin-right: -25%;
+        }
+
+        .aui-navBar-item:last-child {
+            -webkit-box-ordinal-group: 4;
+            -webkit-order: 3;
+            -ms-flex-order: 3;
+            order: 3;
+            -webkit-box-pack: end;
+            -webkit-justify-content: flex-end;
+            -ms-flex-pack: end;
+            justify-content: flex-end;
+        }
+
+        .aui-center {
+            -webkit-box-ordinal-group: 3;
+            -webkit-order: 2;
+            -ms-flex-order: 2;
+            order: 2;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            height: 44px;
+            width: 50%;
+            margin-left: 25%;
+        }
+
+        .aui-center-title {
+            text-align: center;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+            text-overflow: ellipsis;
+            font-size: 0.95rem;
+            color: #232326;
+        }
+
+        .icon {
+            width: 25px;
+            height: 25px;
+            display: block;
+            border: none;
+            float: left;
+            background-size: 25px;
+            background-repeat: no-repeat;
+        }
+
+        .icon-return {
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAAA8CAYAAAA6/NlyAAABtElEQVRoQ+3YPUoEQRCG4XcvoIl4DzUQvIMeQDQQQ28geAAvYKSZ5oYama+BIngABVPFREFFZGAWlnFn56e/2emq7c02qa6nvpmBrgFz9hvMmZcE9p54Sjgl7GwC6ZF2Fug/TkpYlPACcAS8A8fAt6hucJkuEl4EboCVvLsd4CK4U1EBNbiIfcrhb6J+g8sowUXsM7ABvAR3KSygApvAZnNTgM1gFWBT2FCwOWwI2CS2Ldgstg3YNLYp2Dy2CdgFti7YDbYO2BW2CuwOOw3sElsGdoudBF4CHoHl/Eb2CdwDX8IbWh+lXoFsEfFRvC1lm4ntPjqawZkHwEkRfArsz+DwPo5YB4ZFcPb/Etga6+gWOAR++uhSdGb2SD+UfbQy9BmwN3bYdT4E6+9y6cbDLXraisclumqn5Q5dBR69527e6TpgV+i6YDfoJmAX6KZg8+g2YNPotmCz6BCwSXQo2BxaATaFVoHL0FfAZkxXSyW4DL0LnIvutcFl1OBJ6FXgLrhTUYEuwKPW1oDfmLBlGw/RLOMs02XCUYoTOMpYhE2lhIXDjLJUSjjKWIRNpYSFw4yy1B9GxHc9kTzBxQAAAABJRU5ErkJggg==");
+        }
+
+        .icon-news {
+            background-image: url("data:image/png;base64,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");
+        }
+
+        .icon-search {
+            background-size: 18px;
+            width: 18px;
+            height: 18px;
+            margin-left: 15px;
+            margin-top: 12px;
+            margin-right: 4px;
+            background-image: url("data:image/png;base64,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");
+        }
+
+        .aui-search {
+            padding: 15px 15px;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .aui-search-bg {
+            background: #f4f2f2;
+            border-radius: 30px;
+            /* padding: 8px 0; */
+            width: 100%;
+        }
+
+        .aui-search-bg input {
+            background: none;
+            border: none;
+            width: 85%;
+            font-size: 0.95rem;
+            padding: 12px 0;
+        }
+
+        .aui-travel {
+            background: #ededed;
+            padding: 10px 0 0 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .aui-travel-item {
+            position: relative;
+            float: left;
+            width: 48.501%;
+            box-sizing: border-box;
+            text-align: center;
+            margin:0 1.5% 3% 0%;
+            background: #ffffff;
+            border-radius: 4px;
+            box-shadow: 0 -1px 8px rgba(0,0,0,0.3);
+            cursor :pointer;
+        }
+
+        .aui-travel-item-img {
+            position: relative;
+        }
+
+        .aui-travel-item-img span {
+            position: absolute;
+            left: 10px;
+            bottom: 5px;
+            color: #fff;
+            font-size: 0.9rem;
+        }
+
+        .aui-travel-item-img img {
+            width: 100%;
+            display: block;
+            border: none;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .aui-travel-item p {
+            color: #5c5c5c;
+            font-size: 14px;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+            padding: 0 10px;
+            margin: 10px 0;
+        }
+
+        .aui-travel-cell {
+            padding: 10px 8px;
+            position: relative;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            color: #000000;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        .aui-travel-cell-hd {
+            margin-right: .3em;
+            width: 35px;
+            height: 35px;
+            line-height: 35px;
+            text-align: center;
+            position: relative;
+        }
+
+        .aui-travel-cell-hd img {
+            width: 100%;
+            max-height: 100%;
+            vertical-align: top;
+            border: 1px solid #00bcd4;
+            border-radius: 100%;
+        }
+
+        .aui-travel-cell-bd {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            min-width: 0;
+            text-align: left;
+        }
+
+        .aui-travel-cell-bd h4 {
+            font-weight: 400;
+            font-size: 0.8rem;
+            width: auto;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-wrap: normal;
+            word-wrap: break-word;
+            word-break: break-all;
+            padding-bottom: 4px;
+        }
+
+        .aui-travel-cell-bd p {
+            color: #808080;
+            font-size: 0.7rem;
+            line-height: 1.2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            padding: 0;
+            margin: 0;
+        }
+
+        .aui-travel-cell-fr {
+            float: right;
+            text-align: right;
+            color: #999;
+            font-size: 0.7rem;
+        }
+
+        .aui-travel-cell-fr-img {
+            width: 14px;
+            height: 14px;
+            margin-bottom: 4px;
+        }
+
+        .aui-travel-cell-fr-img img {
+            width: 100%;
+            max-height: 100%;
+            vertical-align: top;
+        }
+
+        .aui-tabBar {
+            background: none;
+            width: 100%;
+            position: relative;
+            z-index: 100;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: 30px 0;
+        }
+
+        .aui-tabBar-item {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            -webkit-box-pack: center;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            background: none;
+            color: #979797;
+        }
+
+        .aui-tabBar-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 100%;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.8);
+        }
+
+        .icon-add {
+            background-size: 20px;
+            background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAD1klEQVRYR82YW+jfcxjHX++IRGSZYo61YZObzZQ5c2NhWSl2QLkgpZW5W23CblnajYgLpyE5a66GckgOU2TO5ZxjLCmiR+/1/f377vv/fL6f7+F3sefy930Or+/zPJ/n83x/Yh8X7eN8jAaMiMOAM4EjgaOB/4Cfge+BtyT9MSYJgwAjwnaXANcCK4ADMhB/Ay8A9wMvSYq+sL0BI8JAm4HTegZ7H7hV0nN97DoDRsRBwBPApX0CJHSfBVZL+quLn06AEXGMSwSc2sVpB50PgeWSvi3pFgEj4kDg7QElLcX+AFgqyX2alS6AjwKrStGAf4Bdld7CloNTd7VN0urBgBGxEniqAPc48ACwQ9K/1o2I/YELgeuAKwv2KyU9k9PJZrAq7WfAsRnjnwA7f6MNICKWAU9XczKl+g2wIFfqNsCbgK2Z4B7Ei7s0eZXRecArwPyMv3WSkrHaAHcAFyQcetieJenN+rOIMMTy6rftkr5rPHclPs/05suS3BKzJAkYEYcCvwH7JWzulXRDI/htwAbAvWdxL26W5N9nJCLuBtYlfPp6nCNpd/NZDvC8qiSplzpd0ruTBxFhiE2Z0m2SdEdNdwnwTkb3fEmvdgW8CtiWcLRbkpeDPRIRXhB+zASc/DxPkheHic3vwIyPmu0qSY91BbwZuCsR+BNJp9SCXQ08WABcI8mzdAL4MXBywma9pC1dAdcDdyac7JK0qBZsI3B7AXCjJC8XE8CPAA/yptwiaVZScj24Bng44aRZ4surGdfGuELS8x1KvFbSI10z6PHiMZOSJZLe84OI8B7oi39BRvcLYJEkX4PWXwzMHLCGzUWSZsXMZfBg4FfAi0JTtkqaGRURcQbwInBEQ/EX4OLGib8H2GtEVTZ+gcNTK1jboN7uAAlAO5svyVfUpK/mAD5YXmI909xnWyR5lk50/FnwOiQ/M7xtT4b8XiHbANcCD2VK9yVwTn18tDVhdcvsBOZm9K6RlIzVBuhbwcvCCRmnPwBXdFwWngSOyvj5qqrInk2oKa37YES4X9w3beLg9yXWLR+06/0SBfsbJWVjlAD93CPCX3Al8WbsjFtO6riw+nBd1va112WjPqQaDQ46TfkU8Mj6s81pEdDGEXEc8FrL8toX3BPgbElflww7AVaQx1djwnvfGPGe6H3Sh6MonQGnBNkLzjF7AY6E7A03CHAg5CC4wYA9IX0Qzu3ac82m7F3iuoOIKB0cwy1rfkAVT0ZNYRRgIZOj4UaVuJDJqcBNDbCRSa9bo8paf/nRJW5k8kT/iTSm56Z6SPo0+1DdqWZwKESb3f/arWM4fzGZtAAAAABJRU5ErkJggg==");
+        }
+
+        .babyInfoList{
+            cursor :pointer
+        }
+
+        .remen_cursor{
+            cursor :pointer
+        }
+
+        .new_cursor{
+            cursor :pointer
+        }
+
+        #nav1{
+            position:fixed;
+            width:100%;
+            padding-top: 35px;;
+            background-color:#ededed;
+            z-index:999;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    </style>
+</head>
+<body>
+<div id="header" >
+    <div id="nav1">
+        <table style="font-size: 18px;" width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td  onClick="openNew7()" tapmode="highlight" align="left"><img  width="25" src="../image/header/sousuo.png"/></td>
+                <td width="60" align="center" onclick="indexShoping(0);">热门</td>
+                <td width="60" align="center" onclick="indexShoping(1);">推荐</td>
+                <td width="60" align="center" onclick="indexShoping(2);">最新</td>
+                <td align="right"><img tapmode="highlight" onClick="fnOpenScanner()" width="25" src="../image/header/sao2.png"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<section style="padding-top: 65px;" class="aui-flexView">
+    <section class="aui-scrollView">
+        <div class="aui-travel shoping_index_info">
+
+        </div>
+    </section>
+    <footer class="aui-tabBar ">
+        <a href="javascript:;" class="aui-tabBar-item">
+            <!--<img src="images/icon-add.png" alt="">-->
+        </a>
+    </footer>
+</section>
+
+<script class="index_shoping_info" type="text/template">
+    {{ for(var vi in it) { }}
+    {{? it[vi].video!=0}}
+    <a tapmode="highlight"  href="javascript:;"  class="aui-travel-item list_info release_task babyInfoList getBabyInfo"  data-id="{{=it[vi].itemid}}" data-itemshorttitle="{{=it[vi].itemshorttitle}}" data-couponmoney="{{=it[vi].couponmoney}}" data-video="{{=it[vi].video}}"  data-photo="{{=it[vi].itempic}}" data-couponurl="{{=it[vi].couponurl}}" data-shopname="{{=it[vi].shopname}}" data-itemprice="{{=it[vi].itemprice}}" data-shoptype="{{=it[vi].shoptype}}" data-sn="{{=it[vi].sn}}"  data-itemsale="{{=it[vi].itemsale}}" data-general_index="{{=it[vi].general_index}}">
+        <div class="aui-travel-item-img">
+            <img src="{{=it[vi].itempic}}" alt="">
+            <span>
+                                <!--<i class="icon icon-add"></i>西班牙 . 马德里-->
+            </span>
+        </div>
+        <!-- <p align="left">{{=it[vi].itemshorttitle}}</p>-->
+        <div class="aui-travel-cell">
+            <div class="aui-travel-cell-hd">
+                <img src="{{=it[vi].itempic}}" alt="">
+            </div>
+            <div class="aui-travel-cell-bd">
+                <h4>{{=it[vi].shopname}}</h4>
+                <p>{{=it[vi].starttime}}</p>
+            </div>
+            <span class="aui-travel-cell-fr">
+                <div class="aui-travel-cell-fr-img">
+                    <img src="images/icon-x.png" alt="">
+                </div>
+                <div>{{=it[vi].itemsale}}</div>
+            </span>
+        </div>
+    </a>
+    {{?}}
+    {{ } }}
+</script>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery-weui.js"></script>
+<script type="text/javascript">
+    var page=1;
+    var   babyarray=[];
+    apiready=function(){
+        indexShoping(1);
+        //加载更多数据
+        api.addEventListener({
+            name:'swipeup',
+            extra:{
+                threshold:500  //设置距离底部多少距离时触发，默认值为0，数字类型
+            }
+        }, function(ret, err){
+            refreshShoping();//随机类目
+        });
+
+        //用户修改性别则刷新页面
+        api.addEventListener({
+            name: 'upSex'
+        }, function(ret, err) {
+            upShoping();
+        });
+
+        api.addEventListener({
+            name:'resume'//前台
+        }, function(ret, err){
+            resetShoping();
+        });
+    };
+
+    //打开搜索
+    function openNew7() {
+        api.openWin({
+            name: 'rexiaobaoyou',
+            url: 'rexiaobaoyou.html',
+            reload:true,
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+
+    //打开相机
+    function fnOpenScanner() {
+        var fnscanner = api.require('FNScanner');
+        fnscanner.openScanner({}, function(ret, err) {
+            if (ret && 'success' == ret.eventType) {
+                //alert(ret.content);
+                api.openFrame({
+                    name: 'taobao_window',
+                    url: ret.content,
+                    rect: {
+                        x: 0,
+                        y: 0,
+                        w: 'auto',
+                        h: 'auto',
+                        marginTop:50,    //相对父 window 上外边距的距离
+                        marginBottom:'0',    //相对父 window 下外边距的距离
+                    },
+                    bounces: true,
+                    progress: {
+                        type: "default",
+                    }
+                });
+            }
+        });
+    }
+
+    //商品类目(cid)：1女装，2男装，3内衣，4美妆，5配饰，6鞋品，7箱包，8儿童，9母婴，10居家，11美食，12数码，13家电，14其他，15车品，16文体，17宠物
+
+    //根据用户性别分类目展示
+    function indexShoping(n) {
+        var url = '';
+        var users=getStorage("users");
+        var num=n;
+        if(!users){
+            var sex=0;
+        }else{
+            var sex= parseInt(users.sex) === 1 ? 1 : 2;
+        }
+        if(parseInt(num)===0){
+            // url = 'http://v2.api.haodanku.com/itemlist/apikey/mumu/nav/4/cid/'+sex+'/back/100/min_id/' + page + 'sort/4';//商品列表页API  cid：1女装 2男装 按销量降序
+            url='http://v2.api.haodanku.com/column/apikey/mumu/type/10/back/100/min_id/'+page+'/sort/4/cid/'+sex+'';
+        }else if(parseInt(num)===1){
+            //url = 'http://v2.api.haodanku.com/itemlist/apikey/mumu/nav/4/cid/'+sex+'/back/100/min_id/' + page + '';//商品列表页API cid：1女装 2男装
+            url='http://v2.api.haodanku.com/column/apikey/mumu/type/10/back/100/min_id/'+page+'/cid/'+sex+''
+        }else if(parseInt(num)===2){
+            //url = 'http://v2.api.haodanku.com/itemlist/apikey/mumu/nav/4/cid/'+sex+'/back/100/min_id/' + page + 'sort/5';//商品列表页API  cid：1女装 2男装 按佣金降序
+            url='http://v2.api.haodanku.com/column/apikey/mumu/type/10/back/100/min_id/'+page+'/sort/5/cid/'+sex+'';
+        }
+        $.showLoading();
+        api.ajax({//最高为1000（back）个宝贝一页
+            url: url,
+            method: 'get',
+            cache: true,
+        }, function (ret, err) {
+            $.hideLoading();
+            if (!err) {
+                if (ret.data.length<1) {
+                    page=1;
+                    resetShoping();
+                    return;
+                }
+                page=ret.min_id;
+                var data = ret.data;
+                var list = [];
+                $.each(data, function (i, item) {
+                    var entity = {};
+                    entity.sn=i;//数组下标
+                    entity.itemid=item.itemid;//宝贝id
+                    entity.shoptype=item.shoptype;//宝贝来源
+                    entity.tkrates=item.tkrates;//佣金比例
+                    entity.tkmoney=item.tkmoney;//预计可得佣金
+                    entity.itemsale=item.itemsale;//宝贝月销量
+                    entity.itemprice=item.itemprice;//宝贝在售价格
+                    entity.shopname=item.shopname;//宝贝店铺
+                    entity.couponurl=item.couponurl;//宝贝优惠券链接
+                    entity.couponmoney=item.couponmoney;//宝贝优惠金额
+                    entity.itemshorttitle=item.itemshorttitle;//宝贝短标题
+                    entity.general_index=item.general_index;//宝贝好单指数 代替评论条数
+                    item.starttime = timestampToTime(item.starttime); // 宝贝发布时间
+                    entity.starttime =getDateDiff(item.starttime);
+                    if(parseInt(item.videoid)>0){//宝贝视频
+                        entity.video=' http://cloud.video.taobao.com/play/u/1/p/1/e/6/t/1/'+item.videoid+'.mp4';
+                    }else{
+                        entity.video=item.videoid;
+                    }
+                    if(item.itempic){//宝贝图片
+                        entity.itempic=item.itempic+'_310x310.jpg';
+                    }
+                    list.push(entity);
+                });
+                babyarray=list;
+                //list = list.sort(ascSort('itemsale'));//按月销量降序排序
+                var interText = doT.template($(".index_shoping_info").text());
+                $(".shoping_index_info").html(interText(list));
+            }
+        })
+    }
+
+
+    //修改用户性别分类目展示
+    function upShoping() {
+        var url = '';
+        var users=getStorage("users");
+        var sex= parseInt(users.sex) === 1 ? 2 : 1;
+        url='http://v2.api.haodanku.com/column/apikey/mumu/type/10/back/100/min_id/'+page+'/cid/'+sex+'';//商品列表页API cid ：1女装 2男装
+        $.showLoading();
+        api.ajax({//最高为1000（back）个宝贝一页
+            url: url,
+            method: 'get',
+            cache: true,
+        }, function (ret, err) {
+            $.hideLoading();
+            if (!err) {
+                if (ret.data.length<1) {
+                    page=1;
+                    resetShoping();
+                    return;
+                }
+                page=ret.min_id;
+                var data = ret.data;
+                var list = [];
+                $.each(data, function (i, item) {
+                    var entity = {};
+                    entity.sn=i;//数组下标
+                    entity.itemid=item.itemid;//宝贝id
+                    entity.shoptype=item.shoptype;//宝贝来源
+                    entity.tkrates=item.tkrates;//佣金比例
+                    entity.tkmoney=item.tkmoney;//预计可得佣金
+                    entity.itemsale=item.itemsale;//宝贝月销量
+                    entity.itemprice=item.itemprice;//宝贝在售价格
+                    entity.shopname=item.shopname;//宝贝店铺
+                    entity.couponurl=item.couponurl;//宝贝优惠券链接
+                    entity.couponmoney=item.couponmoney;//宝贝优惠金额
+                    entity.itemshorttitle=item.itemshorttitle;//宝贝短标题
+                    entity.general_index=item.general_index;//宝贝好单指数 代替评论条数
+                    item.starttime = timestampToTime(item.starttime); // 宝贝发布时间
+                    entity.starttime =getDateDiff(item.starttime);
+                    if(parseInt(item.videoid)>0){//宝贝视频
+                        entity.video=' http://cloud.video.taobao.com/play/u/1/p/1/e/6/t/1/'+item.videoid+'.mp4';
+                    }else{
+                        entity.video=item.videoid;
+                    }
+                    if(item.itempic){//宝贝图片
+                        entity.itempic=item.itempic+'_310x310.jpg';
+                    }
+                    list.push(entity);
+                });
+                babyarray=list;
+                //list = list.sort(ascSort('itemsale'));//按月销量降序排序
+                var interText = doT.template($(".index_shoping_info").text());
+                $(".shoping_index_info").html(interText(list));
+
+            }
+        })
+    }
+
+    //打开宝贝视频页面
+    $(document).on('click','.getBabyInfo',function() {
+        var id=$(this).data("id");                            //宝贝id
+        var video=$(this).data("video");                      //宝贝视频
+        var photo=$(this).data("photo");                     //宝贝图片
+        var shopname=$(this).data("shopname");               //宝贝店铺
+        var shoptype=$(this).data("shoptype");              //宝贝来源
+        var itemprice=$(this).data("itemprice");            //宝贝价格
+        var couponurl=$(this).data("couponurl");            //宝贝优惠券链接
+        var couponmoney=$(this).data("couponmoney");        //宝贝优惠价格
+        var itemsale=$(this).data("itemsale");              //宝贝月销量
+        var itemshorttitle=$(this).data("itemshorttitle");  //宝贝短标题
+        var sn=$(this).data("sn");                          //数组下标
+        var general_index=$(this).data("general_index");    //宝贝好单指数 代替评论条数
+        api.openWin({
+            name: 'douyin',
+            url: 'douyin.html',
+            reload: true,
+            slidBackEnabled: false,
+            pageParam: {
+                id:id,
+                sn:sn,
+                video:video,
+                photo:photo,
+                shopname:shopname,
+                shoptype:shoptype,
+                itemprice:itemprice,
+                couponurl:couponurl,
+                couponmoney:couponmoney,
+                itemshorttitle:itemshorttitle,
+                itemsale:itemsale,
+                babyarray: babyarray,
+                general_index:general_index,
+                page:page,
+            }
+        });
+    });
+
+    //上滑加载更多
+    function refreshShoping() {
+        var url = '';
+        url = 'http://v2.api.haodanku.com/column/apikey/mumu/type/10/back/100/min_id/'+page+'';//商品筛选API
+        // $.showLoading();
+        api.ajax({//最高为1000（back）个宝贝一页
+            url: url,
+            method: 'get',
+            cache: true,
+        }, function (ret, err) {
+            //$.hideLoading();
+            if (!err) {
+                if (ret.data.length<1) {
+                    page=1;
+                    refreshShoping();
+                    return;
+                }
+                page=ret.min_id;
+                var data = ret.data;
+                var list = [];
+                $.each(data, function (i, item) {
+                    var entity = {};
+                    entity.sn=i;//数组下标
+                    entity.itemid=item.itemid;//宝贝id
+                    entity.shoptype=item.shoptype;//宝贝来源
+                    entity.tkrates=item.tkrates;//佣金比例
+                    entity.tkmoney=item.tkmoney;//预计可得佣金
+                    entity.itemsale=item.itemsale;//宝贝月销量
+                    entity.itemprice=item.itemprice;//宝贝在售价格
+                    entity.shopname=item.shopname;//宝贝店铺
+                    entity.couponurl=item.couponurl;//宝贝优惠券链接
+                    entity.couponmoney=item.couponmoney;//宝贝优惠金额
+                    entity.itemshorttitle=item.itemshorttitle;//宝贝短标题
+                    entity.general_index=item.general_index;//宝贝好单指数 代替评论条数
+                    item.starttime = timestampToTime(item.starttime); // 宝贝发布时间
+                    entity.starttime =getDateDiff(item.starttime);
+                    if(parseInt(item.videoid)>0){//宝贝视频
+                        entity.video=' http://cloud.video.taobao.com/play/u/1/p/1/e/6/t/1/'+item.videoid+'.mp4';
+                    }else{
+                        entity.video=item.videoid;
+                    }
+                    if(item.itempic){//宝贝图片
+                        entity.itempic=item.itempic+'_310x310.jpg';
+                    }
+                    list.push(entity);
+                });
+                babyarray=list;
+                //list = list.sort(ascSort('itemsale'));//按月销量降序排序
+                var interText = doT.template($(".index_shoping_info").text());
+                $(".shoping_index_info").append(interText(list));
+            }
+        })
+    }
+
+    //重置页面数据 防止接口没有数据返回
+    function resetShoping() {
+        var url = '';
+        url = 'http://v2.api.haodanku.com/column/apikey/mumu/type/10/back/100/min_id/'+page+'';//商品筛选API
+        // $.showLoading();
+        api.ajax({//最高为1000（back）个宝贝一页
+            url: url,
+            method: 'get',
+            cache: true,
+        }, function (ret, err) {
+            //$.hideLoading();
+            if (!err) {
+                if (ret.data.length<1) {
+                    page=1;
+                    resetShoping();
+                    return;
+                }
+                page=ret.min_id;
+                var data = ret.data;
+                var list = [];
+                $.each(data, function (i, item) {
+                    var entity = {};
+                    entity.sn=i;//数组下标
+                    entity.itemid=item.itemid;//宝贝id
+                    entity.shoptype=item.shoptype;//宝贝来源
+                    entity.tkrates=item.tkrates;//佣金比例
+                    entity.tkmoney=item.tkmoney;//预计可得佣金
+                    entity.itemsale=item.itemsale;//宝贝月销量
+                    entity.itemprice=item.itemprice;//宝贝在售价格
+                    entity.shopname=item.shopname;//宝贝店铺
+                    entity.couponurl=item.couponurl;//宝贝优惠券链接
+                    entity.couponmoney=item.couponmoney;//宝贝优惠金额
+                    entity.itemshorttitle=item.itemshorttitle;//宝贝短标题
+                    entity.general_index=item.general_index;//宝贝好单指数 代替评论条数
+                    item.starttime = timestampToTime(item.starttime); // 宝贝发布时间
+                    entity.starttime =getDateDiff(item.starttime);
+                    if(parseInt(item.videoid)>0){//宝贝视频
+                        entity.video=' http://cloud.video.taobao.com/play/u/1/p/1/e/6/t/1/'+item.videoid+'.mp4';
+                    }else{
+                        entity.video=item.videoid;
+                    }
+                    if(item.itempic){//宝贝图片
+                        entity.itempic=item.itempic+'_310x310.jpg';
+                    }
+                    list.push(entity);
+                });
+                babyarray=list;
+                //list = list.sort(ascSort('itemsale'));//按月销量降序排序
+                var interText = doT.template($(".index_shoping_info").text());
+                $(".shoping_index_info").html(interText(list));
+
+            }
+        })
+    }
+
+</script>
+</html>
+

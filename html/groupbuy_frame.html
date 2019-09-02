@@ -1,0 +1,855 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>APICloud APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" href="./js/mescroll/mescroll.css">
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: #ededed;
+        }
+
+        .h1 {
+            height: 5px;
+        }
+
+        .h10 {
+            height: 10px;
+            background: #f0f0f0;
+        }
+
+        .hightitem {
+            background-color: #fff;
+        }
+
+        .col img {
+            position: absolute;
+            right: 0;
+            width: 80px;
+            top: 0;
+        }
+
+        .col .matrix3 {
+            display: table;
+            height: inherit;
+            width: 100%;
+        }
+
+        .matrix3 .matrixcell {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .section02 .col img {
+            position: relative;
+        }
+
+        .section02 .col .petty {
+            text-align: center;
+            font-size: 20px;
+            padding-top: 10px;
+        }
+
+        .section02 .col .petty img {
+            width: 40%;
+            margin-top: 10px;
+        }
+
+        .section02 .logocover {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .section02 .logocover img {
+            width: 80%;
+        }
+
+        .section02 .title {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .section02 .subtitle {
+            font-size: 14px;
+            margin-top: 5px;
+            color: #666;
+        }
+
+        .section03 .matrixcell {
+            text-align: left;
+            margin-left: 10px;
+        }
+
+        .section03 .col img {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            left: inherit;
+            width: 50px;
+        }
+
+        .section03 .col {
+            height: 80px;
+        }
+
+        .section03 .col .title {
+            margin-left: 10px;
+            font-size: 20px;
+        }
+
+        .section03 .col .subtitle {
+            font-size: 13px;
+            color: #666;
+            margin-left: 10px;
+            margin-top: 10px;
+        }
+
+        .card {
+            border: 1px solid #ededed;
+            margin: 0 5px;
+        }
+
+        .card .upimg {
+            position: relative;
+        }
+
+        .card .upimg img {
+            width: 100%;
+            height: 150px;
+        }
+
+        .card .title,
+        .card .subtitle {
+            font-size: 14px;
+            bottom: 25px;
+            color: #fff;
+            margin-left: 10px;
+            margin-top: 10px;
+        }
+
+        .card .hot {
+            position: absolute;
+            bottom: 5px;
+            margin-left: 10px;
+        }
+
+        .card .hot span {
+            color: #fff;
+        }
+
+        .card .downinfo {
+            padding: 10px;
+            font-size: 14px;
+            color: #666;
+            line-height: 20px;
+        }
+
+        .card .info {
+            background-color: rgba(0, 0, 0, 0.4);
+            position: absolute;
+            bottom: 0px;
+            width: 100%;
+            padding-bottom: 5px;
+        }
+
+        .viewed-eye .eye {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: url(../image/eye.png) no-repeat;
+            background-size: 11px auto;
+            margin-bottom: -3px;
+        }
+
+        .card .img_wrap {
+            position: absolute;
+            right: 0;
+            bottom: 10px;
+        }
+
+        .card .subtitle {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .card .viewed-eye {
+            background-color: #000;
+            padding: 5px;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .mescroll{
+            position: fixed;
+            top: 5px;
+            bottom: 0;
+            height: auto; /*如设置bottom:50px,则需height:auto才能生效*/
+        }
+    </style>
+</head>
+
+<body>
+<div id="mescroll" class="mescroll" >
+    <div>
+
+    </div>
+    <div style="background-color:#ededed; padding:15px; padding-top:5px; padding-bottom:22px;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="50%" valign="top">
+                    <div style="font-size:13px; color:#666666;">我的活跃度(本月) <strong></strong></div>
+                    <div id="caifu1"  onClick="openNew11()" tapmode="" style="font-size:30px; color:#333333; margin-bottom:3px; margin-top:8px;">0</div>
+                    <div style="font-size:13px; color:#666666;"> + <strong><font id="caifu4">0</font></strong>（今日）</div>
+                </td>
+                <td width="50%" valign="top" onClick="qiandao()">
+                    <div style="font-size:13px; color:#666666;">今日收益（元）</div>
+                    <div id="caifu2" class="today_money" style="font-size:30px; color:#333333; margin-bottom:3px; margin-top:8px;">签到收益</div>
+                    <div onClick="openNew10()" tapmode="" style="font-size:13px; color:#333333;">+<strong class="jiacheng_money"></strong ><font class="svip_text">(SVIP0加成0%)</font></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div style="padding:13px; padding-top:0px; padding-bottom:6px;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td onClick="openNew11()" tapmode="" width="33%">
+                    <div style="color:#999999; font-size:12px;">余额</div>
+                    <div style="font-size:18px;" class="money_yue">0</div></td>
+                <td width="34%" align="center">
+                    <div style="color:#999999; font-size:12px;">活跃预估收入</div>
+                    <div class="month_money" style="font-size:18px;">0</div>
+                </td>
+                <td onClick="openNew12()" tapmode="" width="33%" align="right">
+                    <div style="color:#999999; font-size:12px;">上月平均奖金</div>
+                    <div style="font-size:18px;" class="last_moth_jiangjin">0</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div  id="nav" class="nav" onClick="openNew5()" tapmode="" style="background-color: #2aa146; padding: 18px;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td valign="top"><div id="caifu3" style="font-size: 28px; color: #FFFFFF; margin-bottom: 8px;">0</div>
+                    <div style="font-size: 13px; color: #FFFFFF;" class="renwu_head_title">每日必做任务</div>
+                </td>
+                <td valign="top">
+                    <div>
+                        <div align="right"><img src="../image/find/renwu.png" width="60" height="60"></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="h1"></div>
+
+    <div id="nav " class="nav ios_none" onClick="openNew6()" tapmode="" style="background-color: #2aa146; padding: 18px;display: block">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td valign="top"><div id="step" style="font-size: 28px; color: #FFFFFF; margin-bottom: 8px;">0<font style="font-size:13px;"></font></div>
+                    <div style="font-size: 13px; color: #FFFFFF;">今日步数</div>
+                </td>
+                <td valign="top">
+                    <div>
+                        <div align="right"><img src="../image/find/yundong.png" width="60" height="60"></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="h1 ios_h_none" style="display: block"></div>
+    <div id="nav" class="nav" onClick="openNew7()" tapmode="" style="background-color: #2aa146; padding: 18px;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td valign="top"><div id="caifu5" style="font-size: 28px; color: #FFFFFF; margin-bottom: 8px;">0</div>
+                    <div style="font-size: 13px; color: #FFFFFF;">购物活跃度</div>
+                </td>
+                <td valign="top"><div>
+                    <div align="right"><img src="../image/find/taobao.png" width="60" height="60"></div>
+                </div></td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="h1"></div>
+    <div id="nav" class="nav" onClick="openNew8()" tapmode="" style="background-color: #2aa146; padding: 18px;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td valign="top"><div id="caifu6" style="font-size:28px; color:#FFF; margin-bottom:8px;">0</div>
+                    <div style="font-size: 13px; color: #FFFFFF;">邀请一名好友每月都可领112元</div>
+                </td>
+                <td valign="top"><div>
+                    <div align="right"><img src="../image/find/tuiguang.png" width="60" height="60"></div>
+                </div></td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="h1"></div>
+    <div id="nav" class="nav" onClick="openNew9()" tapmode="" style="background-color: #2aa146; padding: 18px;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td valign="top"><div id="caifu7" style="font-size:28px; color:#FFF; margin-bottom:8px;">0</div>
+                    <div style="font-size: 13px; color: #FFFFFF;">第三方任务收益（元）</div>
+                </td>
+                <td valign="top"><div>
+                    <div align="right"><img src="../image/find/disanfang.png" width="60" height="60"></div>
+                </div></td>
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+<script id="template" type="text/template">
+    {{~ it:data }}
+    <div class="card hightitem open-win" win="shoplist" param='{"type":1,"shopType":-1}'>
+        <div class="upimg">
+            <img id="thumbnail_{{= data.id }}" src="../image/default1.jpg">
+            <div class="info">
+                <div class="title">{{= data.title }}</div>
+                <div class="subtitle">{{= data.subtitle }}</div>
+                <div class="img_wrap">
+                    <div class="viewed-eye"><i class="eye"></i>{{= data.eye }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="h10"></div>
+    {{~}}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<!--<script type="text/javascript" src="../script/list.js"></script>-->
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../script/countUp.min.js"></script>
+<script src="./js/mescroll/mescroll.min.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+
+    var dataStart,bushuStart,steps;
+    var user=getStorage("users");
+    apiready = function() {
+        if(!user){
+            return;
+        }
+        checkQiandao();//签到
+        qingchu();//清除步数
+        refresh();//加载数据
+        window.setInterval(refresh, 1000*60); //定时刷新页面
+        var systemType = api.systemType;
+        if (systemType == 'android') {
+            dataStart = dateStartStamp(systemType);
+            init(dataStart);
+            startCount();
+            window.setInterval(getSteps_stop_android,1000);
+        } else {
+            $(".ios_h_none").css("display", "none");
+            $(".ios_none").css("display", "none");
+        }
+
+        api.addEventListener({
+            name:'pause'  //后台
+        }, function(ret, err){
+            if(systemType=='android'){
+                startCount();
+                window.setInterval(getSteps_stop_android, 1000);
+            }
+        });
+
+    };
+
+    function init(dataStart){
+        bushuStart = Number(getStorage(dataStart+'_bushu'+user.user_id))||0;
+        steps = Number(getStorage(dataStart+user.user_id))||0;
+    }
+
+    //开始计步
+    function startCount(){
+        bushuStart = bushuStart +1;
+        setStorage(dataStart+"_bushu"+user.user_id,bushuStart);
+        var pedometer = api.require('pedometer');
+        if(!pedometer  || JSON.stringify(pedometer)== '{}'){
+             return;
+        }
+        pedometer.startCount(function(ret) {
+//             api.toast({
+//                msg: ret.steps+"ss",
+//                duration: 3000,
+//                location: 'bottom'
+//             });
+        });
+    }
+
+    //停止计步
+    function stopCount(){
+        var pedometer = api.require('pedometer');
+        if(!pedometer || JSON.stringify(pedometer)== '{}'){
+            return;
+        }
+        pedometer.stopCount();
+    }
+
+    //获取步数
+    function getSteps(){
+        var pedometer = api.require('pedometer');
+        if(!pedometer || JSON.stringify(pedometer)== '{}'){
+            return;
+        }
+        pedometer.getSteps(function(ret) {
+            if(bushuStart>1){
+                setStorage(dataStart+user.user_id, steps+ret.steps);
+            }else{
+                setStorage(dataStart+user.user_id, ret.steps);
+            }
+        });
+    }
+    //
+    //android 更新今日步数
+    function getSteps_stop_android(){
+        //var step = $api.byId("step");
+//          stopCount();
+        getSteps();
+        //step.innerHTML = getStorage('steps')||steps;
+//          startCount();
+    }
+
+    //校验签到
+    function checkQiandao() {
+        var users = getStorage('users');
+        api.ajax({
+            url:'http://shujunode.mumuim.cn:8080/users/isqiandao',
+            method:'get',
+            data:{
+                values: {
+                    "uid" : users.user_id,
+                },
+            }
+        },function(ret,err) {
+            if(!err){
+                if(Number(ret.data) > 0){
+                    var qiandao_money = Number(ret.data);
+                    if(qiandao_money >0){
+                        if(users.svip>0){
+                            var today_money = qiandao_money+qiandao_money*users.svip*svip_add;
+                            today_money = Math.floor(today_money*1000)/1000;
+
+                            var jiacheng_money = qiandao_money*users.svip*svip_add;
+                            jiacheng_money = Math.floor(jiacheng_money*1000)/1000;
+                            $('.today_money').text(today_money);
+                            $('.jiacheng_money').text(jiacheng_money);
+                        }else{
+                            qiandao_money = Math.floor(qiandao_money*1000)/1000;
+                            $('.today_money').text(qiandao_money);
+                        }
+                    }
+                }else{
+                    $('.today_money').text("签到收益");
+                }
+            }else{
+
+            }
+        })
+    }
+
+    //上传步数
+    function bushu() {
+        var users = getStorage('users');
+        var bushu =  getStorage(dataStart+user.user_id);
+        var systemType = api.systemType;
+        var sqlbushu =$('#step').text();
+        if(bushu>0){
+            if(systemType=='android'){
+                if((parseInt(bushu)-parseInt(sqlbushu))<500){//今天-数据库<500
+                    api.ajax({
+                        url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                        method:'post',
+                        data:{
+                            values: {
+                                "ac" :"upbushu",
+                                "uid" : users.user_id,
+                                "username":users.user_name ,
+                                "bushu":bushu,
+                                "systemType":systemType,
+                            },
+                        }
+                    },function(ret,err) {
+                        if(!err){
+                            console.log("上传步数成功");
+                        }else{
+                            console.log("上传步数失败");
+                        }
+                    })
+                }
+            }
+        }
+    }
+
+    //清除缓存
+    function qingchu(){
+        var users = getStorage('users');
+        var lastdate = 0;
+        var systemType = api.systemType;
+        lastdate = lastStartStamp(systemType);
+        var bushu =  getStorage(lastdate+user.user_id);
+        if(bushu){
+            api.ajax({
+                url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                method:'post',
+                data:{
+                    values: {
+                        "ac" :"yesterdayBushu",
+                        "uid" : users.user_id,
+                        "username":users.user_name ,
+                        "bushu":bushu,
+                    },
+                }
+            },function(ret,err) {
+                if(!err){
+                    if(parseInt(ret.code) == 200){
+                        $api.rmStorage(lastdate+user.user_id);
+                        $api.rmStorage(lastdate+"_bushu"+user.user_id);
+                    }
+                    console.log("上传步数成功");
+                }else{
+                    console.log("上传步数失败");
+                }
+            })
+        }
+    }
+
+    function qiandao() {
+        var users = getStorage("users");
+        api.ajax({
+            url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            method:'post',
+            data:{
+                values: {
+                    "ac" :"qiandao",
+                    "uid" : users.user_id,
+                },
+            }
+        },function(ret,err) {
+            var qiandao_money = 0;
+            if(!err){
+                if(parseInt(ret.code) == 200){
+                    qiandao_money = Number(ret.data.qiandao_money)+Number(ret.data.vip_money);
+                    qiandao_money = Math.floor(qiandao_money*1000)/1000;
+                    ret.data.vip_money = Math.floor(ret.data.vip_money*1000)/1000;
+                    $('.jiacheng_money').text(ret.data.vip_money);
+                    $('.today_money').text(qiandao_money);
+                    api.toast({
+                        msg:'签到成功',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                    money();
+                }else{
+                    qiandao_money = Number(ret.data.qiandao_money)+Number(ret.data.vip_money);
+                    $('.jiacheng_money').text(ret.data.vip_money);
+                    if(isNaN(qiandao_money)){
+                        qiandao_money=0;
+                    }
+                    $('.today_money').text(qiandao_money);
+                    api.toast({
+                        msg:ret.msg,
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+
+            }else{
+                api.toast({
+                    msg: '网络异常，请重新请求!',
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+        })
+    }
+    var svip_add=0;
+    //刷新金额
+    function money(){
+        var was_times =  parseInt(getStorage("money_refresh")) || 0 ;
+        var times = parseInt(timest());
+        var len = times-was_times;
+        if(len <=3){
+            api.toast({
+                msg: "您的操作太频繁请稍后重试",
+                duration: 4000,
+                location: 'bottom'
+            })
+        }
+        var users = getStorage('users');
+        if(!users){
+            return;
+        }
+        api.ajax({
+            url:'http://shujunode.mumuim.cn:8080/users/refreshToDay',
+            method:'get',
+            cache:true,
+            data:{
+                values: {
+                    "uid" : users.user_id,
+                },
+            }
+        },function(ret,err) {
+            //today_points":0,"renwu_points":0,"bushu":0,"gouwu_points":0,"tuijian_money":0,"three_task_money":0,"pay_points":13,"user_money":16.073,"svip":0,"last_moth_fenhong":0
+            if(!err){
+                if (ret.code == 200) {
+                    var pay_points = ret.data.pay_points || 0;
+                    var today_money = ret.data.today_points || 0;
+                    var today_renwu_money = ret.data.renwu_points || 0;
+                    var today_xiaofei_money = ret.data.gouwu_points || 0;
+                    var today_tuijian_money = ret.data.tuijian_money || 0;
+                    var today_bushu = ret.data.bushu || 0;
+                    var three_task_money=ret.data.three_task_money || 0;
+                    var money_yue= ret.data.user_money || 0;
+                    var svip_jiacheng = ret.data.svip_add*100 || 0;
+                    svip_add=svip_jiacheng;
+
+                    $('#caifu1').text(pay_points);
+                    $('#caifu4').text(today_money);
+                    $('#caifu3').text(today_renwu_money);
+                    $('#caifu5').text(today_xiaofei_money);
+                    $('#caifu6').text(today_tuijian_money);
+                    $('#caifu7').text(three_task_money);
+                    var systemType = api.systemType;
+                    if(systemType=='android'){
+                        $('#step').text(today_bushu);
+                    }
+                    $('.month_money').text(parseInt((pay_points*30)/1000));
+                    $('.money_yue').text(money_yue);
+                    $('.svip_text').text("SVIP"+ret.data.svip+"加成"+svip_jiacheng+"%");
+                    $('.last_moth_jiangjin').text(ret.data.last_moth_fenhong);
+                }else{
+                    api.toast({
+                        msg: ret.msg,
+                        duration: ret.code,
+                        location: 'bottom'
+                    });
+                }
+            }else {
+                api.toast({
+                    msg: "网络请求超时，请稍后重试",
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+        })
+    }
+
+    //刷新页面
+    function refresh(){
+        var users=getStorage("users");
+        if(!users){
+            return;
+        }
+        money();
+        bushu();
+    }
+
+    //下拉刷新
+    $(function() {
+        //创建MeScroll对象,内部已默认开启下拉刷新;
+        var mescroll = new MeScroll("mescroll", {
+            down:{
+                use: true, //是否初始化下拉刷新; 默认true
+                auto: false, //是否在初始化完毕之后自动执行下拉回调callback; 默认true
+                autoShowLoading: true, //如果在初始化完毕之后自动执行下拉回调,是否显示下拉刷新进度; 默认false. (需配置down的callback才生效)
+                isLock: false, //是否锁定下拉,默认false;
+                isBoth: true, //下拉刷新时,如果滑动到列表底部是否可以同时触发上拉加载;默认false,两者不可同时触发;
+                callback:getListData,
+                //function(mescroll) {
+                //     console.log("down --> callback");
+                //     getListData;
+                // },
+                offset: 80, //触发刷新的距离,默认80
+                outOffsetRate: 0.2, //超过指定距离范围外时,改变下拉区域高度比例;值小于1且越接近0,越往下拉高度变化越小;
+                bottomOffset: 20, //当手指touchmove位置在距离body底部20px范围内的时候结束上拉刷新,避免Webview嵌套导致touchend事件不执行
+                minAngle: 45, //向下滑动最少偏移的角度,取值区间  [0,90];默认45度,即向下滑动的角度大于45度则触发下拉;而小于45度,将不触发下拉,避免与左右滑动的轮播等组件冲突;
+                hardwareClass: "mescroll-hardware", //硬件加速样式;解决iOS下拉因隐藏进度条而闪屏的问题,参见mescroll.css
+                mustToTop: false, // 是否滚动条必须在顶部,才可以下拉刷新.默认false. 当您发现下拉刷新会闪白屏时,设置true即可修复.
+                warpId: null, //可配置下拉刷新的布局添加到指定id的div;默认不配置,默认添加到mescrollId
+                warpClass: "mescroll-downwarp", //容器,装载布局内容,参见mescroll.css
+                resetClass: "mescroll-downwarp-reset", //高度重置的动画,参见mescroll.css
+                textInOffset: '↓ 下拉刷新 ↓', // 下拉的距离在offset范围内的提示文本
+                textOutOffset: '↑ 释放更新 ↑', // 下拉的距离大于offset范围的提示文本
+                textLoading: '加载中 ...', // 加载中的提示文本
+                htmlContent: '<p class="downwarp-progress" ></p><p class="downwarp-tip" style="font-size: 16px"></p>', // 布局内容
+                inited: function(mescroll, downwarp) {
+                    //console.log("down --> inited");
+                    //初始化完毕的回调,可缓存dom
+                    mescroll.downTipDom = downwarp.getElementsByClassName("downwarp-tip")[0];
+                    mescroll.downProgressDom = downwarp.getElementsByClassName("downwarp-progress")[0];
+                },
+                inOffset: function(mescroll) {
+                    //console.log("down --> inOffset");
+                    //进入指定距离offset范围内那一刻的回调
+                    if (mescroll.downTipDom) mescroll.downTipDom.innerHTML = mescroll.optDown.textInOffset;
+                    if(mescroll.downProgressDom) mescroll.downProgressDom.classList.remove("mescroll-rotate");
+                },
+                outOffset: function(mescroll) {
+                    //console.log("down --> outOffset");
+                    //下拉超过指定距离offset那一刻的回调
+                    if (mescroll.downTipDom) mescroll.downTipDom.innerHTML = mescroll.optDown.textOutOffset;
+                },
+                onMoving: function(mescroll, rate, downHight) {
+                    //下拉过程中的回调,滑动过程一直在执行; rate下拉区域当前高度与指定距离offset的比值(inOffset: rate<1; outOffset: rate>=1); downHight当前下拉区域的高度
+                    //console.log("down --> onMoving --> mescroll.optDown.offset="+mescroll.optDown.offset+", downHight="+downHight+", rate="+rate);
+                    if(mescroll.downProgressDom) {
+                        var progress = 360 * rate;
+                        mescroll.downProgressDom.style.webkitTransform = "rotate(" + progress + "deg)";
+                        mescroll.downProgressDom.style.transform = "rotate(" + progress + "deg)";
+                    }
+                },
+                beforeLoading: function(mescroll, downwarp) {
+                    //console.log("down --> beforeLoading");
+                    //准备触发下拉刷新的回调
+                    return false; //如果要完全自定义下拉刷新,那么return true,此时将不再执行showLoading(),callback();
+                },
+                showLoading: function(mescroll) {
+                    //console.log("down --> showLoading");
+                    //触发下拉刷新的回调
+                    if (mescroll.downTipDom) mescroll.downTipDom.innerHTML = mescroll.optDown.textLoading;
+                    if(mescroll.downProgressDom) mescroll.downProgressDom.classList.add("mescroll-rotate");
+                },
+                afterLoading: function (mescroll) {
+                    //console.log("down --> afterLoading");
+                    // 结束下拉之前的回调. 返回延时执行结束下拉的时间,默认0ms; 常用于结束下拉之前再显示另外一小段动画,才去结束下拉的场景, 参考案例【dotJump】
+                    return 2000
+                }
+            },
+
+        });
+        function getListData() {
+            refresh();
+            mescroll.endErr();
+        }
+    });
+
+
+
+    //  //下拉刷新
+    // (function(window) {
+    //      var _element = document.getElementById('refreshContainer'),
+    //          _refreshText = document.querySelector('.refreshText'),
+    //          _startPos = 0,
+    //          _transitionHeight = 0;
+    //      _element.addEventListener('touchstart', function(e) {
+    //          //console.log('初始位置：', e.touches[0].pageY);
+    //          _startPos = e.touches[0].pageY;
+    //          _element.style.position = 'relative';
+    //          _element.style.transition = 'transform 0s';
+    //      }, false);
+    //      _element.addEventListener('touchmove', function(e) {
+    //          //console.log('当前位置：', e.touches[0].pageY);
+    //          _transitionHeight = e.touches[0].pageY - _startPos;
+    //          if (_transitionHeight > 0 && _transitionHeight < 100) {
+    //              _refreshText.innerText = '下拉刷新';
+    //              _element.style.transform = 'translateY('+_transitionHeight+'px)';
+    //              if (_transitionHeight > 60) {
+    //                  _refreshText.innerText = '释放更新';
+    //              }
+    //          }
+    //      }, false);
+    //      _element.addEventListener('touchend', function(e) {
+    //          _element.style.transition = 'transform 0.5s ease 1s';
+    //          _element.style.transform = 'translateY(0px)';
+    //          _refreshText.innerText = '更新中...';
+    //          refresh();
+    //          // todo...
+    //      }, false);
+    //  })(window);
+
+    function openNew5() {
+        api.openWin({
+            name: 'renwu',
+            url: 'renwu_window.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+
+    function openNew6() {
+        api.openWin({
+            name: 'yundong',
+            url: 'yundong_window.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+    function openNew7() {
+        api.openWin({
+            name: 'taobao',
+            url: 'taobao_window.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+    function openNew8() {
+        api.openWin({
+            name: 'tuiguang',
+            url: 'tuiguang_window.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+    function openNew9() {
+        api.openWin({
+            name: 'renwudisanfang_window',
+            url: 'renwudisanfang_window.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+    function openNew10() {
+        api.openWin({
+            name: 'bangzhu',
+            url: 'bangzhu.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+    function openNew11() {
+        api.openWin({
+            name: 'qianbao_window',
+            url: 'qianbao_window.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+    function openNew12() {
+        api.openWin({
+            name: 'huoyedu',
+            url: 'huoyedu.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+    }
+
+</script>
+
+</html>
+
+

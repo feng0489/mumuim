@@ -1,0 +1,177 @@
+<!doctype html>
+<html>
+
+<head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>APICloud APP</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+            header {
+                background-color: #ededed;
+                border-bottom-width: 1px;
+                border-bottom-style: solid;
+                border-bottom-color: #ededed;
+            }
+            
+            h1 {
+                height: 40px;
+                line-height: 40px;
+                color: #333333;
+                font-size: 18px;
+                text-align: center;
+            }
+
+            .back {
+                position: absolute;
+                left: 0px;
+                bottom: 0px;
+                width: 40px;
+                height: 40px;
+                background: url(../image/cm2_icn_back.png) center center no-repeat;
+                background-size: 15px auto;
+            }
+            
+            nav {
+                position: relative;
+                height: 100px;
+                background-color: #ededed;
+                display: flex;
+                display: -webkit-flex;
+                display: flex;
+                border-bottom: solid #f0f0f0 1px;
+            }
+            
+            nav>div {
+                -webkit-box-flex: 1;
+                -webkit-flex: 1;
+                flex: 1;
+                width: 100%;
+                line-height: 35px;
+                color: #666666;
+                font-size: 15px;
+                text-align: center;
+            }
+            
+            .nav-act {
+	color: #FF0000;
+            }
+            
+            .nav-hov {
+                background-color: rgba(250, 240, 230, 0.7);
+            }
+            
+            mark {
+                position: absolute;
+                bottom: 0px;
+                left: 0px;
+                text-align: center;
+                background: transparent;
+                -webkit-transition: 300ms;
+            }
+            
+            mark>img {
+                height: 8px;
+            }
+        </style>
+    </head>
+
+    <body>
+
+    <nav id="nav">
+            <div class="nav-act" tapmode="nav-hov" onClick="fnChange(0);">9.9包邮</div>
+        <div tapmode="nav-hov" onClick="fnChange(1);">男装</div>
+            <div tapmode="nav-hov" onClick="fnChange(2);">女装</div>
+            <div tapmode="nav-hov" onClick="fnChange(3);">鞋帽</div>
+            <div tapmode="nav-hov" onClick="fnChange(4);">鞋帽</div>
+            <div tapmode="nav-hov" onClick="fnChange(5);">鞋帽</div>
+      <mark></mark>
+        </nav>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            fnReady();
+
+            fnInit();
+			var systemType = api.systemType;  // 获取手机类型，比如： ios
+            if(systemType=='ios'){//兼容ios和安卓
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="30px";
+            }else{
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="35px";
+            }
+
+            api.openFrameGroup({
+                name: 'message_group',
+                scrollEnabled: true,
+                rect: {
+                        x:0,
+                        y:250,
+                        w:'auto',
+                        h:'auto',
+                        marginTop:0,    //相对父 window 上外边距的距离
+                        marginBottom:50,    //相对父 window 下外边距的距离
+                },
+                index: 0,
+                frames: [{
+                    name: 'tuiguang_frame1',
+                    url: 'http://temai.m.taobao.com/9k9?spm=a3126.8759693%2Fd.16030392.2&pid=mm_10011550_0_0'
+                }, {
+                    name: 'tuiguang_frame1',
+                    url: 'tuiguang_frame1.html'
+                }, {
+                    name: 'tuiguang_frame2',
+
+                    url: 'http://temai.m.taobao.com/9k9?spm=a3126.8759693%2Fd.16030392.2&pid=mm_10011550_0_0'
+                }, {
+                    name: 'tuiguang_frame3',
+
+                    url: 'tuiguang_frame3.html'
+                }, {
+                    name: 'tuiguang_frame4',
+
+                    url: 'tuiguang_frame4.html'
+                }, {
+                    name: 'tuiguang_frame5',
+
+                    url: 'tuiguang_frame5.html'
+                }]
+            }, function(ret, err) {
+                fnChangeStyle(ret.index);
+            });
+        };
+
+        var navs, mark;
+
+        function fnInit() {
+            navs = $api.domAll(nav, 'div');
+            mark = $api.dom(nav, 'mark');
+            mark.style.width = (api.winWidth / 3) + 'px';
+        };
+
+        function fnChange(index) {
+            fnChangeStyle(index);
+            api.setFrameGroupIndex({
+                name: 'message_group',
+                index: index,
+                scroll: true
+            });
+        };
+
+        function fnChangeStyle(index) {
+            for (var i = 0; i < navs.length; i++) {
+                if (i == index) {
+                    $api.addCls(navs[i], 'nav-act');
+                } else {
+                    $api.removeCls(navs[i], 'nav-act');
+                }
+            };
+
+            var markPosX = (api.winWidth / 3) * index + 'px';
+            $api.css(mark, '-webkit-transform: translate(' + markPosX + ', 0)');
+        };
+    </script>
+</html>

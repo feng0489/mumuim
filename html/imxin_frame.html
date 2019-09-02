@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8" />
+	<title>详细资料</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+	<link rel="stylesheet" href="css/iconfont/iconfont.css" />
+	<link rel="stylesheet" href="css/reset.css" />
+	<link rel="stylesheet" href="css/animate.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	<script type="text/javascript" src="../script/doT.min.js"></script>
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/zepto.min.js"></script>
+	<script src="js/fontSize.js"></script>
+	<script src="js/wcPop/wcPop.js"></script>
+	<style>
+		.none-btn {
+			margin: 3px 10px;
+			height: 80px;
+			line-height: 40px;
+			text-align: center;
+			font-size: 20px;
+			margin-top: 20px;
+			border-radius: 5px;
+			color: #08080e;
+			background-color: #c6c6c6;
+		}
+	</style>
+</head>
+<body>
+	
+<div class="wcim__popup-tmpl">
+		<div id="J__popupTmpl-newFriends"><div class="wcim__popupTmpl"><div class="wcim__newFriends-panel"><ul class="wcim__similarPanel-cells clearfix bg-fff rmt-25" style="border-radius:.5rem;margin:.25rem;"><li><a class="flexbox flex-alignc" href="#"><span class="bg" style="height:auto;"><i class="iconfont icon-search c-9ea0a3 fs-40" ></i></span><label class="flex1 flexbox"><input  class="ipt-text flex1  search_text" type="text"  data-text="" placeholder="输入手机号/账号搜索" onkeyup ="search(this)"/></label></a></li>
+					</ul>
+					<div  class="c-9ea0a3 fs-24 rpl-25 rmt-30">新的好友请求</div><ul class="wcim__similarPanel-cells clearfix rmt-10 bg-fff">
+					<div  id="frinds_list_info">
+
+					</div>
+			</ul></div></div>
+		</div>
+	</div>
+
+<script type="text/x-dot-template" id="frinds-list-info-last" >
+	{{ for(var vi in it) { }}
+		<li  id="toAddfriend_{{=it[vi].fid}}" onclick="open_friendInfo(this);" data-id="{{=it[vi].fid}}">
+			<a class="wcim__material-cell flexbox flex-alignc" href="#"><span class="avator"><img src="{{=it[vi].photo}}"></span>
+			<label class="flex1 flexbox flex-alignc"><span class="flex1"><em class="db fs-32">{{=it[vi].nickname}}</em>
+			<em class="db fs-24 c-9ea0a3 rmt-5 ">信息仅对好友可见</em></span>
+			{{? it[vi].isfriend==0}}
+			<span data-id="{{=it[vi].fid}}"  class="item_arrow" onclick="add_new_friend(this);">添加</span>
+			{{??}}
+			<span class="item_arrow" >已添加</span>
+			{{?}}
+			</label>
+			</a>
+		</li>
+	{{ } }}
+</script>
+
+<script type="text/x-dot-template" id="frinds-list-info-lasts">
+
+	<li  id="toAddfriend_{{=it.fid}}" onclick="open_friendInfo(this)" data-id="{{=it.fid}}">
+		<a class="wcim__material-cell flexbox flex-alignc" href="#"><span class="avator"><img src="{{=it.photo}}" ></span>
+			<label class="flex1 flexbox flex-alignc"><span class="flex1" ><em class="db fs-32">{{=it.nickname}}</em>
+			<em class="db fs-24 c-9ea0a3 rmt-5">信息仅对好友可见</em></span>
+				{{? it.isfriend==0}}
+				<span data-id="{{=it.fid}}"  class="item_arrow" onclick="add_new_friend(this);">添加</span>
+				{{??}}
+				<span class="item_arrow" >已添加</span>
+				{{?}}
+			</label>
+		</a>
+	</li>
+
+</script>
+
+
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<!--<script type="text/javascript" src="../script/jquery.js"></script>-->
+<script type="text/javascript" src="../script/toaddfriend.js"></script>
+<script type="text/javascript" src="../script/Convert_Pinyin.js"></script>
+
+
+<script type="text/javascript">
+	var db;
+	apiready = function() {
+		api.addEventListener({
+			name:'viewdisappear'
+		},function(){
+			api.closeWin();
+		});
+		var users = getStorage('users');
+		if(!users) {
+			api.alert({
+				title: '请先登录',
+				msg: '去登录',
+			}, function (ret, err) {
+				if (parseInt(ret.buttonIndex) === 1) {
+					api.closeWin({
+						name: 'is_special'
+					});
+
+					//关闭所有窗口
+					api.closeToWin({
+						name: 'root'
+					});
+					api.openWin({
+						name: 'login',
+						url: '../login_frame.html',
+						reload: true,
+						slidBackEnabled: false,
+						pageParam: {
+							name: 'test'
+						}
+					})
+				}
+			});
+			api.closeWin();
+			return;
+		}
+		db = api.require("db");
+		openDb(db);
+		//deltable(db,"toAddFriend")
+		innitToAddriend();
+	};
+	//计算字符串长度
+	function getStrLen(str) {
+		var strlen = 0;
+		for (var i = 0; i < str.length; i++) {
+			if (str.charCodeAt(i) > 255) { //如果是汉字，则字符串长度加3
+				strlen += 3;
+			} else {
+				strlen++;
+			}
+		}
+		return strlen;
+	}
+	//判断字符串是否为空或纯空格
+	function isNull(str){
+		if ( str == "" ) return true;
+		var regu = "^[ ]+$";
+		var re = new RegExp(regu);
+		//为空或纯空格为 true    有值为false
+		return re.test(str);
+	}
+	//查找用户
+	var isClick=0;
+	function search(inputobj){
+			$("#frinds_list_info").html('');
+			if (isNull(inputobj.value) === true || getStrLen(inputobj.value) < 2) {
+				return;
+			}
+			clearTimeout(isClick);
+			isClick = setTimeout(function () {
+				var username=inputobj.value;
+				var users = getStorage("users");
+				db.selectSql({
+					name: 'mylocaldb',
+					sql: 'SELECT * FROM toAddFriend where nickname="' + username + '"',
+				}, function (rets, errs) {
+					if (rets.status) {
+						var friends = rets.data[0];
+						if (friends && friends.nickname === username) {
+							$("#toAddfriend_" + friends.fid).remove();
+							var interTexts = doT.template($("#frinds-list-info-lasts").text());
+							$("#frinds_list_info").prepend(interTexts(friends));
+						} else {
+							if (isNull(username) === true || getStrLen(username) < 2) {
+								return;
+							}
+							api.ajax({
+								url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+								//url: 'http://192.168.88.132:9988/index.php?m=default&c=phone&a=request',
+								method: 'post',
+								data: {
+									values: {
+										"ac": "findUser",
+										"username": username,
+										"uid": users.user_id
+									},
+								}
+							}, function (ret, err) {
+								if (!err) {
+									if (parseInt(ret.code) === 200 && ret.data) {
+										var user = ret.data;
+										var data = {
+											nickname: user.fid_name,
+											addtime: timest(),
+											username: users.user_name,
+											intro: user.intro || '这个人很懒，什么也没说',
+											uid: users.user_id,
+											fid: user.fid,
+											photo: user.fid_photo || '../image/my/profile_default.png',
+											online: user.online || "0",
+											isfriend: user.isfriend,
+										};
+										insertToAddFriend(db, data);//添加1条信息到数据库
+										var interText = doT.template($("#frinds-list-info-lasts").text());
+										$("#frinds_list_info").html(interText(data));
+									} else {
+										parseInt(ret.code) === 10418 ? $("#frinds_list_info").html('<dav align="center" class="none-btn">该用户不存在</dav>') : $("#frinds_list_info").html('');
+
+									}
+								} else {
+									api.toast({
+										msg: '网络异常，请稍后重试!',
+										duration: 3000,
+										location: 'bottom'
+									});
+								}
+
+							});
+						}
+					} else {
+						console.log("selecterr" + JSON.stringify(errs));
+					}
+				});
+			}, 1500);
+
+	}
+
+	//添加好友
+	function add_new_friend(obj){
+		var fid = $(obj).data("id");
+		var users = getStorage('users');
+		api.ajax({
+			url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+			//url: 'http://192.168.88.132:9988/index.php?m=default&c=phone&a=request',
+			method: 'post',
+			data: {
+				values: {
+					"ac": "friendly",
+					"uid": users.user_id,
+					"fid":fid,
+				},
+			}
+		}, function (friendly, er) {
+			if (friendly.code == 200) {
+				data = {
+					isfriend: 1,
+					fid:friendly.data.fid,
+				};
+				updateToAddFriendByUid(db,data);
+				$("#toAddfriend_"+friendly.data.fid).find(".item_arrow").removeClass("add_new_friend");
+				$("#toAddfriend_"+friendly.data.fid).find(".item_arrow").text("已添加");
+				api.sendEvent({
+					name: 'addFriend',
+				});
+			}
+		});
+	}
+
+
+	//查询最近搜索记录
+	function innitToAddriend() {
+		newToAddFriend(db);
+		var users=getStorage("users");
+		db.selectSql({
+			name: 'mylocaldb',
+			sql: 'SELECT * FROM toAddFriend  where uid='+users.user_id
+		}, function(ret, err){
+			if( ret.status ){
+				var interText = doT.template($("#frinds-list-info-last").text());
+				$("#frinds_list_info").html(interText(ret.data));
+			}else {
+				console.log("selecterr" + JSON.stringify( err ) );
+			}
+		})
+	}
+
+	//进入好友资料页
+	function open_friendInfo(obj){
+		var friendid = $(obj).data("id");
+		api.openWin({
+			name: 'imziliao',
+			url: 'imziliao_window.html',
+			pageParam: {
+				uid: friendid
+			}
+		});
+	}
+</script>
+</html>

@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>APICloud APP</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <style>
+            header {
+                background-color: #ededed;
+                border-bottom: solid #ededed 1px;
+            }
+
+            h1 {
+                height: 50px;
+                line-height: 50px;
+                color: rgb(38, 38, 38);
+                font-size: 20px;
+                text-align: center;
+            }
+
+            .back {
+                position: absolute;
+                left: 0px;
+                bottom: 0px;
+                width: 50px;
+                height: 50px;
+                background: url(../image/cm2_icn_back.png) center center no-repeat;
+                background-size: 15px auto;
+            }
+        </style>
+    </head>
+
+    <body>
+        <header id="header">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="80"><div class="back event-back"></div></td>
+    <td><h1 class="friend_talking_title">我的活跃度</h1></td>
+    <td onClick="tishi()" tapmode="highlight" width="80"><font color="#333333">奖金说明</font></td>
+  </tr>
+</table>
+        </header>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            fnReady();
+            fnReadyFrame();
+            var systemType = api.systemType;  // 获取手机类型，比如： ios
+            if(systemType=='ios'){//兼容ios和安卓
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="30px";
+            }else{
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="35px";
+            }
+        };
+		function tishi(){
+	alert("月奖金说明 \n\n月奖是根据过去一个月平台获得的总收益的百分百送给用户(包含广告收益、任务收益、佣金收益等)，用户升级到SVI2可得月奖的20%、拉新两个用户可得30%、完成10订单（包含自己跟团的订单）可得50%， \n\n例如 \n\n本月奖金平均是3000元，你只完成SVIP2其他没完成，可得600元奖金，如果全部完成可得3000元，如果只完成10个订单，前面两个任务都没完成，是没有领取资格");  
+	}
+    </script>
+
+</html>

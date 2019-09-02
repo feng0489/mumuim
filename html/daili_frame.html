@@ -1,0 +1,392 @@
+<!doctype html>
+<html>
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+        <title>运营商控制台</title>
+        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="./js/mescroll/mescroll.min.css" />
+        <style>
+            html,
+            body {
+                background-color: #ededed;
+            }
+
+            .empty>img {
+                float: left;
+                padding-left: 20px;
+                height: 124px;
+            }
+            
+            .empty>span {
+                height: 124px;
+                line-height: 124px;
+                padding-left: 20px;
+            }
+
+            .message>div {
+                position: relative;
+                top: -1px;
+                box-sizing: border-box;
+                height: 49px;
+                border-top: 1px solid #eee;
+            }
+
+            .mescroll{
+                position: fixed;
+                top: 5px;
+                bottom: 0;
+                height: auto; /*如设置bottom:50px,则需height:auto才能生效*/
+            }
+        </style>
+    </head>
+
+    <body>
+        <div id="mescroll" class="mescroll" >
+            <div>
+            </div>
+            <div class="dailiTable_info_list">
+
+                <div id="nav" class="nav none_info_text"   style="padding-bottom:8px; padding-top:8px; padding-right:12px; background-color:#FFFFFF; display: block">
+                    <div align="center" style="color:#999999;">
+                        <img src="img/deng.gif" width="66" height="66" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+<script class="dailiTable_info" type="text/x-dot-template">
+	
+	<div style="background-color:#ededed; padding:15px; padding-top:5px; padding-bottom:22px;">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td width="50%" valign="top">
+                <div style="font-size:13px; color:#666666;">预估收入(本月) <strong></strong></div>
+                <div id="caifu1"  tapmode="" style="font-size:30px; color:#333333; margin-bottom:3px; margin-top:8px;">{{=it.sum_month_money}}</div>
+                <div style="font-size:13px; color:#666666;"> + <strong><font class="tday_money">{{=it.sum_today_money}}</font></strong>（今日）</div>
+            </td>
+            <td width="50%" valign="top" onClick="qianbao()">
+                <div style="font-size:13px; color:#666666;">未处理提现（元）</div>
+                <div id="caifu2" class="today_money" style="font-size:30px; color:#333333; margin-bottom:3px; margin-top:8px;">{{=it.wait_money}}</div>
+                <div tapmode="" style="font-size:13px; color:#333333;">+<strong class="jiacheng_money">{{=it.user_money}}</strong ><font class="svip_text">(账户余款)</font></div>
+            </td>
+        </tr>
+    </table>
+
+
+</div>
+
+        <div onClick="openNew1()" tapmode="" style="background-image: linear-gradient(160deg, #414141 20%,#595858 80%); padding:10px; margin-bottom:10px; color:#FFFFFF;">
+            <div><strong>财务流水</strong></div>
+            <div style="font-size:36px; padding-bottom:10px;">{{=it.sum_tixian_money}}</div>
+            <div>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <!--<td width="33%"><p style="font-size:12px;">今日预估收入</p>-->
+                        <!--<p>0</p></td>-->
+                        <!--<td width="34%" align="center"><p style="font-size:12px;">累计提现</p>-->
+                        <!--<p>{{=it.tixian_yongjin}}</p></td>-->
+                        <td>
+                            <p style="font-size:12px;">累计提现</p>
+                            <p>{{=it.true_money}}</p>
+                        </td>
+                        <td width="33%" align="right">
+                            <p style="font-size:12px;">待提现</p>
+                            <p>{{=it.wait_money}}</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div onClick="openNew2()" tapmode="" style="background-image: linear-gradient(160deg, #d3b382 20%,#e9d5a5 80%); padding:10px; margin-bottom:10px; color:#FFFFFF;">
+            <div><strong>用户报表</strong></div>
+            <p style="font-size:36px; padding-bottom:10px;">{{=it.friend_count}}</p>
+            <div>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <!--<td width="33%"><p style="font-size:12px;">今日新增人数</p>-->
+                        <!--<p>0</p></td>-->
+                        <!--<td width="34%" align="center"><p style="font-size:12px;">活跃用户</p>-->
+                        <!--<p>{{=it.friend_count}}</p></td>-->
+                        <td>
+                            <p style="font-size:12px;">活跃用户</p>
+                            <p>{{=it.friend_count}}</p>
+                        </td>
+                        <td width="33%" align="right">
+                            <p style="font-size:12px;">有效用户</p>
+                            <p>{{=it.true_friend_count}}</p>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div onClick="openNew3()" tapmode="" style="background-image: linear-gradient(160deg, #b77864 20%,#dbb3a1 80%); padding:10px; margin-bottom:10px; color:#FFFFFF;">
+            <div><strong>PID报表</strong></div>
+            <p style="font-size:36px; padding-bottom:10px;">{{=it.pid_count}}</p>
+            <div>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <!--<td width="33%"><p style="font-size:12px;">今日新增人数</p>-->
+                        <!--<p>0</p></td>-->
+                        <!--<td width="34%" align="center"><p style="font-size:12px;">活跃用户</p>-->
+                        <!--<p>{{=it.friend_count}}</p></td>-->
+                        <td><p style="font-size:12px;">最高用户数量</p>
+                        <p>{{=it.uid_max_count}}</p></td>
+                        <td width="33%" align="right"><p style="font-size:12px;">剩余用户数量</p>
+                        <p>{{=it.uid_min_count}}</p></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        
+        <div style="background-image: linear-gradient(160deg, #ffffff 20%,#ffffff 80%); padding:10px; margin-bottom:10px; color:#FFFFFF;">
+            <div style="color: black; padding-bottom: 10px;"><strong>运营商工具</strong></div>
+            <div>
+                <table width="100%"border="0"cellspacing="0"cellpadding="0">
+                    <tr>
+                        <td width="25%"align="left">
+                            <a class="mDialogs" @click="mdialog5" href="javascript:;">
+                                <div onClick="openNew41()" tapmode="" align="center"style="background-image: linear-gradient(160deg, #d3b382 20%,#d3b382 80%); border-radius:50px; height:43px; width:43px; padding:15px; font-size:16px; color:#FFFFFF;"><strong>分享资源</strong>
+                                </div>
+                            </a>
+                        </td>
+                        <td width="25%"align="left">
+                            <a class="mDialogs" @click="mdialog5" href="javascript:;">
+                                <div onClick="openNew42()" tapmode="" align="center"style="background-image: linear-gradient(160deg, #d3b382 20%,#d3b382 80%); border-radius:50px; height:43px; width:43px; padding:15px; font-size:16px; color:#FFFFFF;"><strong>发布任务</strong>
+                                </div>
+                            </a>
+                        </td>
+                        <td width="25%"align="left">
+                            <a class="mDialogs" @click="mdialog6"href="javascript:;">
+                                <div onClick="openNew43()" tapmode="" align="center"style="background-image: linear-gradient(160deg, #d3b382 20%,#d3b382 80%); border-radius:50px; height:43px; width:43px; padding:15px; font-size:16px; color:#FFFFFF;"><strong>营销功能</strong></div>
+                            </a>
+                        </td>
+                        <td width="25%"align="left">
+                            <a class="mDialogs mdialog1" @click="mdialog1"href="javascript:;">
+                                <div align="center"style="background-image: linear-gradient(160deg, #d3b382 20%,#d3b382 80%); border-radius:50px; height:43px; width:43px; padding:15px; font-size:16px; color:#FFFFFF;"><strong>更多</strong></div>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        	
+				
+
+
+</script>
+
+<div align="center" style="padding:20px; color:#CCCCCC;">让玩手机变得有价值</div>
+
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="./js/mescroll/mescroll.min.js"></script>
+    <script type="text/javascript">
+        apiready = function(){
+            tableinfo();//代理报表信息
+        }
+
+        //代理报表信息
+        function tableinfo() {
+            var users = getStorage("users");
+            api.ajax({
+                url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                method: 'post',
+                data: {
+                    values: {
+                        "ac":"dailiTable",
+                        "uid": users.user_id,
+                    },
+                }
+            }, function (ret, err) {
+                if(!err){
+                    if(parseInt(ret.code) == 200){
+                        var data= ret.data;
+                        if(data){
+                            $('.none_info_text').css("display","none");
+                            var interText = doT.template($(".dailiTable_info").text());
+                            $(".dailiTable_info_list").html(interText(data));
+                        }
+                    }else{
+                        api.toast({
+                            msg:ret.msg,
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                }else{
+                    api.toast({
+                        msg: '网络异常，请重新请求!',
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+
+            });
+        }
+        //提现管理
+        function openNew1() {
+            api.openWin({
+                name: 'daili3',
+                url: 'daili3.html',
+                pageParam: {
+                    name: 'test'
+                }
+            });
+        }
+        //用户管理
+        function openNew2() {
+            api.openWin({
+                name: 'daili1',
+                url: 'daili1.html',
+                pageParam: {
+                    name: 'test'
+                }
+            });
+        }
+        //pid管理
+        function openNew3() {
+            api.openWin({
+                name: 'daili2',
+                url: 'daili2.html',
+                pageParam: {
+                    name: 'test'
+                }
+            });
+        }
+        //分享资源
+        function openNew41() {
+            api.openWin({
+                name: 'dailifenxiang',
+                url: 'dailifenxiang.html',
+                pageParam: {
+                    name: 'test'
+                }
+            });
+        }
+        //发布任务
+        function openNew42() {
+            api.openWin({
+                name: 'renwudisanfangfabu_window',
+                url: 'renwudisanfangfabu_window.html',
+                pageParam: {
+                    name: 'test'
+                }
+            });
+        }
+        //营销功能
+        function openNew43() {
+            api.openWin({
+                name: 'dailigongneng',
+                url: 'dailigongneng.html',
+                pageParam: {
+                    name: 'test'
+                }
+            });
+        }
+
+        function openNew44() {
+            api.openWin({
+                name: 'daili2',
+                url: 'daili2.html',
+                pageParam: {
+                    name: 'test'
+                }
+            });
+        }
+
+        function qianbao() {
+            api.openWin({
+                name: 'qianbao',
+                url: 'qianbao_window.html',
+                pageParam: {
+                    name: 'test'
+                }
+            });
+        }
+
+        //下拉刷新
+        $(function() {
+            //创建MeScroll对象,内部已默认开启下拉刷新;
+            var mescroll = new MeScroll("mescroll", {
+                down:{
+                    use: true, //是否初始化下拉刷新; 默认true
+                    auto: false, //是否在初始化完毕之后自动执行下拉回调callback; 默认true
+                    autoShowLoading: true, //如果在初始化完毕之后自动执行下拉回调,是否显示下拉刷新进度; 默认false. (需配置down的callback才生效)
+                    isLock: false, //是否锁定下拉,默认false;
+                    isBoth: true, //下拉刷新时,如果滑动到列表底部是否可以同时触发上拉加载;默认false,两者不可同时触发;
+                    callback:getListData,
+                    //function(mescroll) {
+                    //     console.log("down --> callback");
+                    //     getListData;
+                    // },
+                    offset: 80, //触发刷新的距离,默认80
+                    outOffsetRate: 0.2, //超过指定距离范围外时,改变下拉区域高度比例;值小于1且越接近0,越往下拉高度变化越小;
+                    bottomOffset: 20, //当手指touchmove位置在距离body底部20px范围内的时候结束上拉刷新,避免Webview嵌套导致touchend事件不执行
+                    minAngle: 45, //向下滑动最少偏移的角度,取值区间  [0,90];默认45度,即向下滑动的角度大于45度则触发下拉;而小于45度,将不触发下拉,避免与左右滑动的轮播等组件冲突;
+                    hardwareClass: "mescroll-hardware", //硬件加速样式;解决iOS下拉因隐藏进度条而闪屏的问题,参见mescroll.css
+                    mustToTop: false, // 是否滚动条必须在顶部,才可以下拉刷新.默认false. 当您发现下拉刷新会闪白屏时,设置true即可修复.
+                    warpId: null, //可配置下拉刷新的布局添加到指定id的div;默认不配置,默认添加到mescrollId
+                    warpClass: "mescroll-downwarp", //容器,装载布局内容,参见mescroll.css
+                    resetClass: "mescroll-downwarp-reset", //高度重置的动画,参见mescroll.css
+                    textInOffset: '↓ 下拉刷新 ↓', // 下拉的距离在offset范围内的提示文本
+                    textOutOffset: '释放更新', // 下拉的距离大于offset范围的提示文本
+                    textLoading: '加载中 ...', // 加载中的提示文本
+                    htmlContent: '<p class="downwarp-progress"></p><p class="downwarp-tip" style="font-size: 16px"></p>', // 布局内容
+                    inited: function(mescroll, downwarp) {
+                        //console.log("down --> inited");
+                        //初始化完毕的回调,可缓存dom
+                        mescroll.downTipDom = downwarp.getElementsByClassName("downwarp-tip")[0];
+                        mescroll.downProgressDom = downwarp.getElementsByClassName("downwarp-progress")[0];
+                    },
+                    inOffset: function(mescroll) {
+                        //console.log("down --> inOffset");
+                        //进入指定距离offset范围内那一刻的回调
+                        if (mescroll.downTipDom) mescroll.downTipDom.innerHTML = mescroll.optDown.textInOffset;
+                        if(mescroll.downProgressDom) mescroll.downProgressDom.classList.remove("mescroll-rotate");
+                    },
+                    outOffset: function(mescroll) {
+                        //console.log("down --> outOffset");
+                        //下拉超过指定距离offset那一刻的回调
+                        if (mescroll.downTipDom) mescroll.downTipDom.innerHTML = mescroll.optDown.textOutOffset;
+                    },
+                    onMoving: function(mescroll, rate, downHight) {
+                        //下拉过程中的回调,滑动过程一直在执行; rate下拉区域当前高度与指定距离offset的比值(inOffset: rate<1; outOffset: rate>=1); downHight当前下拉区域的高度
+                        //console.log("down --> onMoving --> mescroll.optDown.offset="+mescroll.optDown.offset+", downHight="+downHight+", rate="+rate);
+                        if(mescroll.downProgressDom) {
+                            var progress = 360 * rate;
+                            mescroll.downProgressDom.style.webkitTransform = "rotate(" + progress + "deg)";
+                            mescroll.downProgressDom.style.transform = "rotate(" + progress + "deg)";
+                        }
+                    },
+                    beforeLoading: function(mescroll, downwarp) {
+                        //console.log("down --> beforeLoading");
+                        //准备触发下拉刷新的回调
+                        return false; //如果要完全自定义下拉刷新,那么return true,此时将不再执行showLoading(),callback();
+                    },
+                    showLoading: function(mescroll) {
+                        //console.log("down --> showLoading");
+                        //触发下拉刷新的回调
+                        if (mescroll.downTipDom) mescroll.downTipDom.innerHTML = mescroll.optDown.textLoading;
+                        if(mescroll.downProgressDom) mescroll.downProgressDom.classList.add("mescroll-rotate");
+                    },
+                    afterLoading: function (mescroll) {
+                        //console.log("down --> afterLoading");
+                        // 结束下拉之前的回调. 返回延时执行结束下拉的时间,默认0ms; 常用于结束下拉之前再显示另外一小段动画,才去结束下拉的场景, 参考案例【dotJump】
+                        return 2000
+                    }
+                },
+            });
+            function getListData() {
+                tableinfo();
+                mescroll.endErr();
+            }
+        });
+    </script>
+</html>

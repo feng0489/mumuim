@@ -1,0 +1,359 @@
+<!DOCTYPE html>		
+<html>		
+<head>		
+	<meta charset="utf-8">		
+	<title>frame</title>		
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>		
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">		
+	<link rel="stylesheet" type="text/css" href="../css/api.css" />		
+
+    	<link rel="stylesheet" href="css/iconfont/iconfont.css" />
+	<link rel="stylesheet" href="css/reset.css" />
+	<link rel="stylesheet" href="css/animate.css" />
+	<link rel="stylesheet" href="css/swiper-3.4.1.min.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/fontSize.js"></script>
+	<script src="js/swiper-3.4.1.min.js"></script>
+	<script src="js/rippleEffect.js"></script>
+	<script src="js/wcPop/wcPop.js"></script>
+     <script type="text/javascript">
+	  function openNew20() {
+        api.openWin({
+		     bounces:false,
+            name: 'imkaihongbao',
+            url: 'imkaihongbao_window.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+      }
+    </script>
+	
+	<style>		
+		html,body {min-height: 100%;background-color: #F5F5F5;height: 100%;word-wrap:break-word; word-break:break-all; font-size:12px;}		
+	</style>		
+</head>		
+<body>		
+
+<!--聊天页面样式-->
+<div class="weChatIM__panel clearfix">
+<div class="we__chatIM-wrapper flexbox flex__direction-column">
+<!-- //主页面 -->
+<div class="wcim__container flex1">
+<div id="mescroll" class="mescroll">
+<!-- 加载聊天记录提示 -->
+<!-- <div class="wcim__chatMsg-loading J__chatMsgLoading"><img src="img/deng.gif" /> 数据载入中...</div> -->
+<div class="wcim__chatMsgPanel"><ul class="clearfix" id="J__chatMsgList">
+
+<!--聊天盒子-->
+<ul class="content" id="chatbox">
+<!--页面已有内容-->
+<li class="time"><span>2018年09月02日 上午08:25</span></li>
+<!-- 别人-->
+<li class="others">
+<a class="avatar" href="微钉-好友主页(详细资料).html"><img src="img/uimg/u__chat-img08.jpg" /></a>
+<div class="content">
+<p class="author">杨幂幂(Mimi)</p>
+<div class="msg">好久都没有联系了，最近还好吧。</div>
+</div>
+</li>
+
+<!--自己-->
+<li class="me">
+<div class="content">
+<p class="author">风铃子</p>
+<div class="msg">嗯，一切挺好哒~ <img class="face" src="img/emotion/face01/27.png"></div>
+</div>
+<a class="avatar" href="微钉-好友主页(详细资料).html"><img src="img/uimg/u__chat-img07.jpg" /></a>
+</li>
+           
+<!--其他类模板-->
+<li class="others">
+<a class="avatar" href="微钉-好友主页(详细资料).html"><img src="img/uimg/u__chat-img08.jpg" /></a>
+<div class="content"><p class="author">杨幂幂(Mimi)</p><div class="msg picture"><img class="lg-face" src="img/emotion/face02/0.gif"></div></div>
+</li>
+
+<li class="time"><span>09月01日 17:30</span></li>
+<li class="others">
+<a class="avatar" href="微钉-好友主页(详细资料).html"><img src="img/uimg/u__chat-img08.jpg" /></a><div class="content">
+<p class="author">杨幂幂(Mimi)</p>
+<div class="msg">最近一直在玩彩票，要不要一起玩啊<br><a href="http://caipiao.163.com/">http://caipiao.163.com/</a>
+</div></div></li>
+
+<li onClick="openNew20()" tapmode="highlight" class="me">
+<div class="content"><p class="author">风铃子</p><div class="msg redpackets J__getRedPackets">
+<div class="hb-card flexbox flex-alignc"><span class="ico"><i class="iconfont icon-hongbao"></i></span>
+<span class="tit flex1"><em class="clamp1">恭喜发财，大吉大利</em><label class="desc">查看红包</label></span>
+</div><div class="hb-foot">拼手气红包</div></div></div><a class="avatar" href="微钉-好友主页(详细资料).html"><img src="img/uimg/u__chat-img07.jpg" /></a>
+</li>
+
+<li onClick="openNew20()" tapmode="highlight" class="others">
+<a class="avatar" href="微钉-好友主页(详细资料).html"><img src="img/uimg/u__chat-img08.jpg" /></a><div class="content">
+<p class="author">杨幂幂(Mimi)</p><div class="msg redpackets off J__viewRedPackets">
+<div class="hb-card flexbox flex-alignc"><span class="ico"><i class="iconfont icon-hongbao"></i></span>
+<span class="tit flex1"><em class="clamp1">恭喜发财，大吉大利</em><label class="desc">红包已被领取</label></span></div>
+<div class="hb-foot">拼手气红包</div></div></div>
+</li>
+
+<li class="time"><span>"风铃子" 撤回了一条消息</span></li>
+<li class="me">
+<div class="content"><p class="author">风铃子</p><div class="msg lgface"><img class="lg-face" src="img/emotion/face02/2.gif">
+</div></div><a class="avatar" href="微钉-好友主页(详细资料).html"><img src="img/uimg/u__chat-img07.jpg" /></a>
+</li>
+
+<li class="others">
+<a class="avatar" href="微钉-好友主页(详细资料).html"><img src="img/uimg/u__chat-img08.jpg" /></a>
+<div class="content"><p class="author">杨幂幂(Mimi)</p>
+<div class="msg video"><img class="img__video" src="img/placeholder/wchat__video02-poster.jpg" videoUrl="img/placeholder/wchat__video02-Y7qk5uVcNcFJIY8O4mKzDw.mp4" />
+</div></div></li>
+
+<li class="me">
+<div class="content">
+<p class="author">风铃子</p><div class="msg lgface"><img class="lg-face" src="img/emotion/face05/7.gif">
+</div></div><a class="avatar" href="微钉-好友主页(详细资料).html"><img src="img/uimg/u__chat-img07.jpg" /></a>
+</li>
+
+<li class="others">
+<a class="avatar" href="好友主页-详细资料.html"><img src="img/uimg/u__chat-img09.jpg" /></a><div class="content">
+<p class="author">琵琶精（ppj）</p><div class="msg audio" data-time="0">
+<audio preload="auto" hidden="true"><source src="img/placeholder/audio-test01.mp3" type="audio/mpeg"></audio><s class="ico_voice"></s><span class="data"><em class="time">0''</em><i class="redot"></i></span>
+</div></div></li>
+
+<li class="me"><div class="content"><p class="author">花样少年</p>
+<div class="msg audio" data-time="0"><audio preload="auto" hidden="true"><source src="img/placeholder/audio-test02.mp3" type="audio/mpeg"></audio>
+<s class="ico_voice"></s><span class="data"><em class="time">0''</em><i class="redot"></i></span></div>
+</div><a class="avatar" href="好友主页-详细资料.html"><img src="img/uimg/u__chat-img13.jpg" /></a></li>
+
+<li class="me"><div class="content"><p class="author">花样少年</p>
+<div class="msg audio" data-time="0">
+<audio preload="auto" hidden="true"><source src="img/placeholder/audio-test01.mp3" type="audio/mpeg"></audio>
+<s class="ico_voice"></s><span class="data"><em class="time">0''</em><i class="redot"></i></span></div></div>
+<a class="avatar" href="好友主页-详细资料.html"><img src="img/uimg/u__chat-img13.jpg" /></a></li>
+
+<li class="me">
+<div class="content"><p class="author">花样少年</p>
+<div class="msg map" data-poiname="珠江国际大厦" data-poiaddress="广东省广州市越秀区越华路112号" data-lat="23.1297" data-lng="113.26753">
+<div class="pointinfo"><div class="poiname clamp1">广州市天河体育中心</div><div class="poiaddress clamp2">广东省广州市天河区天河路299号</div>
+</div><div class="poithumb"><img src="img/placeholder/map-location.png" /></div></div></div><a class="avatar" href="好友主页-详细资料.html"><img src="img/uimg/u__chat-img13.jpg" /></a>
+</li>
+                  
+</ul>
+<div style="height:60px;"></div> 
+
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+		var emotionSwiper;
+		function setEmotionSwiper(tmpl){
+			var _tmpl = tmpl ? tmpl : $("#J__emotionFootTab ul li.cur").attr("tmpl");
+			$("#J__swiperEmotion .swiper-container").attr("id", _tmpl);
+			$("#J__swiperEmotion .swiper-wrapper").html($("." + _tmpl).html());emotionSwiper = new Swiper('#' + _tmpl, {pagination: '.pagination-emotion',paginationClickable: true
+			});
+		}
+		// 点击切换表情
+		$("#J__emotionFootTab").on("click", "ul li.swiperTmpl", function(){
+			// 先销毁swiper
+			emotionSwiper && emotionSwiper.destroy(true, true);var _tmpl = $(this).attr("tmpl");$(this).addClass("cur").siblings().removeClass("cur");
+			setEmotionSwiper(_tmpl);
+		});
+	</script>
+	<!-- …… 表情模板.End -->
+
+	<!-- …… 图片预览弹窗.Start -->
+	<div class="wcim__popup-imgPreview" style="display: none;">
+		<div class="swiper-container J__swiperImgPreview">
+			<div class="swiper-wrapper"></div>
+			<!-- <div class="swiper-pagination pagination-imgPreview"></div> -->
+		</div>
+	</div>
+	<script type="text/javascript">
+		var curIndex = 0, imgPreviewSwiper;
+		$("body").on("click", "#J__chatMsgList li .picture", function(){
+			var html = "",  _src = $(this).find("img").attr("src");
+			$("#J__chatMsgList li .picture").each(function(i, item){
+				html += '<div class="swiper-slide"><div class="swiper-zoom-container">'+ $(this).html() +'</div></div>';if($(this).find("img").attr("src") == _src){
+					curIndex = i;
+				}
+			});
+			$(".J__swiperImgPreview .swiper-wrapper").html(html);$(".wcim__popup-imgPreview").show();
+
+			imgPreviewSwiper = new Swiper('.J__swiperImgPreview',{
+				pagination: false,paginationClickable: true,zoom: true,observer: true,
+				observeParents: true,initialSlide: curIndex
+			});
+		});
+		// 关闭预览
+		$(".wcim__popup-imgPreview").on("click", function(e){
+			var that = $(this);imgPreviewSwiper.destroy(true, true);
+			$(".J__swiperImgPreview .swiper-wrapper").html('');that.hide();
+		});
+	</script>
+	<!-- …… 图片预览弹窗.End -->
+
+	<!-- …… 视频预览弹窗.Start -->
+	<div class="wcim__popup-videoPreview" style="display: none;"><i class="wcim__videoClose"></i><video id="J__videoPreview" width="100%" height="100%" controls x5-video-player-type="h5" x5-video-player-fullscreen="true" webkit-playsinline preload="auto"></video>
+	</div>
+	<script type="text/javascript">
+		var video = document.getElementById("J__videoPreview");$("body").on("click", "#J__chatMsgList li .video", function(){video.src = $(this).find("img").attr("videoUrl");$(".wcim__popup-videoPreview").show();
+			if(video.paused){video.play();}else{video.pause();
+			}
+		});
+		video.addEventListener("ended", function(){video.currentTime = 0;
+		}, false);
+		// 关闭预览
+		$(".wcim__popup-videoPreview").on("click", ".wcim__videoClose", function(){
+			$(".wcim__popup-videoPreview").hide();video.currentTime = 0;video.pause();
+		});
+
+		// 进入全屏、退出全屏
+		video.addEventListener("x5videoenterfullscreen", function(){
+			console.log("进入全屏");
+		}, false);
+		video.addEventListener("x5videoexitfullscreen", function(){
+			$(".wcim__popup-videoPreview .wcim__videoClose").trigger("click");
+		}, false)
+	</script>
+	<!-- …… 视频预览弹窗.End -->
+
+	
+
+
+
+	<script src="js/mescroll/mescroll.js"></script>
+	<script src="js/mescroll/mescroll-wrapper.js"></script>
+
+	<script type="text/javascript">
+		
+
+		// ...获取语音时长
+		getVoiceTime();
+		function getVoiceTime() {
+			$("#J__chatMsgList li .audio").each(function () {
+				var that = $(this), audio = that.find("audio")[0], duration;
+				audio.load();audio.oncanplay = function () {duration = Math.ceil(audio.duration);
+					if (duration == 'Infinity') {getVoiceTime();} else {
+						that.find(".time").text(duration + `''`);that.attr("data-time", duration);var percent = (duration / 60).toFixed(2) * 100 + 20 + '%';that.css("width", percent);
+					}
+				}
+			});
+		}
+		// ...语音播放事件
+		var timer = null;
+		$("body").on("click", "#J__chatMsgList li .audio", function () {
+			var that = $(this);that.parents("li").siblings("li").find(".ico_voice").removeClass("active");that.find(".redot").addClass("off");
+			// audio播放事件
+			timer && clearTimeout(timer);that.parents("li").siblings("li").find("audio")[0].pause();var audio = that.find("audio")[0], time = that.attr("data-time");
+			if (audio.paused) {audio.play();that.find(".ico_voice").addClass("active");timer = setTimeout(function () {that.find(".ico_voice").removeClass("active");
+				}, time * 1000);
+			} else {audio.pause();that.find(".ico_voice").removeClass("active");clearTimeout(timer);}
+		});
+	</script>
+
+</body>	
+	<script type="text/javascript" src="../script/api.js"></script>
+	<script>
+		apiready = function(){
+			//引入模块UIChatBox
+			var UIChatBox = api.require('UIChatBox');
+				//打开模块输入框
+				UIChatBox.open({
+				    placeholder: '',
+				    maxRows: 3,
+				    //表情地址
+				    emotionPath: 'widget://image/emotion',
+				    //录音按钮文本
+				    texts: {
+				        recordBtn: {
+				            normalTitle: '按 住 说 话',
+				            activeTitle: '松 开 结 束'
+				        },
+				        sendBtn: {
+				            title: '发送'
+				        }
+				    },
+				    //其他按钮样式
+				    styles: {
+				        inputBar: {
+				            borderColor: '#ededed',
+				            bgColor: '#ededed'
+				        },
+				        inputBox: {
+				            borderColor: '#ededed',
+				            bgColor: '#FFFFFF'
+				        },
+				        //表情按钮
+				        emotionBtn: {
+				            normalImg: 'widget://image/face2.png'
+				        },
+				        //额外功能按钮
+				        extrasBtn: {
+				            normalImg: 'widget://image/add2.png'
+				        },
+				        //键盘按钮
+				        keyboardBtn: {
+				            normalImg: 'widget://image/key1.png'
+				        },
+				        //录音按钮
+				        speechBtn: {
+				            normalImg: 'widget://image/cam1.png'
+				        },
+				        recordBtn: {
+				            normalBg: '#c4c4c4',
+				            activeBg: '#999999',
+				            color: '#000',
+				            size: 13
+				        },
+				        indicator: {
+				            target: 'both',
+				            color: '#c4c4c4',
+				            activeColor: '#9e9e9e'
+				        },
+				        sendBtn: {
+				            titleColor: '#ffffff',
+				            bg: '#999999',
+				            activeBg: '#ffffff',
+				            titleSize: 14
+				        }
+				    },
+				    //额外功能内容
+				    extras: {
+				        titleSize: 10,
+				        titleColor: '#a3a3a3',
+				        btns: [{
+				            title: '图片',
+				            normalImg: 'widget://image/album1.png',
+				            activeImg: 'widget://image/album2.png'
+				        }, {
+				            title: '发送位置',
+				            normalImg: 'widget://image/loc1.png',
+				            activeImg: 'widget://image/loc2.png'
+				        }]
+				    }
+				}, function(ret, err) {
+					if (ret.eventType=='show'){//模块打开成功触发事件
+						
+					}else if (ret.eventType=='send') {//若点击发送触发事件
+					
+				        var panel = $api.byId("chatbox");
+				        panel.innerHTML += "<li class='me'><div class='content'><p class='author'>风铃子</p><div class='msg'>"+ret.msg+"<img class='face' src='img/emotion/face01/27.png'></div></div><a class='avatar'><img src='img/uimg/u__chat-img07.jpg' /></a></li>";
+				    } else if(ret.eventType=='clickExtras'){//用户点击额外功能按钮触发
+				        
+
+				    }else if(ret.eventType=='clickRecord'){//用户点击录音功能按钮触发
+				        
+
+				    }
+				});
+				
+		}
+	</script>
+	
+      
+    
+</html>		

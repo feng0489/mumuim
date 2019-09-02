@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>APICloud APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        header {
+            background-color: #ededed;
+            height: 50px;
+        }
+
+        .back {
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            width: 50px;
+            height: 50px;
+            background: url(../image/cm2_icn_back.png) center center no-repeat;
+            background-size: 15px auto;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<header id="header">
+    <div class="back event-back"></div>
+    <div style=" padding-top:15px;" align="center"><span align="center" style="color:#0e080b;">淘宝</span>
+    </div>
+    </div>
+</header>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        //$api.byId('searchText').value = api.pageParam.keyword ;
+        fnReady();
+        fnReadyFrame();
+            var systemType = api.systemType;  // 获取手机类型，比如： ios
+            if(systemType=='ios'){//兼容ios和安卓
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="30px";
+            }else{
+	        var x=document.getElementById("header");
+	        x.style.paddingTop="35px";
+            }
+        // state:0,            //加载状态，数字类型，取值范围：0-开始加载；1-加载进度发生变化；2-结束加载；3-title发生变化；4-url发生变化
+        //     progress:0,            //state为1时，页面的加载进度，数字类型，取值范围 0-100
+        //     title:'',            //state为3时，页面当前的title，字符串类型
+        //     url:''                //state为0|2|4时，页面当前的url，字符串类型
+        var keyword = api.pageParam.keyword;
+        var users = getStorage('users');
+        var state1 = 0;
+        var state2 = 0;//第一次为跳转到爱淘宝，记录为1，当为1开始记录用户点击的和搜索的内容
+        var state4 = 0;
+        var appURL = "";
+        // api.setFrameClient({
+        //     frameName: 'search_result'
+        // }, function(ret, err) {
+        //     console.log(JSON.stringify("setFrameClient"+JSON.stringify(ret)))
+        //     switch (ret.state) {
+        //         case 0:
+        //             break;
+        //         case 1:
+        //             state1 = state1+1;
+        //             break;
+        //         case 2:
+        //             state2 = state2+1
+        //             break;
+        //         case 3:
+        //             if(state2 >=1){
+        //                 if(ret.title === "商品详情页" || ret.title === "爱淘宝" || ret.title === "淘宝网 - 淘！我喜欢" ){
+        //                     break;
+        //                 }
+        //                 //var systemType = api.systemType;//设备类型 android ios
+        //                 //alert("搜索关键字"+keyword);
+        //                 // alert("系统类型"+systemType);
+        //                 //alert("标题："+ret.title);
+        //                 //alert("跳转地址："+appURL);
+        //                 // api.openApp({
+        //                 //     iosUrl: 'weixin://', //打开微信的，其中weixin为微信的URL Scheme
+        //                 //     appParam: {
+        //                 //         appParam: 'app参数'
+        //                 //     }
+        //                 // });
+        //                 var username = users.user_name || users.nickname
+        //                 api.ajax({
+        //                     url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+        //                     //url:'http://192.168.1.177:9988/index.php?m=default&c=phone&a=request',
+        //                     method:'post',
+        //                     data:{
+        //                         values: {
+        //                             "ac"     :"submitSearch",
+        //                             "keyword":keyword,
+        //                             "uid"    :users.user_id,
+        //                             "title"  :ret.title,
+        //                             "appURL" :appURL,
+        //                             "username" :username,
+        //                         },
+        //                     }
+        //                 },function(ret,err) {
+        //
+        //                 });
+        //             }
+        //             break;
+        //         case 4:
+        //             if(state2 >=1){
+        //                 appURL = ret.url;
+        //
+        //             }
+        //
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        // });
+    };
+
+
+    //获取地址栏参数
+    //url为空时为调用当前url地址
+    //调用方法为 var params = getPatams();
+    function getParams(url) {
+        var theRequest = new Object();
+        if (!url)
+            url = location.href;
+        if (url.indexOf("?") !== -1)
+        {
+            var str = url.substr(url.indexOf("?") + 1) + "&";
+            var strs = str.split("&");
+            for (var i = 0; i < strs.length - 1; i++)
+            {
+                var key = strs[i].substring(0, strs[i].indexOf("="));
+                var val = strs[i].substring(strs[i].indexOf("=") + 1);
+                theRequest[key] = val;
+            }
+        }
+        return theRequest;
+    }
+
+
+</script>
+
+</html>

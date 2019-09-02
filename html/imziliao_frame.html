@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+	<meta charset="UTF-8" />
+	<title>详细资料</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<meta http-equiv="Access-Control-Allow-Origin" content="*" />
+	<link rel="stylesheet" href="css/iconfont/iconfont.css" />
+	<link rel="stylesheet" href="css/reset.css" />
+	<link rel="stylesheet" href="css/animate.css" />
+	<link rel="stylesheet" href="css/layout.css" />
+	
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/zepto.min.js"></script>
+	<script src="js/fontSize.js"></script>
+	<script src="js/wcPop/wcPop.js"></script>
+	
+</head>
+<body>
+	
+	<!-- <>主容器 -->
+	<div class="weChatIM__panel clearfix">
+		<div class="we__chatIM-wrapper flexbox flex__direction-column">
+			<!-- //顶部 -->
+			
+			<!-- //主页面 -->
+			<div class="wcim__container flex1">
+				<!-- //好友主页-详细资料 -->
+
+				<div class="wcim__userProfile-detail"  id="user_inziliao_info">
+					<ul  class="clearfix  friend_user_info">
+						<li><div class="item flexbox flex-alignc wcim__material-cell"><img class="uimg" src="../image/my/profile_default.png" />
+								<label class="lbl flex1"><span class="userName"> </span>
+									<!--<i class="iconfont icon-male dib fs-36 c-3296fa"></i>-->
+									<i class="num">账号：</i></label></div>
+						</li>
+					</ul>
+					<!-- 按钮 --><div class="rpl-25 rpr-25"><span data-id="" data-photo="" data-name=""  class="wcim__btn-primary rmt-25 send_Msg " onclick="send_Msg(this);" href="#"  style="display: none">发消息</span>
+					<span data-fid=""  class="wcim__btn-primary  rmt-25  add_new_friend" href="#" style="display: none" onclick="add_new_friend(this);">添加好友</span>
+					<!--<a class="wcim__btn-default rmt-25" href="#">视频聊天</a>-->
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- …… 设置备注/标签弹窗模板.Start -->
+	<div class="wcim__popup-tmpl">
+		<div id="J__popupTmpl-setRemarks" style="display:none;"><div class="wcim__popupTmpl"><div class="wcim__setRemarks-panel"><ul class="wcim__similarPanel-cells clearfix bg-fff">
+						<li class="flexbox flex-alignc"><div class="lbl flex1 flexbox flex-alignc"><input class="ipt-text flex1" type="text" name="name" placeholder="备注名" /></div></li><li class="flexbox flex-alignc"><div class="lbl flex1 flexbox flex-alignc"><input class="ipt-text flex1" type="text" name="lbl" placeholder="标签" /></div></li><li class="flexbox flex-alignc"><div class="lbl flex1 flexbox flex-alignc"><input class="ipt-text flex1" type="text" name="tel" placeholder="电话号码" /></div></li>
+						<li class="flexbox flex-alignc"><div class="lbl flex1 flexbox flex-alignc"><input class="ipt-text flex1" type="text" name="moreinfo" placeholder="更多备注信息" /></div></li></ul></div></div>
+		</div>
+	</div>
+
+
+	
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/toaddfriend.js"></script>
+<script type="text/javascript">
+	var id;
+	var db;
+	apiready = function() {
+		id = api.pageParam.uid;
+		friend();
+		db = api.require("db");
+		openDb(db);
+	};
+	//查询好友资料
+	function friend(){
+		var users=getStorage('users');
+		api.ajax({
+			url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+			method: 'post',
+			data: {
+				values: {
+					"ac": "getOneUser",
+					"fid": id,
+					"uid":users.user_id
+				},
+			}
+		}, function (ret, er) {
+			if(parseInt(ret.code) == 200){
+				var username,city,photo;
+				if(ret.data.nickname){
+					username =  ret.data.nickname;
+				}else {
+					username = ret.data.user_name
+				}
+				city= ret.data.city || '未设置';
+				photo=ret.data.headimgurl || '../image/my/profile_default.png';
+				$(".friend_user_info").find(".uimg").attr("src",photo);
+				$(".friend_user_info").find(".userName").text(username);
+				$(".friend_user_info").find("#diqu").text(city);
+				$(".friend_user_info").find(".num").text("账号："+ret.data.user_name);
+				$('.send_Msg').data('id',ret.data.user_id);
+				$('.send_Msg').data('photo',photo);
+				$('.send_Msg').data('name',username);
+				$('.add_new_friend').data('fid',ret.data.user_id);
+				if(ret.data.isfriend){
+					$('.send_Msg').css('display','block');
+				}else{
+					$('.add_new_friend').css('display','block');
+				}
+
+			}
+		})
+
+	}
+
+	function send_Msg(obj){
+		var uid = $(obj).data("id");
+		var photo = $(obj).data("photo");
+		var username = $(obj).data("name");
+		api.openWin({
+			name: 'im',
+			url: 'im_window.html',
+			pageParam: {
+				uid: uid,
+				photo:photo,
+				username: username
+			}
+		});
+	}
+
+	//添加好友
+	function add_new_friend(obj){
+		var fid = $(obj).data("fid");
+		var users = getStorage('users');
+		api.ajax({
+			url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+			method: 'post',
+			data: {
+				values: {
+					"ac": "friendly",
+					"uid": users.user_id,
+					"fid":fid,
+				},
+			}
+		}, function (friendly, er) {
+			if(!er){
+				if (friendly.code == 200) {
+					data = {
+						isfriend: 1,
+						fid:friendly.data.fid,
+					}
+					updateToAddFriendByUid(db,data)
+					$('.add_new_friend').css('display','none');
+					$('.send_Msg').css('display','block');
+					api.sendEvent({
+						name: 'addFriend',
+					});
+				}
+			}
+
+		});
+	}
+
+
+
+</script>
+</html>

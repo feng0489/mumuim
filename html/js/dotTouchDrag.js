@@ -1,0 +1,6 @@
+/**
+	* @title 		触点拖动
+	* @Timer	2018/04/27 15:30:45 GMT+0800 (中国标准时间)
+*/
+
+!function (o) { o.fn.touchDrag = function (options) { var obj = $(this), win = o(window), isDrag = false, opt = o.extend({ position: "" }, options); obj.on("touchstart", function (e) { isDrag = true; var touch = e.originalEvent.targetTouches[0]; var disX = parseInt(touch.pageX - obj.offset().left), disY = parseInt(touch.pageY - obj.offset().top); obj.on("touchmove", function (e) { if (!isDrag) { return } var _touch = e.originalEvent.targetTouches[0]; var curX = _touch.pageX - disX, curY = _touch.pageY - disY; curX = curX < 0 ? 0 : curX; curY = curY < 0 ? 0 : curY; curX = curX < win.width() - obj.outerWidth() ? curX : win.width() - obj.outerWidth(); curY = curY < win.height() - obj.outerHeight() ? curY : win.height() - obj.outerHeight(); switch (opt.position) { case "top": curY = 0; break; case "bottom": curY = win.height() - obj.outerHeight(); break; case "left": curX = 0; break; case "right": curX = win.width() - obj.outerWidth(); break }obj.css({ "left": curX, "top": curY }); e.preventDefault() }); obj.on("touchend", function (e) { isDrag = false }) }) } }(jQuery);

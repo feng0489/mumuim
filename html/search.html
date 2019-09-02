@@ -1,0 +1,593 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>APICloud APP</title>
+    <link rel="stylesheet" type="text/css" href="css/weui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        header {
+            background: #ededed;
+            height: 50px;
+            border-bottom: 0px solid #DDDFE3;
+        }
+
+        .left {
+            float: left;
+            width: 50px;
+            height: 50px;
+            background: url(../image/cm2_icn_back.png) no-repeat center center;
+            background-size: 15px auto;
+        }
+
+        .right {
+            float: right;
+            width: 50px;
+            line-height: 50px;
+            color: #FF8400;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .right-hov {
+            color: #DD8400;
+        }
+
+        .middle {
+            position: absolute;
+            left: 50px;
+            right: 60px;
+            margin-top: 8px;
+            height: 34px;
+            border-radius: 34px;
+            background-color: #ffffff;
+        }
+
+        .middle>img:first-child {
+            float: left;
+            padding-top: 7px;
+            height: 20px;
+            vertical-align: top;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .middle>input {
+            position: absolute;
+            left: 40px;
+            right: 50px;
+            margin-top: 8px;
+            height: 18px;
+            line-height: 18px;
+            color: #999;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .middle>input::-webkit-input-placeholder {
+            color: #666;
+            line-height: 18px;
+            font-size: 14px;
+        }
+
+        .middle>img:last-child {
+            float: right;
+            padding-top: 4px;
+            height: 27px;
+            vertical-align: top;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .darktitle {
+            height: 40px;
+            line-height: 40px;
+            margin-left: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .row {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+        }
+
+        .col {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            position: relative;
+        }
+
+        .flipcard {
+            height: 30px;
+            line-height: 30px;
+            color: #000;
+            text-align: center;
+            font-size: 14px;
+            margin: 5px 5px 3px 5px;
+            background-color: #fff;
+        }
+
+        .inwrap {
+            margin: 0 10px;
+        }
+
+        .item-hov {
+            background-color: #FAFAFA;
+        }
+
+        .aui-flex {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            padding: 15px;
+            position: relative;
+        }
+
+        .aui-flex-box {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            min-width: 0;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* 必要布局样式css */
+        .aui-flexView {
+            width: 100%;
+            height: 100%;
+            margin: 0 auto;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+        .aui-scrollView {
+            width: 100%;
+            height: 100%;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            margin-top: 0;
+            padding-bottom: 50px;
+        }
+
+        .aui-navBar {
+            height: 44px;
+            position: relative;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            z-index: 1002;
+            background: #ffffff;
+        }
+
+        .aui-navBar-item {
+            height: 44px;
+            min-width: 40%;
+            -webkit-box-flex: 0;
+            -webkit-flex: 0 0 40%;
+            -ms-flex: 0 0 40%;
+            flex: 0 0 40%;
+            padding: 0 0.9rem;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            overflow: hidden;
+            color: #808080;
+            position: relative;
+        }
+
+        .aui-navBar-item:first-child {
+            -webkit-box-ordinal-group: 2;
+            -webkit-order: 1;
+            -ms-flex-order: 1;
+            order: 1;
+            margin-right: -25%;
+            font-size: 0.9rem;
+            font-weight: normal;
+            color: #333;
+        }
+
+        .aui-navBar-item:last-child {
+            -webkit-box-ordinal-group: 4;
+            -webkit-order: 3;
+            -ms-flex-order: 3;
+            order: 3;
+            -webkit-box-pack: end;
+            -webkit-justify-content: flex-end;
+            -ms-flex-pack: end;
+            justify-content: flex-end;
+        }
+
+        .aui-center {
+            -webkit-box-ordinal-group: 3;
+            -webkit-order: 2;
+            -ms-flex-order: 2;
+            order: 2;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: center;
+            -webkit-justify-content: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            -ms-flex-align: center;
+            align-items: center;
+            height: 44px;
+            width: 50%;
+            margin-left: 25%;
+        }
+
+        .aui-center-title {
+            text-align: center;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            display: block;
+            text-overflow: ellipsis;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+            border: none;
+            float: left;
+            background-size: 20px;
+            background-repeat: no-repeat;
+        }
+
+        .aui-packet-list {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .aui-packet-list .aui-flex {
+            margin: 0px;
+            background: #fff;
+            padding: 10px 10px 5px 5px;
+            height: 140px;
+        }
+
+        .aui-flex-title {
+            background: #f76d55;
+            color: #fff;
+            height: 130px;
+            padding: 0 8px;
+            margin-right: 15px;
+            text-align: center;
+            width: 113px;
+        }
+
+        .aui-flex-title h2 {
+            font-weight: normal;
+            font-size: 30px;
+            padding-top: 10px;
+        }
+
+        .aui-flex-title h2 em {
+            font-size: 18px;
+            font-style: normal;
+        }
+
+        .aui-flex-title p {
+            font-size: 13px;
+        }
+
+        .aui-flex-box h2 {
+            font-size: 16px;
+            padding-bottom: 5px;
+            position: relative;
+        }
+
+        .aui-flex-box span {
+            display: inline-block;
+            font-size: 15px;
+            color: #FFFFFF;
+            border: 1px solid #FF0000;
+            padding: 2px 2px;
+            background-color: #FF0000;
+            margin-top: 12px;
+        }
+
+        .aui-flex-box p {
+            padding-top: 10px;
+            color: #999;
+            font-size: 13px;
+        }
+
+        .aui-flex-button button {
+            border: 1px solid #f56b53;
+            color: #f56b53;
+            background: none;
+            font-size: 14px;
+            border-radius: 20px;
+            padding: 2px 10px;
+        }
+
+        .tab-nav {
+            /* padding-top: 10px; */
+            height: 40px;
+            line-height: 40px;
+            /* border-radius: 80px; */
+            display: block;
+            position: relative;
+            /* margin-bottom: 15px; */
+            /* position: fixed; */
+            background: #fff;
+            z-index: 1;
+            width: 100%;
+            /* border-bottom: 10px solid #ededed; */
+        }
+
+        .tab-nav-item {
+            height: 40px;
+            /* line-height: 45px; */
+            position: relative;
+            text-align: center;
+            color: #585858;
+            font-size: 0.9rem;
+            display: block;
+            float: left;
+            border-radius: 80px;
+            /* padding: 0 15px; */
+            width: 25%;
+            /* padding-top: 10px; */
+        }
+
+        .tab-nav-item.tab-active {
+            /* background-color: #51bd03; */
+        }
+
+        .tab-nav-item.tab-active a {
+            color: #23beae;
+            font-weight: bold;
+        }
+
+        .tab-nav-item a {
+            display: inherit;
+            color: inherit;
+            font-size: 0.85rem;
+            color: #7d7d7d;
+        }
+
+        .tab-panel {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-panel .tab-panel-item {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            -webkit-transform: translateX(-100%);
+            transform: translateX(-100%);
+        }
+
+        .tab-nav-item.tab-active:before {
+            content: '';
+            width: 100%;
+            height: 1px;
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            margin-left: -50%;
+            z-index: 4;
+            background-color: #23beae;
+            border: 1px solid #23beae;
+        }
+
+        .tab-panel .tab-panel-item.tab-active ~ .tab-panel-item {
+            -webkit-transform: translateX(100%);
+            transform: translateX(100%);
+        }
+
+        .tab-panel .tab-panel-item.tab-active {
+            position: relative;
+            -webkit-transition: -webkit-transform .15s;
+            transition: -webkit-transform .15s;
+            transition: transform .15s;
+            transition: transform .15s, -webkit-transform .15s;
+            -webkit-transform: translateX(0);
+            transform: translateX(0);
+        }
+        #nav1{
+            position:fixed;
+            width:100%;
+            background-color:#ededed;
+            z-index:999;
+        }
+    </style>
+</head>
+
+<body>
+<header id="header">
+    <div id="nav1">
+        <div class="left event-back"></div>
+        <div class="right" tapmode="highlight" onClick="fnSearch();">搜索</div>
+        <div class="middle">
+            <img src="../image/header/search_groupbuy.png">
+            <input id="searchText" type="text" placeholder="请输入搜索内容">
+            <img src="../image/header/mic.png" tapmode onClick="fnOpenSpeechRecognizer();">
+        </div>
+    </div>
+</header>
+
+<div class="remen hotkey_info_list">
+    <div class="darktitle">热门搜索</div>
+    <div class="row inwrap">
+        <div class="col flipcard" onClick="kwShop(this)" >春装2019款女</div>
+        <div class="col flipcard" onClick="kwShop(this)">连衣裙</div>
+        <div class="col flipcard" onClick="kwShop(this)">口红</div>
+    </div>
+    <div class="row inwrap">
+        <div class="col flipcard" onClick="kwShop(this)">手机</div>
+        <div class="col flipcard" onClick="kwShop(this)">吃鸡神器</div>
+        <div class="col flipcard" onClick="kwShop(this)">零食</div>
+        <!--<div class="col flipcard win" win="search_result" param='{"keyword":"俱乐部"}'>俱乐部</div>-->
+    </div>
+
+</div>
+<section class="aui-flexView">
+    <section class="aui-scrollView">
+        <div class="aui-packet-list">
+            <div class="aui-tab" data-ydui-tab>
+                <div class="tab-panel">
+                    <div class="tab-panel-item tab-active shoping_index_info">
+
+                        <!--<div class="aui-flex">-->
+                        <!--<div style="background-image:url(https://img.alicdn.com/imgextra/i4/34450237/TB2X8MXDTlYBeNjSszcXXbwhFXa_!!0-saturn_solar.jpg_240x240xz.jpg_.webp); background-size: cover;"-->
+                        <!--class="aui-flex-title"></div>-->
+                        <!--<div class="aui-flex-box">-->
+                        <!--<h2>分享到微信朋友圈分享到微分享到微信朋友圈分享到微... <i class="aui-icon-yw"></i></h2>-->
+                        <!--<table width="100%" border="0" cellspacing="0" cellpadding="0">-->
+                        <!--<tr>-->
+                        <!--<td><p><strong style="color:#FF0000;">天猫</strong> 卖家店铺名称</p>-->
+                        <!--<span><strong>3</strong>元优惠券</span></td>-->
+                        <!--<td align="right"><p style="font-size:24px; color:#FF0000;">¥ 8.80</p>-->
+                        <!--<p>销量:2290</p></td>-->
+                        <!--</tr>-->
+                        <!--</table>-->
+                        <!--</div>-->
+                        <!--</div>-->
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../script/product.js"></script>
+<script type="text/javascript" src="js/jquery-weui.js"></script>
+
+<script type="text/javascript">
+    var  searchText;
+    apiready = function() {
+        if(api.pageParam){
+            searchText = api.pageParam.keyword;
+            console.log("searchText"+searchText);
+            if(searchText){
+                fnSearch();
+            }
+        }
+        fnReady();
+        fnInitInput();
+        var systemType = api.systemType;  // 获取手机类型，比如： ios
+        if(systemType=='ios'){//兼容ios和安卓
+            var x=document.getElementById("header");
+            x.style.paddingTop="25px";
+        }else{
+            var x=document.getElementById("header");
+            x.style.paddingTop="35px";
+        }
+    };
+
+    function fnInitInput() {
+        searchText = $api.byId('searchText');
+    };
+
+    function fnOpenSpeechRecognizer() {
+        api.toast({
+            msg: '开始语音识别',
+            duration: 3000,
+            location: 'middle'
+        });
+        var speechRecognizer = api.require('speechRecognizer');
+        speechRecognizer.record({}, function(ret, err) {
+            if (ret.status) {
+                $api.byId('searchText').value = ret.wordStr;
+            }
+        });
+    };
+
+    function kwShop(data) {
+        $api.byId('searchText').value = $(data).text();
+        fnSearch();
+    }
+
+    document.onkeydown=keyDownSearch;
+
+    function keyDownSearch() {
+        // 兼容FF和IE和Opera    
+        var theEvent =  window.event;
+        var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+        if (code == 13) {
+            var keywor = $('#searchText').val() ||'';
+            if(keywor){
+                fnSearch()
+            }
+        }
+    }
+
+    function fnSearch() {
+        var key =  $api.byId('searchText').value;
+        if(key){
+            api.openWin({
+                name: 'rexiaobaoyou',
+                url: 'rexiaobaoyou.html',
+                reload:true,
+                pageParam: {
+                    keyword:key,
+                }
+            });
+        }
+    };
+
+
+
+    function showLoader() {
+        //显示加载器.for jQuery Mobile 1.2.0
+        $.mobile.loading('show', {
+            text: '加载中...', //加载器中显示的文字
+            textVisible: true, //是否显示文字
+            theme: 'a', //加载器主题样式a-e
+            textonly: false, //是否只显示文字
+            html: "" //要显示的html内容，如图片等
+        });
+    }
+
+    function hideLoader() {
+        //隐藏加载器
+        $.mobile.loading('hide');
+    }
+</script>
+
+</html>

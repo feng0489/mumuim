@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>等级特权</title>
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"/>
+        <meta content="yes" name="apple-mobile-web-app-capable"/>
+        <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+        <meta content="telephone=no" name="format-detection"/>
+        <script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+        <script src="../script/jquery-progress.js" type="text/javascript"></script>
+        <style>
+		/* 公共样式表css */
+html,body {
+    color: #333;
+    margin: 0;
+    height: 100%;
+    font-family: "Myriad Set Pro","Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: normal;
+}
+.circliful{position:relative;}
+.circle-text, .circle-info, .circle-text-half, .circle-info-half{width:100%;position:absolute;text-align:center;display:inline-block;}
+.circle-info, .circle-info-half{color:#999;}
+.circliful .fa{margin:-10px 3px 0 3px;position:relative;bottom:4px;}
+
+a, label, button, input, select {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+img {
+    border: 0;
+}
+
+body {
+    background: #ededed;
+    color: #666;
+}
+
+html, body, div, dl, dt, dd, ol, ul, li, h1, h2, h3, h4, h5, h6, p, blockquote, pre, button, fieldset, form, input, legend, textarea, th, td {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #08acee;
+}
+
+button {
+    outline: 0;
+}
+
+img {
+    border: 0;
+}
+
+button,input,optgroup,select,textarea {
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    outline: none;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    color: #666;
+}
+
+a:hover {
+    color: #eee;
+}
+
+.clearfix::after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+.clearfix {
+}
+
+/* 必要布局样式css */
+.aui-flexView {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.aui-navBar {
+    height: 44px;
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    /* background-color: rgba(255, 255, 255, 0.1); */
+    z-index: 1002;
+}
+
+.aui-scrollView {
+    width: 100%;
+    height: 100%;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    margin-top: -44px;
+}
+
+.aui-navBar-item {
+    height: 44px;
+    min-width: 25%;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 25%;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    padding: 0 10px;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #ffffff;
+}
+
+.icon {
+    width: 18px;
+    height: 18px;
+    background-size: 18px;
+    display: block;
+}
+
+
+.aui-center {
+    -webkit-box-ordinal-group: 3;
+    -webkit-order: 2;
+    -ms-flex-order: 2;
+    order: 2;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 44px;
+    width: 50%;
+}
+
+.aui-center-title {
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
+    font-size: 1rem;
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.aui-info-bg {
+    padding-top: 50px;
+    width: 100%;
+    height: 175px;
+    background: #ededed url("../images/icon-top-bg.png") no-repeat center;
+    background-size: 100%;
+}
+
+.aui-info-tag {
+    width: 90px;
+    margin: 0 auto;
+}
+
+.aui-info-tag img {
+    width: 90px;
+    display: block;
+    border: none;
+}
+
+.aui-member {
+    font-size: 0.8rem;
+    color: #fff;
+    text-align: center;
+}
+
+.aui-head-title {
+    text-align: center;
+    color: #333333;
+    font-size: 0.85rem;
+    padding: 10px 0;
+}
+
+.aui-palace {
+    padding: 10px;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 10px solid #e8e8e8;
+}
+
+.aui-palace-grid {
+    position: relative;
+    float: left;
+    padding: 12px 10px;
+    width: 33.33333333%;
+    box-sizing: border-box;
+}
+
+.aui-palace-grid-icon {
+    width: 35px;
+    height: 35px;
+    margin: 0 auto;
+}
+
+.aui-palace-grid-icon img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.aui-palace-grid-text {
+    display: block;
+    text-align: center;
+    color: #333333;
+    font-size: 14px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    padding-top: 10px;
+}
+
+.aui-palace-grid-text h2 {
+    font-size: 0.85rem;
+    font-weight: normal;
+}
+
+.aui-palace-grid-text p {
+    font-size: 0.6rem;
+    color: #888888;
+}
+
+.aui-palace-grid:before {
+    content: " ";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 1px;
+    bottom: 0;
+    color: #e5e5e5;
+    -webkit-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
+}
+
+.aui-palace-grid:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    color: #e5e5e5;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+}
+
+.aui-palace:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #925757;
+    color: #5d2323;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+}
+
+.aui-palace-grid-clear:after {
+    content: " ";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    border-bottom: 1px solid #ffffff;
+    color: #ffffff;
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+}
+
+.aui-palace-grid-clear-right:before {
+    content: " ";
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 1px;
+    bottom: 0;
+    border-right: 1px solid #ffffff;
+    color: #ffffff;
+    -webkit-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
+}
+
+.aui-tabBar {
+    width: 100%;
+    position: relative;
+    z-index: 100;
+    display: flex;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 44px;
+    background-color: #FF6633;
+}
+
+.aui-tabBar:after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    border-top: 1px solid #d6d6d6;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+}
+
+.aui-tabBar-text {
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 0.9rem;
+    width: 260px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.icon-diamonds {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    margin-top: -1px;
+    float: left;
+    position: absolute;
+    left: -3px;
+}
+
+.icon-diamonds img {
+    width: 18px;
+    height: 18px;
+    display: block;
+    border: none;
+}
+/*进度条开始*/
+.waic{
+	/*padding: 30px;*/
+}
+.hengxian{
+	width: 100%;
+	height: 1.5px;
+	background-color: #a0a0a0;
+}
+.hongxian{
+	width: 0;
+	height: 1.5px;
+	background-color: #ff6933;
+}
+.yixiaof{
+	color: #ff6933;
+	display: inline-block;
+	line-height: 18px;
+	font-size: 20px;
+	position: relative;
+	-webkit-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
+	-ms-transform: translateX(-50%);
+	transform: translateX(-50%);
+}
+.dingwei{
+	width: 20px;
+	position: relative;
+	top: 3px;
+	-webkit-transform: translateX(-50%);
+	-moz-transform: translateX(-50%);
+	-ms-transform: translateX(-50%);
+	transform: translateX(-50%);
+}
+.yifen{
+	-webkit-box-flex: 1; /* OLD - iOS 6-, Safari 3.1-6 */
+	-moz-box-flex: 1; /* OLD - Firefox 19- */
+	width: 20%; /* For old syntax, otherwise collapses. */
+	-webkit-flex: 1; /* Chrome */
+	-ms-flex: 1; /* IE 10 */
+	flex: 1; /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+
+.flexbox {
+	display: box; /* OLD - Android 4.4- */
+	display: -webkit-box; /* OLD - iOS 6-, Safari 3.1-6 */
+	display: -moz-box; /* OLD - Firefox 19- (buggy but mostly works) */
+	display: -ms-flexbox; /* TWEENER - IE 10 */
+	display: -webkit-flex; /* NEW - Chrome */
+	display: flex; /* NEW, Spec - Opera 12.1, Firefox 20+ */
+}
+.jucol{
+
+}
+.dengji{
+	text-align: center;
+	font-size: 13px;
+	line-height: 20px;
+	float: left;
+}
+.dengji img{
+	width: 16px;
+}
+.djwai{
+	position: relative;
+	top: -8px;
+	height: 62px;
+}
+.jucol{
+	color: #ff6933;
+}
+.gray {
+    -webkit-filter: grayscale(100%);
+    -moz-filter: grayscale(100%);
+    -ms-filter: grayscale(100%);
+    -o-filter: grayscale(100%);
+    filter: grayscale(100%);
+    filter: gray;
+}
+/*进度条结束*/
+		.aui-palace-grid1 {    position: relative;
+    float: left;
+    padding: 12px 10px;
+    width: 33.33333333%;
+    box-sizing: border-box;
+}
+        </style>
+        <script type="text/javascript" src="../script/api.js"></script>
+        <script type="text/javascript" src="../script/common.js"></script>
+        <script type="text/javascript" src="../script/doT.min.js"></script>
+        <script type="text/javascript">
+            var points=1;
+            apiready = function() {
+                huoyuedu();//用户活跃度
+                yuejiangjin();//用户月奖
+                monthBonus();//月奖资格
+                api.addEventListener({
+                    name:'viewdisappear'
+                },function(){
+                    api.closeWin();
+                });
+            };
+
+            //获取活跃度
+            function huoyuedu() {
+                var users = getStorage("users");
+                //用户可用积分
+                api.ajax({
+                    url:'http://shujunode.mumuim.cn:8080/users/huoyuedu',
+                    method:'get',
+                    cash:true,
+                    data:{
+                        values: {
+                            "uid" :users.user_id,
+                        },
+                    }
+                },function(ret,err) {
+                    if(!err){
+                        if(ret.code==200){
+                            points = parseInt(ret.data.rank_points) || 1;
+                            setStorage("points"+users.user_id,points);
+                            $('.total_huoyuedu').text(ret.data.total_pay_points);
+                            $(function(){
+                                var geshu = $(".djwai").children(".dengji").length;
+                                // alert(geshu);
+                                var wid = $(".djwai").width()/geshu/2;
+                                // alert(wid);
+                                var widt = wid + "px";
+                                // alert(widt);
+                                $(".xianpa").css({"padding-left":widt,"padding-right":widt});
+                                $(".yixif").css({"padding-left":widt,"padding-right":widt});
+                            });
+
+                        }
+                    }else{
+                        api.toast({
+                            msg: "网络请求超时，请稍后重试",
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                })
+            }
+
+            //上个月平均奖金
+            function yuejiangjin() {
+                var users = getStorage("users");
+                //用户等级活跃度
+                api.ajax({
+                    url:'http://shujunode.mumuim.cn:8080/users/lastJiangjin',
+                    method:'get',
+                    cash:true,
+                    data:{
+                        values: {
+                            "uid" :users.user_id,
+                        },
+                    }
+                },function(ret,err) {
+                    if(!err){
+                        if(ret.code==200){
+                            $('.yuedu_jiangjin').text(ret.data);
+                        }
+                    }else{
+                        api.toast({
+                            msg: "网络请求超时，请稍后重试",
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                })
+            }
+
+            //用户申请月奖资格
+            function monthBonus(){
+                var users=getStorage("users");
+                api.ajax({
+                    url:'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                    method:'post',
+                    data:{
+                        values: {
+                            "ac" :"monthBonus",
+                            "uid" : users.user_id,
+                        },
+                    }
+                },function(ret,err){
+                    if(!err){
+                        if(ret.code == 200){
+                            var monthbonus_info=ret.data;
+                            $('.month_bonus_percent').text(monthbonus_info.monthbonus_percent);
+                            $('#myStat2').attr('data-text','SVIP'+monthbonus_info.svip_grade);
+                            $("#myStat2").attr("data-percent",parseInt(monthbonus_info.svip_percent));
+                            parseInt(monthbonus_info.svip_status)===1 ? $("#myStat2").attr("data-fgcolor",'#339900') : $("#myStat2").attr("data-fgcolor",'#FF3333') ;
+                            $('#myStat').attr('data-text',+parseInt(monthbonus_info.users_count));
+                            $("#myStat").attr("data-percent",parseInt(monthbonus_info.users_percent));
+                            parseInt(monthbonus_info.user_status)===1 ? $("#myStat").attr("data-fgcolor","#339900") : $("#myStat").attr("data-fgcolor","#FF3333") ;
+                            $('#myStathalf2').attr('data-text',parseInt(monthbonus_info.order_count));
+                            $('#myStathalf2').attr('data-percent',parseInt(monthbonus_info.order_percent));
+                            parseInt(monthbonus_info.order_status)===1 ? $('#myStathalf2').attr('data-fgcolor',"#339900") : $('#myStathalf2').attr('data-fgcolor',"#FF3333");
+                            $(document).ready(function(){
+                                $('#myStathalf').circliful();
+                                $('#myStat').circliful();
+                                $('#myStathalf2').circliful();
+                                $('#myStat2').circliful();
+                            });
+                        }else{
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+                        }
+                    }else{
+                        api.toast({
+                            msg: '网络异常，请稍后重试!',
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                });
+            }
+
+            function openNew9() {
+                api.openWin({
+                    name: 'vip',
+                    url: 'vip.html',
+                    pageParam: {
+                        name: 'test'
+                    }
+                });
+            }
+        </script>
+    </head>
+    <body>
+
+        <section class="aui-flexView">
+
+            <section class="aui-scrollView">
+                <div class="aui-info-bg">
+
+<div class="waic progress"></div>
+
+<script type="text/javascript">
+    var users = getStorage("users");
+    var now_points = getStorage("points"+users.user_id) || 1;
+$(function(){
+	var geshu = $(".djwai").children(".dengji").length;
+    // alert(geshu);
+	var wid = $(".djwai").width()/geshu/2;
+	// alert(wid);
+	var widt = wid + "px";
+	// alert(widt);
+	$(".xianpa").css({"padding-left":widt,"padding-right":widt});
+	$(".yixif").css({"padding-left":widt,"padding-right":widt});
+});
+
+
+$(".progress").startProgress({
+    "nodes":[
+        {"name":"普通","money":0},
+        {"name":"SVIP1","money":10000},
+        {"name":"SVIP2","money":100000},
+        {"name":"SVIP3","money":1000000},
+        {"name":"SVIP4","money":10000000},
+    ],
+    "hasPay": now_points
+});
+
+</script>
+                </div>
+				<div class="aui-palace clearfix">
+				<div style="padding:20px;" align="center">
+				  <p>上个月平均奖金（元）</p>
+				  <p style="font-size:36px; color:#FF6600;" class="yuedu_jiangjin">0</p>
+				  <p style="font-size:16px;"><strong><font color="#FF6600">我的月奖金</font></strong>= 平均奖金 X <span class="month_bonus_percent">0</span>%</p>
+				</div>
+
+<table width="100%">
+	<tr>
+		<td width="33%" align="right"><div id="myStat2"  data-dimension="90" data-text='' data-info="当前" data-width="5" data-fontsize="15" data-percent="" data-fgcolor="#FF3333" data-bgcolor="#eee"></div>
+			<div align="center">SVIP2<div style="font-size: 12px;">完成得奖金20%</div></div>
+		</td>
+		<td width="34%" align="right"><div id="myStat"  data-dimension="90" data-text="" data-info="人" data-width="5" data-fontsize="25" data-percent="" data-fgcolor="#FF3333" data-bgcolor="#eee"></div>
+			<div align="center">拉新2人<div style="font-size: 12px;">完成得奖金30%</div></div>
+		</td>
+		<td width="33%" align="right"><div id="myStathalf2" data-dimension="90" data-text="" data-info="单" data-width="5" data-fontsize="25" data-percent="" data-fgcolor="#FF3333" data-bgcolor="#eee"></div>
+			<div align="center">10个订单<div style="font-size: 12px;">完成得奖金50%</div></div>
+		</td>
+	</tr>
+</table>
+                </div>
+                <div class="aui-palace clearfix">
+
+				<div style="padding:20px;" align="center">
+				  <p>累计活跃度</p>
+				  <p style="font-size:36px; color:#FF6600;" class="total_huoyuedu">0</p>
+				  <p style="font-size:16px;"><strong><font color="#FF6600">年终奖</font></strong> = 广告收益 + 佣金收益 + 其他收益 </p>
+				</div>
+                    <center>
+
+
+<div id="myStathalf" data-dimension="250" data-text="数据" data-info="统计中" data-width="30" data-fontsize="38" data-percent="100" data-fgcolor="#FF3333" data-bgcolor="#eee"></div>
+
+</center>
+                </div>
+            </section>
+            <footer  onClick="openNew9()" tapmode="" class="aui-tabBar">
+                <div class="aui-tabBar-text">
+                    开通SVIP每日可获得更多收益
+                </div>
+            </footer>
+        </section>
+    </body>
+
+
+	<script type="text/javascript">
+        (function(a){a.fn.circliful=function(b){var c=a.extend({foregroundColor:"#556b2f",backgroundColor:"#eee",fillColor:false,width:15,dimension:200,size:15,percent:50,animationStep:1},b);return this.each(function(){var F="";var s="";var E="";var v="";var t=0;var e=0;var l=100;var B="";var d="";var D="";var q=0;a(this).addClass("circliful");if(a(this).data("dimension")!=undefined){F=a(this).data("dimension")}else{F=c.dimension}if(a(this).data("width")!=undefined){v=a(this).data("width")}else{v=c.width}if(a(this).data("fontsize")!=undefined){t=a(this).data("fontsize")}else{t=c.size}if(a(this).data("percent")!=undefined){e=a(this).data("percent")/100;l=a(this).data("percent")}else{e=c.percent/100}if(a(this).data("fgcolor")!=undefined){B=a(this).data("fgcolor")}else{B=c.foregroundColor}if(a(this).data("bgcolor")!=undefined){d=a(this).data("bgcolor")}else{d=c.backgroundColor}if(a(this).data("animation-step")!=undefined){q=parseFloat(a(this).data("animation-step"))}else{q=c.animationStep}if(a(this).data("text")!=undefined){s=a(this).data("text");if(a(this).data("icon")!=undefined){D='<i class="fa '+a(this).data("icon")+'"></i>'}if(a(this).data("type")!=undefined){i=a(this).data("type");if(i=="half"){a(this).append('<span class="circle-text-half">'+D+s+"</span>");a(this).find(".circle-text-half").css({"line-height":(F/1.45)+"px","font-size":t+"px"})}else{a(this).append('<span class="circle-text">'+D+s+"</span>");a(this).find(".circle-text").css({"line-height":F+"px","font-size":t+"px"})}}else{a(this).append('<span class="circle-text">'+D+s+"</span>");a(this).find(".circle-text").css({"line-height":F+"px","font-size":t+"px"})}}else{if(a(this).data("icon")!=undefined){}}if(a(this).data("info")!=undefined){E=a(this).data("info");if(a(this).data("type")!=undefined){i=a(this).data("type");if(i=="half"){a(this).append('<span class="circle-info-half">'+E+"</span>");a(this).find(".circle-info-half").css({"line-height":(F*0.9)+"px",})}else{a(this).append('<span class="circle-info">'+E+"</span>");a(this).find(".circle-info").css({"line-height":(F*1.25)+"px",})}}else{a(this).append('<span class="circle-info">'+E+"</span>");a(this).find(".circle-info").css({"line-height":(F*1.45)+"px",})}}a(this).width(F+"px");var h=a("<canvas></canvas>").attr({width:F,height:F}).appendTo(a(this)).get(0);var f=h.getContext("2d");var p=h.width/2;var o=h.height/2;var A=e*360;var G=A*(Math.PI/180);var j=h.width/2.5;var z=2.3*Math.PI;var u=0;var C=false;var m=q===0?l:0;var n=Math.max(q,0);var r=Math.PI*2;var g=Math.PI/2;var i="";var w=false;if(a(this).data("type")!=undefined){i=a(this).data("type");if(i=="half"){var z=2*Math.PI;var u=3.13;var r=Math.PI*1;var g=Math.PI/0.996}}if(a(this).data("fill")!=undefined){w=a(this).data("fill")}else{w=c.fillColor}function k(x){f.clearRect(0,0,h.width,h.height);f.beginPath();f.arc(p,o,j,u,z,false);f.lineWidth=v-1;f.strokeStyle=d;f.stroke();if(w){f.fillStyle=w;f.fill()}f.beginPath();f.arc(p,o,j,-(g),((r)*x)-g,false);f.lineWidth=v;f.strokeStyle=B;f.stroke();if(m<l){m+=n;requestAnimationFrame(function(){k(Math.min(m,l)/100)})}}k(m/100)})}}(jQuery));
+</script>
+</html>

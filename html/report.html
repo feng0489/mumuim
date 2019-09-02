@@ -1,0 +1,380 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>举报</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="css/tishi.css" />
+    <style>
+        header {
+            background-color: #ededed;
+            border-bottom: solid #ededed 1px;
+        }
+
+        h1 {
+            height: 40px;
+            line-height: 40px;
+            color: rgb(38, 38, 38);
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .back {
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            width: 40px;
+            height: 40px;
+            background: url(../image/cm2_icn_back.png) center center no-repeat;
+            background-size: 15px auto;
+        }
+
+        .thirdblock {
+            background-color: #fff;
+        }
+
+        .item {
+            height: 50px;
+            line-height: 50px;
+            padding-left: 15px;
+            background-color: #fff;
+        }
+
+        .h10 {
+            height: 10px;
+            background: #f0f0f0;
+        }
+
+        .h2 {
+            height: 1px;
+            margin-left: 15px;
+            background: #f0f0f0;
+        }
+
+        .item_arrow {
+            float: right;
+            width: 16px;
+            padding: 17px 15px 15px 0;
+        }
+    </style>
+</head>
+
+<body>
+<header id="header">
+    <div class="back event-back"></div>
+    <h1>举报</h1>
+</header>
+<div class="thirdblock reportkeyzero" onclick="reportInfo(0)" data-reportkeyzero="广告骚扰">
+    <div class="h2"></div>
+    <div class="item" >
+        <span>广告骚扰</span>
+        <img src="../image/arrow.png" class="item_arrow">
+    </div>
+</div>
+<div class="h10"></div>
+<div class="thirdblock reportkeyone" onclick="reportInfo(1)" data-reportkeyone="色情低俗">
+    <div class="h2"></div>
+    <div class="item" >
+        <span>色情低俗</span>
+        <img src="../image/arrow.png" class="item_arrow">
+    </div>
+</div>
+<div class="h10"></div>
+<div class="thirdblock reportkeytwo" onclick="reportInfo(2)" data-reportkeytwo="政治敏感">
+    <div class="h2"></div>
+    <div class="item" >
+        <span>政治敏感</span>
+        <img src="../image/arrow.png" class="item_arrow">
+    </div>
+</div>
+<div class="h10"></div>
+<div class="thirdblock reportkeythree" onclick="reportInfo(3)" data-reportkeythree="钱财诈骗">
+    <div class="h2"></div>
+    <div class="item" >
+        <span>钱财诈骗</span>
+        <img src="../image/arrow.png" class="item_arrow">
+    </div>
+</div>
+<div class="h10"></div>
+<div class="thirdblock reportkeyfour" onclick="reportInfo(4)" data-reportkeyfour="其他违法行为">
+    <div class="h2"></div>
+    <div class="item" >
+        <span>其他违法行为</span>
+        <img src="../image/arrow.png" class="item_arrow">
+    </div>
+</div>
+<div class="h10"></div>
+<div  style="display: block" class="none_is_report">
+<div class="thirdblock reportkeyfive" onclick="reportInfo(5)" data-reportkeyfive="黑名单">
+    <div class="h2"></div>
+    <div class="item" >
+        <span>黑名单</span>
+        <img src="../image/arrow.png" class="item_arrow">
+    </div>
+</div>
+<div class="h10"></div>
+</div>
+<div  style="display: none" class="none_remove_report">
+<div class="thirdblock reportkeyfive" onclick="reportInfo(6)" data-reportkeyfive="解除拉黑">
+    <div class="h2"></div>
+    <div class="item" >
+        <span>解除拉黑</span>
+        <img src="../image/arrow.png" class="item_arrow">
+    </div>
+</div>
+<div class="h10"></div>
+</div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../script/tishi.js"></script>
+<script type="text/javascript">
+    var reportStart,reportCount;
+    apiready = function() {
+        fnReady();
+        var users=getStorage("users");
+        var systemType = api.systemType;  // 获取手机类型，比如： ios
+        if(systemType=='ios'){//兼容ios和安卓
+            var x=document.getElementById("header");
+            x.style.paddingTop="25px";
+            reportStart = dateStartStamp(systemType);
+            reportCount = parseInt(getStorage(reportStart+"_report"+users.user_id))||0;
+        }else{
+            var x=document.getElementById("header");
+            x.style.paddingTop="35px";
+            reportStart = dateStartStamp(systemType);
+            reportCount = parseInt(getStorage(reportStart+"_report"+users.user_id))||0;
+        }
+        removeStorage();//移除缓存
+        is_reportUser();
+        api.addEventListener({
+            name:'viewdisappear'
+        },function(){
+            api.closeWin();
+        });
+
+    };
+
+    //计算输入值长度
+    function getStrLen(str) {
+        var strlen = 0;
+        for (var i = 0; i < str.length; i++) {
+            if (str.charCodeAt(i) > 255) { //如果是汉字，则字符串长度加3
+                strlen += 3;
+            } else {
+                strlen++;
+            }
+        }
+        return strlen;
+    }
+    //判断输入值是否为空或纯空格
+    function isNull(str){
+        if ( str == "" ) return true;
+        var regu = "^[ ]+$";
+        var re = new RegExp(regu);
+        //为空或纯空格为 true    有值为false
+        return re.test(str);
+    }
+
+    //举报/拉黑
+    function reportInfo(obj){
+        var num=["zero","one","two","three","four","five"];
+        var reportkey = $('.reportkey'+num[obj]+'').data('reportkey'+num[obj]+'');
+        if(parseInt(obj)===5){
+            api.confirm({
+                title: reportkey,
+                msg: '拉黑后将屏蔽双方会话，双方不可发送/接收对方消息',
+                buttons: ['确定', '取消']
+            }, function(ret, err) {
+                var reporButtons = ret.buttonIndex;
+                if(parseInt(reporButtons)===1){
+                    var fid = api.pageParam.friendid;
+                    var users=getStorage("users");
+                    var u_reportcount =getStorage(reportStart+users.user_id,reportCount);
+                    if(parseInt(u_reportcount)>=5){
+                        api.toast({
+                            msg: "拉黑数量已达上限！",
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }else{
+                        api.ajax({
+                            url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                            method: 'post',
+                            data: {
+                                values: {
+                                    "ac": "reportUser",
+                                    "uid": users.user_id,
+                                    "fid": fid
+                                },
+                            }
+                        }, function (re, er) {
+                            if(!er){
+                                if(parseInt(re.code )== 200){
+                                    api.sendEvent({
+                                        name: 'refreshIm',
+                                    });
+                                    reportCount = reportCount +1;
+                                    setStorage(reportStart+"_report"+users.user_id,reportCount);
+                                    Dialog.init("", {
+                                        title:'成功拉黑该好友' ,
+                                        button: {
+                                            确定并关闭: function () {
+                                                Dialog.close(this);
+                                                api.closeWin();
+                                            },
+                                        }
+                                    })
+                                }else{
+                                    api.toast({
+                                        msg: re.msg,
+                                        duration: 3000,
+                                        location: 'bottom'
+                                    });
+                                }
+                            }else{
+                                api.toast({
+                                    msg: '网络异常，请重新请求!',
+                                    duration: 3000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+        }else if(parseInt(obj)===6){
+            api.confirm({
+                title: reportkey,
+                msg: '解除拉黑后将双方可发送/接收对方消息',
+                buttons: ['确定', '取消']
+            }, function(rets, errs) {
+                var removeButtons = rets.buttonIndex;
+                if(parseInt(removeButtons)===1){
+                    var fid = api.pageParam.friendid;
+                    var users=getStorage("users");
+                    api.ajax({
+                        url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                        method: 'post',
+                        data: {
+                            values: {
+                                "ac": "removeReportUser",
+                                "uid": users.user_id,
+                                "fid": fid
+                            },
+                        }
+                    }, function (rest, ersr) {
+                        if(!ersr){
+                            if(parseInt(rest.code )== 200){
+                                api.sendEvent({
+                                    name: 'refreshIm',
+                                });
+                                Dialog.init("", {
+                                    title:'成功解除拉黑' ,
+                                    button: {
+                                        确定并关闭: function () {
+                                            Dialog.close(this);
+                                            api.closeWin();
+                                        },
+                                    }
+                                })
+                            }else{
+                                api.toast({
+                                    msg: rest.msg,
+                                    duration: 3000,
+                                    location: 'bottom'
+                                });
+                            }
+                        }else{
+                            api.toast({
+                                msg: '网络异常，请重新请求!',
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+                        }
+                    });
+                }
+            });
+        } else{
+            Dialog.init('<textarea type="text" class="reportcontent" placeholder="请详细描述被举报对象的恶意行为"  style="margin:8px 0;width:90%;height:100%;padding:11px 8px;font-size:15px; border:1px solid #999;"></textarea>', {
+                title: reportkey,
+                button: {
+                    取消: function () {
+                        Dialog.close(this);
+                    },
+                    提交: function () {
+                        var reportcontent=$(".reportcontent").val();
+                        if(isNull(reportcontent) === true || getStrLen(reportcontent) < 2) {
+                            alert("请输入内容");
+                            return;
+                        }
+                        Dialog.close(this);
+                        Dialog.init('<span style="font-size:16px; color:#000000;">您的举报已受理！</span>'+'<span style="font-size:16px; color:#000000;">举报处理结果将会在24小时内反馈给您。</span>', {
+                            title:'举报成功' ,
+                            button: {
+                                确定并关闭: function () {
+                                    Dialog.close(this);
+                                    api.closeWin();
+                                },
+                            }
+                        })
+                    },
+                }
+            })
+        }
+
+    }
+
+    //移除缓存
+    function removeStorage() {
+        var users = getStorage('users');
+        var lastreportdate = 0;
+        var systemType = api.systemType;
+        lastreportdate = lastStartStamp(systemType);
+        $api.rmStorage(lastreportdate+"_report"+users.user_id);
+    }
+
+    //获取好友状态 是否黑名单
+    function is_reportUser() {
+        var fid = api.pageParam.friendid;
+        var users=getStorage("users");
+        api.ajax({
+            url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            method: 'post',
+            data: {
+                values: {
+                    "ac": "isReportUser",
+                    "uid": users.user_id,
+                    "fid": fid
+                },
+            }
+        }, function (ret, err) {
+            if(!err){
+                if(parseInt(ret.code )== 200){
+                    var is_reportStatus=ret.data;
+                    if(parseInt(is_reportStatus)===3){
+                        $(".none_is_report").css("display","none");
+                        $(".none_remove_report").css("display","block");
+                    }
+                }else{
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            }else{
+                api.toast({
+                    msg: '网络异常，请重新请求!',
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+</script>
+
+</html>

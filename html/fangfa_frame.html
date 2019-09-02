@@ -1,0 +1,1072 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="UTF-8">
+<title>攻略</title>
+        <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"/>
+        <meta content="yes" name="apple-mobile-web-app-capable"/>
+        <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
+        <meta content="telephone=no" name="format-detection"/>
+        <script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+        <script>
+		!function(window) {
+
+    "use strict";
+
+    var doc = window.document
+      , ydui = {};
+
+    var util = ydui.util = {
+
+        parseOptions: function(string) {},
+
+        sessionStorage: function() {}(),
+
+        serialize: function(value) {},
+
+        deserialize: function(value) {}
+    };
+
+    function storage(ls) {}
+
+    $.fn.emulateTransitionEnd = function(duration) {}
+    ;
+
+    if (typeof define === 'function') {
+        define(ydui);
+    } else {
+        window.YDUI = ydui;
+    }
+    ;function Slider(element, options) {
+        this.$element = $(element);
+        this.options = $.extend({}, Slider.DEFAULTS, options || {});
+        this.init();
+    }
+
+    Slider.DEFAULTS = {
+        speed: 300,
+        autoplay: 5000,
+
+        lazyLoad: false,
+        pagination: '.slider-pagination',
+        wrapperClass: 'slider-wrapper',
+        slideClass: 'slider-item',
+        bulletClass: 'slider-pagination-item',
+        bulletActiveClass: 'slider-pagination-item-active'
+    };
+
+    function Slider(element, options) {
+        this.$element = $(element);
+        this.options = $.extend({}, Slider.DEFAULTS, options || {});
+        this.init();
+    }
+
+    Slider.DEFAULTS = {
+        speed: 300,
+        autoplay: 3000,
+        lazyLoad: false,
+        pagination: '.slider-pagination',
+        wrapperClass: 'slider-wrapper',
+        slideClass: 'slider-item',
+        bulletClass: 'slider-pagination-item',
+        bulletActiveClass: 'slider-pagination-item-active'
+    };
+
+    Slider.prototype.init = function() {
+        var _this = this
+          , options = _this.options
+          , $element = _this.$element;
+
+        _this.index = 1;
+        _this.autoPlayTimer = null;
+        _this.$pagination = $element.find(options.pagination);
+        _this.$wrapper = $element.find('.' + options.wrapperClass);
+        _this.itemNums = _this.$wrapper.find('.' + options.slideClass).length;
+
+        options.lazyLoad && _this.loadImage(0);
+
+        _this.createBullet();
+
+        _this.cloneItem().bindEvent();
+    }
+    ;
+
+    Slider.prototype.bindEvent = function() {
+        var _this = this
+          , touchEvents = _this.touchEvents();
+
+        _this.$wrapper.find('.' + _this.options.slideClass).on(touchEvents.start, function(e) {
+            _this.onTouchStart(e);
+        }).on(touchEvents.move, function(e) {
+            _this.onTouchMove(e);
+        }).on(touchEvents.end, function(e) {
+            _this.onTouchEnd(e);
+        });
+
+        $(window).on('resize.ydui.slider', function() {
+            _this.setSlidesSize();
+        });
+
+        ~~_this.options.autoplay > 0 && _this.autoPlay();
+
+        _this.$wrapper.on('click.ydui.slider', function(e) {
+            if (!_this.touches.allowClick) {
+                e.preventDefault();
+            }
+        });
+    }
+    ;
+
+    Slider.prototype.cloneItem = function() {
+        var _this = this
+          , $wrapper = _this.$wrapper
+          , $sliderItem = _this.$wrapper.find('.' + _this.options.slideClass)
+          , $firstChild = $sliderItem.filter(':first-child').clone()
+          , $lastChild = $sliderItem.filter(':last-child').clone();
+
+        $wrapper.prepend($lastChild);
+        $wrapper.append($firstChild);
+
+        _this.setSlidesSize();
+
+        return _this;
+    }
+    ;
+
+    Slider.prototype.createBullet = function() {
+
+        var _this = this;
+
+        if (!_this.$pagination[0])
+            return;
+
+        var initActive = '<span class="' + (_this.options.bulletClass + ' ' + _this.options.bulletActiveClass) + '"></span>';
+
+        _this.$pagination.append(initActive + new Array(_this.itemNums).join('<span class="' + _this.options.bulletClass + '"></span>'));
+    }
+    ;
+
+    Slider.prototype.activeBullet = function() {
+        var _this = this;
+
+        if (!_this.$pagination[0])
+            return;
+
+        var itemNums = _this.itemNums
+          , index = _this.index % itemNums >= itemNums ? 0 : _this.index % itemNums - 1
+          , bulletActiveClass = _this.options.bulletActiveClass;
+
+        !!_this.$pagination[0] && _this.$pagination.find('.' + _this.options.bulletClass).removeClass(bulletActiveClass).eq(index).addClass(bulletActiveClass);
+    }
+    ;
+
+    Slider.prototype.setSlidesSize = function() {
+        var _this = this
+          , _width = _this.$wrapper.width();
+
+        _this.$wrapper.css('transform', 'translate3d(-' + _width + 'px,0,0)');
+        _this.$wrapper.find('.' + _this.options.slideClass).css({
+            width: _width
+        });
+    }
+    ;
+
+    Slider.prototype.autoPlay = function() {
+        var _this = this;
+
+        _this.autoPlayTimer = setInterval(function() {
+
+            if (_this.index > _this.itemNums) {
+                _this.index = 1;
+                _this.setTranslate(0, -_this.$wrapper.width());
+            }
+
+            _this.setTranslate(_this.options.speed, -(++_this.index * _this.$wrapper.width()));
+
+        }, _this.options.autoplay);
+    }
+    ;
+
+    Slider.prototype.stopAutoplay = function() {
+        var _this = this;
+        clearInterval(_this.autoPlayTimer);
+        return _this;
+    }
+    ;
+
+    Slider.prototype.setTranslate = function(speed, x) {
+        var _this = this;
+
+        _this.options.lazyLoad && _this.loadImage(_this.index);
+
+        _this.activeBullet();
+
+        _this.$wrapper.css({
+            'transitionDuration': speed + 'ms',
+            'transform': 'translate3d(' + x + 'px,0,0)'
+        });
+    }
+    ;
+
+    Slider.prototype.touches = {
+        moveTag: 0,
+        startClientX: 0,
+        moveOffset: 0,
+        touchStartTime: 0,
+        isTouchEvent: false,
+        allowClick: false// 用于判断事件为点击还是拖动
+    };
+
+    Slider.prototype.onTouchStart = function(event) {
+        if (event.originalEvent.touches)
+            event = event.originalEvent.touches[0];
+
+        var _this = this
+          , touches = _this.touches;
+
+        touches.allowClick = true;
+
+        touches.isTouchEvent = event.type === 'touchstart';
+
+        if (!touches.isTouchEvent && 'which'in event && event.which === 3)
+            return;
+
+        if (touches.moveTag == 0) {
+            touches.moveTag = 1;
+
+            touches.startClientX = event.clientX;
+            touches.touchStartTime = Date.now();
+
+            var itemNums = _this.itemNums;
+
+            if (_this.index == 0) {
+                _this.index = itemNums;
+                _this.setTranslate(0, -itemNums * _this.$wrapper.width());
+                return;
+            }
+
+            if (_this.index > itemNums) {
+                _this.index = 1;
+                _this.setTranslate(0, -_this.$wrapper.width());
+            }
+        }
+    }
+    ;
+
+    Slider.prototype.onTouchMove = function(event) {
+        event.preventDefault();
+
+        if (event.originalEvent.touches)
+            event = event.originalEvent.touches[0];
+
+        var _this = this
+          , touches = _this.touches;
+
+        touches.allowClick = false;
+
+        if (touches.isTouchEvent && event.type === 'mousemove')
+            return;
+
+        var deltaSlide = touches.moveOffset = event.clientX - touches.startClientX;
+
+        if (deltaSlide != 0 && touches.moveTag != 0) {
+
+            if (touches.moveTag == 1) {
+                _this.stopAutoplay();
+                touches.moveTag = 2;
+            }
+            if (touches.moveTag == 2) {
+                _this.setTranslate(0, -_this.index * _this.$wrapper.width() + deltaSlide);
+            }
+        }
+    }
+    ;
+
+    Slider.prototype.onTouchEnd = function() {
+        var _this = this
+          , speed = _this.options.speed
+          , _width = _this.$wrapper.width()
+          , touches = _this.touches
+          , moveOffset = touches.moveOffset;
+
+        setTimeout(function() {
+            touches.allowClick = true;
+        }, 0);
+
+        if (touches.moveTag == 1) {
+            touches.moveTag = 0;
+        }
+
+        if (touches.moveTag == 2) {
+            touches.moveTag = 0;
+
+            var timeDiff = Date.now() - touches.touchStartTime;
+
+            if (timeDiff > 300 && Math.abs(moveOffset) <= _this.$wrapper.width() * .5) {
+                _this.setTranslate(speed, -_this.index * _this.$wrapper.width());
+            } else {
+                _this.setTranslate(speed, -((moveOffset > 0 ? --_this.index : ++_this.index) * _width));
+            }
+            _this.autoPlay();
+        }
+    }
+    ;
+
+    Slider.prototype.touchEvents = function() {
+        var supportTouch = (window.Modernizr && !!window.Modernizr.touch) || (function() {
+            return !!(('ontouchstart'in window) || window.DocumentTouch && document instanceof DocumentTouch);
+        }
+        )();
+
+        return {
+            start: supportTouch ? 'touchstart.ydui.slider' : 'mousedown.ydui.slider',
+            move: supportTouch ? 'touchmove.ydui.slider' : 'mousemove.ydui.slider',
+            end: supportTouch ? 'touchend.ydui.slider' : 'mouseup.ydui.slider'
+        };
+    }
+    ;
+
+    function Plugin(option) {
+        return this.each(function() {
+
+            var $this = $(this)
+              , slider = $this.data('ydui.slider');
+
+            if (!slider) {
+                $this.data('ydui.slider', new Slider(this,option));
+            }
+        });
+    }
+
+    $(window).on('load.ydui.slider', function() {
+        $('[data-ydui-slider]').each(function() {
+            var $this = $(this);
+            $this.slider(window.YDUI.util.parseOptions($this.data('ydui-slider')));
+        });
+    });
+
+    $.fn.slider = Plugin;
+
+}(window);
+		</script>
+	<style>
+		html,body {
+    color: #333;
+    margin: 0;
+    height: 100%;
+    font-family: "Myriad Set Pro","Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: normal;
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+a, label, button, input, select {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+img {
+    border: 0;
+}
+
+body {
+	background: #fff;
+	color: #666;
+	background-color: #ededed;
+}
+
+html, body, div, dl, dt, dd, ol, ul, li, h1, h2, h3, h4, h5, h6, p, blockquote, pre, button, fieldset, form, input, legend, textarea, th, td {
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    text-decoration: none;
+    color: #08acee;
+}
+
+button {
+    outline: 0;
+}
+
+img {
+    border: 0;
+}
+
+button,input,optgroup,select,textarea {
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    outline: none;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    color: #666;
+}
+
+.clearfix::after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+.clearfix {
+}
+
+.divHeight {
+    width: 100%;
+    height: 10px;
+    background: #f5f5f5;
+    position: relative;
+    overflow: hidden;
+}
+
+.r-line {
+    position: relative;
+}
+
+.r-line:after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    height: 100%;
+    border-right: 1px solid #D9D9D9;
+    -webkit-transform: scaleX(0.5);
+    transform: scaleX(0.5);
+    -webkit-transform-origin: 100% 0;
+    transform-origin: 100% 0;
+}
+
+.b-line {
+    position: relative;
+}
+
+.b-line:after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px solid #e2e2e2;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+}
+
+.aui-flex {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    padding: 15px;
+    position: relative;
+}
+
+.aui-flex-box {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    min-width: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+/* 必要布局样式css */
+.aui-flexView {
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
+.aui-scrollView {
+    width: 100%;
+    height: 100%;
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+
+.aui-navBar {
+    height: 50px;
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    z-index: 1002;
+    background: #fff;
+}
+
+.aui-navBar-item {
+    height: 50px;
+    min-width: 25%;
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 25%;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    padding: 0 0.9rem;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #808080;
+    position: relative;
+}
+
+.aui-navBar-item:first-child {
+    -webkit-box-ordinal-group: 2;
+    -webkit-order: 1;
+    -ms-flex-order: 1;
+    order: 1;
+    margin-right: -25%;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.aui-navBar-item:last-child {
+    -webkit-box-ordinal-group: 4;
+    -webkit-order: 3;
+    -ms-flex-order: 3;
+    order: 3;
+    -webkit-box-pack: end;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+
+.aui-center {
+    -webkit-box-ordinal-group: 3;
+    -webkit-order: 2;
+    -ms-flex-order: 2;
+    order: 2;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 50px;
+    width: 50%;
+    margin-left: 25%;
+}
+
+.aui-center-title {
+    text-align: center;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    display: block;
+    text-overflow: ellipsis;
+    font-size: 0.95rem;
+    color: #333;
+}
+
+.icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    border: none;
+    float: left;
+    background-size: 20px;
+    background-repeat: no-repeat;
+}
+
+.aui-search {
+    background: #f3f3f3;
+    width: 100%;
+    margin: 10px 8px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.aui-search input {
+    width: 100%;
+    background: none;
+    border: none;
+    padding: 0.45rem 2rem;
+    font-size: 0.85rem;
+}
+
+.icon-search {
+    position: absolute;
+    left: 5px;
+    top: 5px;
+}
+
+.aui-nav-box {
+    width: 100%;
+    position: relative;
+    z-index: 100;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 5px 5px 15px 5px;
+    background: #fff;
+}
+
+.aui-nav-item {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #37414b;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.aui-nav-item-active {
+    color: #0fb65a;
+    position: relative;
+}
+
+.m-slider {
+    overflow-x: hidden;
+    width: 92%;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 5px;
+}
+
+.slider-wrapper {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    -webkit-transform: translate3d(0px, 0px, 0px);
+    transform: translate3d(0px, 0px, 0px);
+    position: relative;
+    z-index: 1;
+    -webkit-transition-property: -webkit-transform;
+    transition-property: -webkit-transform;
+    transition-property: transform;
+    transition-property: transform, -webkit-transform;
+}
+
+.slider-item {
+    width: 100%;
+    height: 100%;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    background: #f6f6f6;
+}
+
+.slider-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: none;
+}
+
+.slider-pagination {
+    text-align: right;
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+    right: 0;
+    bottom: 10px;
+    pointer-events: none;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: end;
+    -webkit-align-items: flex-end;
+    -ms-flex-align: end;
+    align-items: flex-end;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.slider-pagination > .slider-pagination-item {
+    margin: 0 .25rem;
+    width: 8px;
+    height: 8px;
+    display: inline-block;
+    border-radius: 100%;
+    background-color: rgba(255,255,255,0.5);
+}
+
+.slider-pagination > .slider-pagination-item.slider-pagination-item-active {
+    background-color: #2c8ae6;
+    border-radius: 100%;
+}
+
+.aui-flex-box h1 {
+    font-size: 1.1rem;
+    color: #364147;
+}
+
+.aui-coll-img {
+	width: 90px;
+	margin-right: 1rem;
+	height: 109px;
+}
+
+.aui-coll-img img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border: none;
+}
+
+.aui-flex-box h2 {
+    font-size: 0.98rem;
+    color: #36404a;
+    margin-bottom: 0.5rem;
+}
+
+.aui-flex-box h3 {
+    font-size: 0.95rem;
+    color: #00CC00;
+    margin-bottom: 0.8rem;
+}
+
+.aui-flex-box h3 em {
+	border: 1px solid #FF0000;
+	color: #FFFFFF;
+	font-size: 0.7rem;
+	font-style: normal;
+	padding: 0.1rem 0.2rem;
+	border-radius: 2px;
+	font-weight: normal;
+	background-color: #FF0000;
+}
+
+.aui-flex-box p {
+    font-size: 0.8rem;
+    color: #abb0b6;
+    margin-bottom: 0.2rem;
+}
+
+.aui-user-list .b-line:after {
+    width: 92%;
+    left: 15px;
+}
+
+.aui-flex-two .aui-icon-user-img {
+    width: auto;
+    height: auto;
+    overflow: hidden;
+}
+
+.aui-flex-two .aui-icon-user-img span {
+    display: block;
+    float: left;
+    margin-right: 0.6rem;
+    text-align: center;
+}
+
+.aui-flex-two .aui-icon-user-img span em {
+    font-size: 0.7rem;
+    font-style: normal;
+    text-align: center;
+    color: #a2a2a2;
+}
+
+.aui-flex-two .aui-icon-user-img img {
+    width: 33px;
+    height: 33px;
+    display: block;
+    border: 1px solid #f2f0f1;
+    border-radius: 100%;
+}
+
+.aui-flex-two {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.aui-flex-two .aui-flex-box {
+    text-align: right;
+}
+
+.aui-flex-two .aui-flex-box h2 {
+    color: #ff7739;
+    margin-bottom: 0.1rem;
+}
+
+.aui-flex-box h2 em {
+    font-size: 0.7rem;
+    font-style: normal;
+    font-weight: normal;
+    background: #848c97;
+    border-radius: 3px;
+    color: #fff;
+    padding: 0.19rem 0.5rem;
+    margin-right: 0.2rem;
+}
+
+.aui-flex-box h5 {
+    border: 1px solid #ffe3d5;
+    color: #fc9260;
+    background: #fdf8f2;
+    font-size: 0.7rem;
+    font-style: normal;
+    padding: 0.1rem 0.2rem;
+    border-radius: 2px;
+    font-weight: normal;
+    width: 108px;
+}
+
+.aui-footer {
+    width: 100%;
+    position: relative;
+    z-index: 100;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 7px 5px 7px 5px;
+    background-color: #fcfcfc;
+}
+
+.aui-footer:after {
+    content: '';
+    position: absolute;
+    z-index: 0;
+    top: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    border-top: 1px solid #e4e4e4;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+    -webkit-transform-origin: 0 100%;
+    transform-origin: 0 100%;
+}
+
+.aui-tabBar-item {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: #939393;
+    font-size: 0.7rem;
+}
+
+.aui-tabBar-item-text {
+    display: inline-block;
+    font-size: 0.65rem;
+    color: #939393;
+    padding-top: 2px;
+}
+
+.aui-tabBar-item-active .aui-tabBar-item-text {
+    color: #21cc64;
+}
+
+
+.aui-footer-fixed {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 49;
+}
+		</style>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"></head>
+<body>
+
+        <section class="aui-flexView">
+
+            <section class="aui-scrollView">
+                <div class="m-slider" data-ydui-slider>
+                    <div class="slider-wrapper">
+                        <div class="slider-item">
+                            <a href="javascript:;">
+                                <img src="images/banner.png">
+                            </a>
+                        </div>
+                        <div class="slider-item">
+                            <a href="javascript:;">
+                                <img src="images/banner.png">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="slider-pagination"></div>
+                </div>
+                <div class="aui-flex" style="padding-bottom:0">
+                    <div class="aui-flex-box">
+                        <h1>如何快速获得高收入？</h1>
+                    </div>
+                </div>
+                <div class="aui-user-list">
+                    <a href="javascript:;" class="aui-flex b-line">
+                        <div align="center" style="background-color:#00CC00; padding:10px; color:#FFFFFF;" class="aui-coll-img">
+                            <div>青铜收入</div>
+							<div style="font-size:30px;">10</div>
+							<div>元/月</div>
+                    </div>
+                        <div class="aui-flex-box">
+                            <h2>赚个外卖钱</h2>
+                            <h3>方法  <em>分享朋友圈</em> <em>分享微信群</em></h3>
+                            <p>每日早晚分享一次朋友圈和分享大于50人的微信群，可轻松获得</p>
+                        </div>
+                    </a>
+                    <a href="javascript:;" class="aui-flex b-line">
+                        <div align="center" style="background-color:#009900; padding:10px; color:#FFFFFF;" class="aui-coll-img">
+                            <div>白银收入</div>
+							<div style="font-size:30px;">100</div>
+							<div>元/月</div>
+                    </div>
+                        <div class="aui-flex-box">
+                            <h2>赚个电费钱</h2>
+                            <h3>方法 <em>完成一次每日任务</em> <em>邀请10位好友</em></h3>
+                            <p>每日分享不同的朋友圈微信群,邀请好友下载app即可获得</p>
+                        </div>
+                    </a>
+                    <a href="javascript:;" class="aui-flex b-line">
+                        <div align="center" style="background-color:#006600; padding:10px; color:#FFFFFF;" class="aui-coll-img">
+                            <div>黄金收入</div>
+							<div style="font-size:30px;">1000</div>
+							<div>元/月</div>
+                    </div>
+                        <div class="aui-flex-box">
+                            <h2>提高生活品质</h2>
+                            <h3>方法 <em>完成每日任务</em> <em>分享朋友</em> <em>发布第三方任务</em></h3>
+                            <p>发布第三方任务可让您快速增加团队人数，可获得团队佣金一半收入</p>
+                        </div>
+                    </a>
+					<a href="javascript:;" class="aui-flex b-line">
+                        <div align="center" style="background-color:#FF6600; padding:10px; color:#FFFFFF;" class="aui-coll-img">
+                            <div>铂金收入</div>
+							<div style="font-size:30px;">10</div>
+							<div>K元/月</div>
+                    </div>
+                        <div class="aui-flex-box">
+                            <h2>提高生活品质</h2>
+                            <h3>方法 <em>完成每日任务</em> <em>分享朋友</em> <em>发布第三方任务</em></h3>
+                            <p>发布第三方任务可让您快速增加团队人数，可获得团队佣金一半收入</p>
+                        </div>
+                    </a>
+					<a href="javascript:;" class="aui-flex b-line">
+                        <div align="center" style="background-color:#FF3300; padding:10px; color:#FFFFFF;" class="aui-coll-img">
+                            <div>星钻收入</div>
+							<div style="font-size:30px;">50</div>
+							<div>K元/月</div>
+                    </div>
+                        <div class="aui-flex-box">
+                            <h2>提高生活品质</h2>
+                            <h3>方法 <em>完成每日任务</em> <em>分享朋友</em> <em>发布第三方任务</em></h3>
+                            <p>发布第三方任务可让您快速增加团队人数，可获得团队佣金一半收入</p>
+                        </div>
+                    </a>
+					<a href="javascript:;" class="aui-flex b-line">
+                        <div align="center" style="background-color:#000000; padding:10px; color:#FFFFFF;" class="aui-coll-img">
+                            <div>皇冠收入</div>
+							<div style="font-size:30px;">100</div>
+							<div>K元/月</div>
+                    </div>
+                        <div class="aui-flex-box">
+                            <h2>提高生活品质</h2>
+                            <h3>方法 <em>完成每日任务</em> <em>分享朋友</em> <em>发布第三方任务</em></h3>
+                            <p>发布第三方任务可让您快速增加团队人数，可获得团队佣金一半收入</p>
+                        </div>
+                    </a>
+                </div>
+<div align="center" style="padding:20px; color:#999999;">到底啦！想赚更多可以申请代理</div>
+            </section>
+            
+        </section>
+
+</body>
+</html>

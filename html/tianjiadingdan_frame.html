@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>设置新昵称</title>
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport"/>
+    <link rel="stylesheet" type="text/css" href="css/weui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+html,body
+
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+a, label, button, input, select {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+img {
+    border: 0;
+}
+
+body {
+    background: #ebebed;
+    color: #666;
+}
+
+html, body, div, dl, dt, dd, ol, ul, li, h1, h2, h3, h4, h5, h6, p, blockquote, pre, button, fieldset, form, input, legend, textarea, th, td {
+    margin: 0;
+    padding: 0;
+}
+
+
+button {
+    outline: 0;
+}
+
+button,input,optgroup,select,textarea {
+    margin: 0;
+    font: inherit;
+    color: inherit;
+    outline: none;
+}
+
+
+
+
+
+.aui-text-input {
+    margin-top: 10px;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    position: relative;
+    background: #fff;
+}
+
+
+.aui-text-input input {
+    width: 100%;
+    padding-left: 10px;
+    font-size: 20px;
+    border: none;
+    background: none;
+    outline: none;
+}
+
+
+
+.aui-button-box {
+    text-align: center;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 3px;
+}
+
+.btn {
+    height: 40px;
+    width: 100%;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+    margin-top: 10px;
+    border-radius: 3px;
+    color: #fff;
+}
+	</style>
+</head>
+<body>
+
+
+        <div class="aui-text-input">
+            <input id="order" class="input-style" size="30" maxlength="30" name="pass" type="number" value="" placeholder="添加付款10分钟后未显示订单号">
+        </div>
+
+        <div class="aui-button-box">
+            <div onClick="uporder();" class="btn">
+			<div style="margin:6px; background-color:#00CC00; padding: 5px;">提交订单号</div>
+			</div>
+        </div>
+
+
+<script type="text/javascript">
+</script>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="js/jquery-weui.js"></script>
+<script type="text/javascript">
+    function uporder(){
+        var users = getStorage("users");
+        if(!users){
+            return;
+        }
+
+        var order = $api.byId("order").value || "";
+        if(!order){
+            api.toast({
+                msg: '请输入订单号！',
+                duration: 3000,
+                location: 'bottom'
+            });
+        }
+        //$.showLoading();
+        api.ajax({
+            url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            method: 'post',
+            data: {
+                values: {
+                    "ac": "uporder",
+                    "uid": users.user_id,
+                    "order":order,
+                },
+            }
+        }, function (ret, err) {
+           // $.hideLoading();
+            if(!err){
+                if(parseInt(ret.code) == 200){
+                    api.toast({
+                        msg: "订单匹配成功",
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }else{
+                    api.toast({
+                        msg: ret.msg,
+                        duration: 3000,
+                        location: 'bottom'
+                    });
+                }
+            }else{
+                api.toast({
+                    msg: '网络异常，请重新请求!',
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+        });
+
+
+    }
+</script>
+
+
+</html>

@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>APICloud APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        body {
+            background-image: linear-gradient(160deg, #ff8f07 20%,#f85023 60%);
+        }
+        header {
+            f85023
+            border-bottom-style: solid;
+
+
+        }
+
+        h1 {
+            height: 40px;
+            line-height: 40px;
+            color: #ffffff;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .back {
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+            width: 40px;
+            height: 40px;
+            background: url(../image/cm2_icn_back.png) center center no-repeat;
+            background-size: 15px auto;
+        }
+
+        nav {
+            position: relative;
+            height: 60px;
+            display: flex;
+            display: -webkit-flex;
+            display: flex;
+            border-bottom: solid #f0f0f0 1px;
+        }
+
+        nav>div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            width: 100%;
+            line-height: 50px;
+            color: #ffffff;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .nav-act {
+            color: #ffffff;
+            font-size: 18px;
+        }
+
+        .nav-hov {
+            background-color: rgba(250, 240, 230, 0.7);
+        }
+
+        mark {
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            text-align: center;
+            background: transparent;
+            -webkit-transition: 300ms;
+        }
+
+        mark>img {
+            height: 8px;
+        }
+    </style>
+</head>
+
+<body>
+<header id="header">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td width="80"><div class="back event-back"></div></td>
+            <td><h1 class="friend_talking_title">用户管理</h1></td>
+            <td onClick="fid();" tapmode="highlight" width="80"><font color="#ffffff">导入用户</font></td>
+        </tr>
+    </table>
+</header>
+
+<nav id="nav">
+    <div class="nav-act total_tuiguang" tapmode="nav-hov" onClick="fnChange(0);">总邀请(0)</div>
+    <div tapmode="nav-hov" onClick="fnChange(1);" class="total_youxiao">有效(0)</div>
+
+    <mark></mark>
+</nav>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnReady();
+        fnInit();
+        var systemType = api.systemType;  // 获取手机类型，比如： ios
+        if(systemType=='ios'){//兼容ios和安卓
+            var x=document.getElementById("header");
+            x.style.paddingTop="30px";
+        }else{
+            var x=document.getElementById("header");
+            x.style.paddingTop="35px";
+        }
+        tuijianTotal();
+        api.openFrameGroup({
+            name: 'message_group',
+            scrollEnabled: true,
+            rect: {
+                x: 0,
+                y: 130,
+                w: 'auto',
+                h: 'auto'
+            },
+            index: 0,
+            frames: [{
+                name: 'tuiguang_frame',
+                url: 'tuiguang_frame.html'
+            }, {
+                name: 'tuiguang_frame1',
+                url: 'tuiguang_frame1.html'
+            }, {
+                name: 'tuiguang_frame2',
+                url: 'tuiguang_frame2.html'
+            }]
+        }, function(ret, err) {
+            fnChangeStyle(ret.index);
+        });
+    };
+
+    //推荐人统计
+    function tuijianTotal() {
+        var users = getStorage("users");
+        api.ajax({
+            url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+            method: 'post',
+            data: {
+                values: {
+                    "ac": "tuijianTotal",
+                    "uid": users.user_id,
+                },
+            }
+        }, function (ret, err) {
+            if(!err){
+                if(parseInt(ret.code) == 200){
+                    var data = ret.data;
+                    $('.lastdate').text(data.lastdate);
+                    $('.total_tuiguang').text("总邀请("+data.total+")");
+                    $('.total_youxiao').text("有效("+data.youxiao+")");
+                }else{
+                    api.toast({
+                        msg: ret.msg,
+                        duration: ret.code,
+                        location: 'bottom'
+                    });
+                }
+            }else{
+                api.toast({
+                    msg: '网络异常，请重新请求!',
+                    duration: 3000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+    var navs, mark;
+
+    function fnInit() {
+        navs = $api.domAll(nav, 'div');
+        mark = $api.dom(nav, 'mark');
+        mark.style.width = (api.winWidth / 3) + 'px';
+    };
+
+    function fnChange(index) {
+        fnChangeStyle(index);
+        api.setFrameGroupIndex({
+            name: 'message_group',
+            index: index,
+            scroll: true
+        });
+    };
+
+    function fnChangeStyle(index) {
+        for (var i = 0; i < navs.length; i++) {
+            if (i == index) {
+                $api.addCls(navs[i], 'nav-act');
+            } else {
+                $api.removeCls(navs[i], 'nav-act');
+            }
+        };
+
+        var markPosX = (api.winWidth / 3) * index + 'px';
+        $api.css(mark, '-webkit-transform: translate(' + markPosX + ', 0)');
+    };
+
+    //导入用户
+    function fid() {//仅能同步一次
+        api.confirm({
+            title: '导入用户',
+            msg: '说明：如果您点击确认，导入粉丝用户。视为您同意以下条例:1.从您点击确认此刻开始您的粉丝用户的一切行为与您相关。一旦出现任何因您的粉丝用户产生的风险纠纷均由您个人承担。平台不承担相关法律责任。2.为保证粉丝用户的合法权益，确保平台的安全性，平台享有最终解释权。',
+            buttons: ['确定', '取消'],
+        }, function(ret, err) {
+            var status= ret.buttonIndex;//0：关闭 1：确定 2：取消
+            if (parseInt(status)===1){
+                var users=getStorage("users");
+                api.ajax({
+                    url: 'https://shuju.mumuim.cn/index.php?m=default&c=phone&a=request',
+                    method: 'post',
+                    data: {
+                        values: {
+                            "ac":"updailiFids",
+                            "uid": users.user_id,
+                        },
+                    }
+                }, function(ret, err) {
+                    if(!err){
+                        if(parseInt(ret.code)===200){
+                            api.toast({
+                                msg: '成功导入用户！',
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+                        }else{
+                            api.toast({
+                                msg: ret.msg,
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+                        }
+                    }else{
+                        api.toast({
+                            msg: '网络异常，请重新请求！',
+                            duration: 3000,
+                            location: 'bottom'
+                        });
+                    }
+                })
+
+
+            }
+
+        });
+    }
+</script>
+</html>

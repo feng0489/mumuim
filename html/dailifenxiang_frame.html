@@ -1,0 +1,334 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>APICloud APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="css/tishi.css" />
+    <style>
+        html,
+        body {
+            background-color: #ededed;
+        }
+        .h80 {height: 80px;}
+        .h40 {height: 40px;}
+        .h20 {height: 20px;}
+        .h10 {height: 10px;}
+        .h1 {height: 1px;margin-left: 0px;}
+        .fr {float: right;}
+        .fl {float: left;}
+        .hightitem {background-color: #fff;}
+
+        .empty>img {
+            float: left;
+            padding-left: 20px;
+            height: 124px;
+        }
+
+        .empty>span {
+            height: 124px;
+            line-height: 124px;
+            padding-left: 20px;
+        }
+
+        .message {
+            display: none;
+            margin-top: 8px;
+            background-color: #fff;
+        }
+
+        .message>div {
+            position: relative;
+            top: -1px;
+            box-sizing: border-box;
+            height: 49px;
+            border-top: 1px solid #eee;
+        }
+
+        .message>div>.msg {
+            box-sizing: border-box;
+            height: 48px;
+            padding-left: 16px;
+            padding-right: 96px;
+            line-height: 48px;
+            color: #888;
+            font-size: 16px;
+        }
+
+        .message>div>.time {
+            position: absolute;
+            top: 0;
+            right: 16px;
+            height: 48px;
+            line-height: 48px;
+            color: #888;
+            text-align: right;
+            font-size: 12px;
+        }
+
+        .active {
+            -webkit-opacity: 0.7;
+            opacity: 0.7;
+        }
+
+        .info {
+            background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:10%;
+            display:inline-block;
+        }
+        .info:hover{
+            cursor: pointer;
+            background: rgba(45,171,219,.6);
+        }
+
+        .info-tip{
+            background:rgba(250,60,0,1);
+            position:absolute;/*根据父元素绝对定位*/
+            width:18px;
+            height:18px;
+            top:-7px;/*在父元素的内部的顶部*/
+            right:-7px;/*在父元素的内部的右边*/
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius:50%;
+            text-align:center;
+
+        }
+        .info1 {          background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:10%;
+            display:inline-block;
+        }
+        .info-tip1 {
+            background:rgba(250,60,0,1);
+            position:absolute;/*根据父元素绝对定位*/
+            width:18px;
+            height:18px;
+            top:-7px;/*在父元素的内部的顶部*/
+            right:-7px;/*在父元素的内部的右边*/
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius:50%;
+            text-align:center;
+        }
+        .info-tip11 {background:rgba(250,60,0,1);
+            position:absolute;/*根据父元素绝对定位*/
+            width:18px;
+            height:18px;
+            top:-7px;/*在父元素的内部的顶部*/
+            right:-7px;/*在父元素的内部的右边*/
+            -webkit-border-radius: 50%;
+            -moz-border-radius: 50%;
+            border-radius:50%;
+            text-align:center;
+        }
+        .info11 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info12 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info13 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info14 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info15 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info16 {background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+        .info17 {
+            background: rgba(45,171,219,.9);
+            position:relative;/*设置子元素相对定位*/
+            color: white;
+            text-align: center;
+            width:50px;
+            height:50px;
+            -webkit-border-radius: 10%;
+            -moz-border-radius: 10%;
+            border-radius:50%;
+            display:inline-block;
+        }
+    </style>
+</head>
+
+<body>
+
+
+<div style="background-image: linear-gradient(160deg, #ffffff 20%,#ffffff 80%); border-radius:10px; padding:10px; margin: 10px; color:#333333; font-size: 25px; " onclick="share(0);">
+    <div><strong class="title_0">嘿，别走！送你的30元现金红包已到账</strong></div>
+    <div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="80%" valign="top">
+                    <p style="font-size:20px; color: dimgray;" class="content_0">当天打款入账，直接提现，按一下红包秒进你的钱包</p>
+                </td>
+                <td width="100" align="right" valign="top">
+                    <div style="padding-left: 10px;"><img src="http://img.17sucai.com/upload/1/2017-11-02/79b82bf5ce497c94127a6265e84bc237.jpg" width="80" height="80">                        </div></td>
+    </tr>
+    </table>
+</div>
+</div>
+
+<div style="background-image: linear-gradient(160deg, #ffffff 20%,#ffffff 80%); border-radius:10px; padding:10px; margin: 10px; color:#333333; font-size: 25px; " onclick="share(1);">
+    <div><strong class="title_1">嘿，别走！送你的30元现金红包已到账</strong></div>
+    <div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="80%" valign="top">
+                    <p style="font-size:20px; color: dimgray;" class="content_1">当天打款入账，直接提现，按一下红包秒进你的钱包</p>
+                </td>
+                <td width="100" align="right" valign="top">
+                    <div style="padding-left: 10px;"><img src="http://img.17sucai.com/upload/1527619/2019-04-08/195d7823b14f75f76b1c41efbd2c2828.jpg" width="80" height="80"> </div></td>
+    </tr>
+    </table>
+</div>
+</div>
+
+<div style="background-image: linear-gradient(160deg, #ffffff 20%,#ffffff 80%); border-radius:10px; padding:10px; margin: 10px; color:#333333; font-size: 25px;" onclick="share(2);">
+    <div><strong class="title_2">【淘微视】看视频、走路、任务赚钱，购物省钱神器</strong></div>
+    <div>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+            <tr>
+                <td width="80%" valign="top">
+                    <p style="font-size:20px; color: dimgray;" class="content_2">每天走路，购物，任务都可获得活跃度，每天都可以通过签到领取同等活跃度的钱！</p>
+                </td>
+                <td width="100" align="right" valign="top">
+                    <div style="padding-left: 10px;"><img src="http://img.17sucai.com/upload/483159/2016-01-28/e24b0debb7930633b2eb9e553c989b5d.png" width="80" height="80"></div>
+                </td>
+    </tr>
+    </table>
+</div>
+</div>
+
+
+<div align="center" style="padding:20px; color:#CCCCCC;">让玩手机变得有价值</div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../script/tishi.js"></script>
+<script>
+    var wx;
+    apiready =function(){
+        wx = api.require('wx');
+    }
+    
+    function share(num) {
+        Dialog.init('', {
+            title: '分享到微信群',
+            button: {
+                取消: function () {
+                    Dialog.close(this);
+                },
+                分享: function () {
+                    var title_Obj='.title_';
+                    title_Obj+=num;
+                    var content_Obj='.content_';
+                    content_Obj+=num;
+                    var title = $(title_Obj).text();
+                    var content = $(content_Obj).text();
+                    var users=getStorage("users");
+                    //分享给好友
+                    wx.shareWebpage({
+                        scene: 'session',
+                        title: title,
+                        description:content,
+                        thumb:'widget://html/images/fenxiang.png',
+                        contentUrl: "http://mumuim.cn/index.php?c=article&a=app&aid=7&u="+users.user_id+"&from=groupmessage",
+                    }, function (ret, err) {
+                        if(ret.status==true){
+                            api.toast({
+                                msg:"分享成功!",
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+                        }else{
+                            api.toast({
+                                msg:"取消分享!",
+                                duration: 3000,
+                                location: 'bottom'
+                            });
+                            console.log("分享失败");
+                        }
+
+                    });
+                    Dialog.close(this);
+                }
+
+            }
+        })
+
+
+
+    }
+</script>
+</html>
